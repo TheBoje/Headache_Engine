@@ -1,14 +1,13 @@
 #include <iostream>
 #include "ofMain.h"
-#include "application.h"
+#include "Application.h"
+#include "ImageUtils.h"
 
 int main(int argc, char**argv) {
 	ofGLFWWindowSettings windowSettings;
 
 	ofSetupOpenGL(512, 512, OF_WINDOW);
-
-  	// instancier et lancer l'application (openFrameworks 0.11.0)
-  	ofRunApp(new Application());
+  	ofRunApp(new ift3100::Application());
 
 	return EXIT_SUCCESS;
 }
