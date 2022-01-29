@@ -16,29 +16,9 @@ namespace ift3100 {
     }
 
     /**
-     * Compute the histogram of the image (the occurence of each color on a grayscale image)
-     *
-     * @param image if it is not in grayscale, will only return the red channel
-     * @param space
-     * @return 256 lengthed unsigned int vector
-     */
-    unsigned int * ImageUtils::computeHist(const ofImage &image) {
-
-        // init a new 256 lengthed array with each case init to 0
-        unsigned int * hist = new unsigned int[256]();
-
-        for(int i = 0; i < (int)image.getWidth(); i++) {
-            for(int j = 0; j < (int)image.getHeight(); j++) {
-                ofColor color = image.getColor(i, j);
-                hist[color.r]++;
-            }
-        }
-
-        return hist;
-    }
-
-    /**
-     * Compute the histogram of the three colors of the image
+     * Compute the histogram of the three colors of the image.
+     * Allocate a 2 dimensional array and give the use the property, it's up to you
+     * to delete it.
      *
      * @param image
      * @param space

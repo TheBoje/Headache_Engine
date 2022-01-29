@@ -11,7 +11,6 @@ namespace ift3100 {
 
         static ofImage * importImage(const std::string& path);
         static void exportImage(const std::string& name);
-        static unsigned int * computeHist(const ofImage& image);
         static unsigned int ** computeHistRGB(const ofImage& image);
     };
 }
