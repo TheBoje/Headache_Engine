@@ -1,5 +1,5 @@
-#ifndef IFT_3100_SPRITES_H
-#define IFT_3100_SPRITES_H
+#ifndef IFT_3100_SPRITE_H
+#define IFT_3100_SPRITE_H
 
 #include <iostream>
 #include <vector>
@@ -8,7 +8,7 @@
 
 
 namespace ift3100 {
-    class Sprites {
+    class Sprite {
         std::vector<ofImage> _image_parts;  // Contains all the parts of the initial image (all the sprites)
         size_t _parts_count;                // The amount of parts (aka: _image_parts.size())
 
@@ -18,10 +18,10 @@ namespace ift3100 {
         size_t _index;                      // The actual index of the iterator in _image_parts
 
     public:
-        Sprites(const ofImage & img, int part_height, int part_width, size_t part_counts);
-        ~Sprites();
+        Sprite(const ofImage & img, int part_height, int part_width, size_t part_counts);
+        ~Sprite();
 
-        void concatenate(const Sprites & sprite);
+        void concatenate(const Sprite & sprite);
         void concatenate(const ofImage & image, size_t part_counts);
 
         ofImage next();
@@ -32,4 +32,4 @@ namespace ift3100 {
 
 
 
-#endif //IFT_3100_SPRITES_H
+#endif //IFT_3100_SPRITE_H
