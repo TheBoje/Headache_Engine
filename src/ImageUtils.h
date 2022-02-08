@@ -12,7 +12,7 @@ namespace ift3100 {
         static ofImage * importImage(const std::string& path);
         static void exportImage(const std::string& name);
         static unsigned int ** computeHistRGB(const ofImage& image);
-        static ofImage convert(const ofImage& image, int code);
+        static cv::Mat convert(const ofImage& image, int code);
     };
 }
 

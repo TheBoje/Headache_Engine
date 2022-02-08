@@ -45,18 +45,27 @@ namespace ift3100 {
     }
 
     /**
-     * Convert an image using openCV library.
+     * Convert an image using openCV library. Result image can be manipulated using openCV lib. For
+     * example you can use it this way :
+     * 
+    // cvt to hsv
+    cv::Mat res = ImageUtils::convert(input, cv::COLOR_RGB2HSV);
+    cv::Mat channels[3];
+    cv::split(res, channels); // split image channels
+    channels[1] = 1; // Set saturation to 1 (max)
+    cv::merge(channels, 3, res); // Merge channels back
+    cv::cvtColor(res, res, cv::COLOR_HSV2RGB); // Convert back to RBG, ofImage format
+    ofImage* output = new ofImage();
+    ofxCv::toOf(res, *output); // convert to ofImage
      * 
      * @param image 
      * @param code convertion code, see https://docs.opencv.org/3.1.0/de/d25/imgproc_color_conversions.html
-     * @return image converted following `code` type.
+     * @return cv image converted by `code`
      */
-    ofImage ImageUtils::convert(const ofImage& image, int code) {
+    cv::Mat ImageUtils::convert(const ofImage& image, int code) {
         cv::Mat tmp = ofxCv::toCv(image); // Convert from ofImage to cv::Mat (openCV image object)
-        cv::Mat colored;
-        cv::cvtColor(tmp, colored, code); // Convert color 
-        ofImage res;
-        ofxCv::toOf(colored, res);        // Convert from cv::Mat to ofImage 
-        return res;
+        cv::Mat converted;
+        cv::cvtColor(tmp, converted, code); // Convert color 
+        return converted;
     }
 }
