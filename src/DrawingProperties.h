@@ -25,7 +25,7 @@ namespace ift3100 {
         
         float STROKE_WIDTH = DEFAULT_STROKE_WIDTH;
 
-        void setStrokeColor(int r, int g, int b, int a) {
+        void setStrokeColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255) {
             STROKE_COLOR.r = r;
             STROKE_COLOR.g = g;
             STROKE_COLOR.b = b;
@@ -36,7 +36,7 @@ namespace ift3100 {
             STROKE_COLOR = color;
         }
 
-        void setFilledColor(int r, int g, int b, int a) {
+        void setFilledColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255) {
             FILLED_COLOR.r = r;
             FILLED_COLOR.g = g;
             FILLED_COLOR.b = b;
