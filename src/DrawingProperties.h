@@ -9,6 +9,12 @@ namespace ift3100 {
 
     static ofColor BACKGROUND_COLOR(DEFAULT_BACKGROUND_COLOR);
     
+
+    /**
+     * @brief Properties for vectors drawing.
+     * Contains the Stroke color, stroke width and the filled color.
+     * Each vector primitive is intented to get one DrawingProperties to describe it. 
+     */
     class DrawingProperties
     {
         
@@ -40,7 +46,7 @@ namespace ift3100 {
         void setFilledColor(ofColor color) {
             FILLED_COLOR = color;
         }
-        
+
     };
 
 }
