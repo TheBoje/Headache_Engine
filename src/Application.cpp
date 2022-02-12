@@ -8,48 +8,7 @@ namespace ift3100 {
 		ofSetWindowTitle("IFT-3100 Main");
 
 		renderer.setup();
-
-        interface.gui.setup("Parametres");
-        interface.gui.add(interface.xInterface.setup("Position x", 0, 0, width));
-        interface.gui.add(interface.yInterface.setup("Position y", 30, 0, height));
-        interface.gui.add(interface.rayonInterface.setup("Rayon", 60, 0, 256));
-        interface.gui.add(interface.rInterface.setup("Rouge", 0, 0, 255));
-        interface.gui.add(interface.gInterface.setup("Vert", 60, 0, 255));
-        interface.gui.add(interface.bInterface.setup("Bleu", 255, 0, 255));
-        interface.gui.add(interface.aInterface.setup("Alpha", 0, 0, 255));
-
-        interface.texture1.setup("Texture 1");
-        interface.color_picker_background.set("Couleur 1", ofColor(31), ofColor(0, 0), ofColor(255, 255));
-        interface.color_picker_stroke.set("Couleur 2", ofColor(255), ofColor(0, 0), ofColor(255, 255));
-
-        interface.texture2.setup("Texture 2");
-        interface.color_picker_background.set("Couleur 1", ofColor(31), ofColor(0, 0), ofColor(255, 255));
-        interface.color_picker_stroke.set("Couleur 2", ofColor(255), ofColor(0, 0), ofColor(255, 255));
-
-        interface.slider_stroke_weight.set("Largeur de ligne", 4.0f, 0.0f, 10.0f);
-
-        interface.texture1.add(interface.color_picker_background);
-        interface.texture1.add(interface.color_picker_stroke);
-        interface.texture1.add(interface.slider_stroke_weight);
-
-        interface.texture2.add(interface.color_picker_background);
-        interface.texture2.add(interface.color_picker_stroke);
-        interface.texture2.add(interface.slider_stroke_weight);
-
-        interface.gui.add(&interface.texture1);
-        interface.gui.add(&interface.texture2);
-
-        interface.textbox.set("text", "ift3100");
-        interface.gui.add(interface.textbox);
-
-        interface.button.setup("button");
-        interface.button.addListener(this, &Application::button_pressed);
-        interface.gui.add(&interface.button);
-
-        interface.checkbox.setName("visible");
-        interface.gui.add(interface.checkbox);
-
-        interface.checkbox = true;
+        interface.construire_interface();
 
 		ofLog() << "<app::setup>";
 	}
@@ -70,16 +29,17 @@ namespace ift3100 {
 	{
         renderer.draw();
         ofBackground(interface.color_picker_background);
-        if (interface.checkbox)
+        if (interface.checkbox) {
             ofSetColor(interface.rInterface, interface.gInterface, interface.bInterface, interface.aInterface);
-            ofCircle(interface.xInterface, interface.yInterface, interface.rayonInterface);
+            ofDrawCircle(interface.xInterface, interface.yInterface, interface.rayonInterface);
             interface.gui.draw();
+        }
 	}
 
 	// fonction appelée juste avant de quitter l'application
 	void Application::exit()
 	{
-        interface.button.removeListener(this, &Application::button_pressed);
+        //interface.button.removeListener(this, &Application::button_pressed);
         ofLog() << "<app::exit>";
 	}
 
@@ -101,14 +61,6 @@ namespace ift3100 {
             ofLog() << "<toggle ui: " << interface.checkbox << ">";
         }
 	}
-    void Application::button_pressed()
-    {
-        // réinitialiser la zone de texte
-        interface.textbox.set("text", "Projet");
-        ofClear(interface.color_picker_background);
-
-        ofLog() << "<button pressed>";
-    }
 
 	void Application::dragEvent(ofDragInfo dragInfo) {
 		ofLog() << "<app::ofDragInfo> " << dragInfo.files.at(0);
@@ -125,8 +77,6 @@ namespace ift3100 {
 
     void Application::windowResized(int w, int h)
     {
-        width = w;
-        height = h;
         ofLog() << "<app::windowResized: (" << w << ", " << h << ")>";
     }
 }

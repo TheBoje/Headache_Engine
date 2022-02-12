@@ -31,5 +31,9 @@ namespace ift3100 {
 			ofClear(c);
 		}
 
-	}
+        //afficher le curseur
+        curseur.dessiner_curseur(curseur.souris_courant_x, curseur.souris_courant_y);
+    }
+
+
 }

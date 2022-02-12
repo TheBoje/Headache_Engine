@@ -3,11 +3,14 @@
 
 #include "ofMain.h"
 #include "Interface.h"
+#include "Curseur.h"
 
 namespace ift3100 {
 	class Renderer
 	{
 	public:
+
+        Curseur curseur;
 
         ofTrueTypeFont font;
         ofColor background_color;

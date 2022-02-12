@@ -5,15 +5,36 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+//#include "ofxGuiExtended"
 #include "Renderer.h"
+#include <string.h>
 
 namespace ift3100 {
     class Interface {
 
     public:
 
-
         ofxPanel gui;
+
+        ofxButton buttonSelection;
+        ofxButton buttonDeplacement;
+        ofxButton buttonSuppression;
+        ofxButton buttonHistogramme;
+        ofxButton buttonImportimage;
+
+
+        ofxGuiGroup OutilsDessin;
+        ofxGuiGroup odPrimitives;
+
+        ofxGuiGroup PointVue;
+        ofxButton buttonPV1;
+        ofxButton buttonPV2;
+        ofxButton buttonPV3;
+
+        ofxGuiGroup Projection;
+        ofxButton buttonPerspective;
+        ofxButton buttonOrthogonale;
+
         ofxIntSlider xInterface;
         ofxIntSlider yInterface;
         ofxIntSlider rayonInterface;
@@ -22,11 +43,16 @@ namespace ift3100 {
         ofxIntSlider bInterface;
         ofxIntSlider aInterface;
 
-        ofxGuiGroup texture1;
-        ofxGuiGroup texture2;
+        ofParameter<bool> checkboxBoiteDelimitation;
+
+
+        int width = 512;
+        int height = 512;
+
 
         ofParameter<ofColor> color_picker_background;
         ofParameter<ofColor> color_picker_stroke;
+        ofParameter<ofColor> color_picker_object;
 
         ofParameter<float> slider_stroke_weight;
 
@@ -34,7 +60,11 @@ namespace ift3100 {
 
         ofParameter<bool> checkbox;
 
-        ofxButton button;
+
+        void construire_interface();
+
+        void button_pressed();
+
     };
 }
 

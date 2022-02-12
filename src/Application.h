@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "Renderer.h"
 #include "Interface.h"
+#include "Curseur.h"
 
 namespace ift3100 {
 	class Application : public ofBaseApp {
@@ -11,9 +12,6 @@ namespace ift3100 {
 
 	Renderer renderer;
     Interface interface;
-
-    int width = 512;
-    int height = 512;
 
 	void setup();
 	void update();
@@ -25,7 +23,6 @@ namespace ift3100 {
     void windowResized(int w, int h);
 
 	void addImage(ofImage * image);
-    void button_pressed();
 	};
 }
 
