@@ -12,7 +12,7 @@ namespace ift3100 {
         std::vector<ofImage> _image_parts;  // Contains all the parts of the initial image (all the sprites)
         size_t _parts_count;                // The amount of parts (aka: _image_parts.size())
 
-        int _parts_height;                  // The height of a part (each part need to have the same heigt and width
+        int _parts_height;                  // The height of a part (each part need to have the same height and width
         int _parts_width;
 
         size_t _index;                      // The actual index of the iterator in _image_parts

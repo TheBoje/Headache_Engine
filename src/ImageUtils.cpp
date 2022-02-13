@@ -22,7 +22,7 @@ namespace ift3100 {
      *
      * @param image
      * @param space
-     * @return a 3 lengthed array of 256 lengthed unsigned int vectors for rbg colors
+     * @return a 3 lengthen array of 256 lengthen unsigned int vectors for rbg colors
      */
     unsigned int ** ImageUtils::computeHistRGB(const ofImage &image) {
 
@@ -42,5 +42,30 @@ namespace ift3100 {
         }
 
         return hist;
+    }
+
+    /**
+     * Convert an image using openCV library. Result image can be manipulated using openCV lib. For
+     * example you can use it this way :
+     * 
+    // cvt to hsv
+    cv::Mat res = ImageUtils::convert(input, cv::COLOR_RGB2HSV);
+    cv::Mat channels[3];
+    cv::split(res, channels); // split image channels
+    channels[1] = 1; // Set saturation to 1 (max)
+    cv::merge(channels, 3, res); // Merge channels back
+    cv::cvtColor(res, res, cv::COLOR_HSV2RGB); // Convert back to RBG, ofImage format
+    ofImage* output = new ofImage();
+    ofxCv::toOf(res, *output); // convert to ofImage
+     * 
+     * @param image 
+     * @param code convertion code, see https://docs.opencv.org/3.1.0/de/d25/imgproc_color_conversions.html
+     * @return cv image converted by `code`
+     */
+    cv::Mat ImageUtils::convert(const ofImage& image, int code) {
+        cv::Mat tmp = ofxCv::toCv(image); // Convert from ofImage to cv::Mat (openCV image object)
+        cv::Mat converted;
+        cv::cvtColor(tmp, converted, code); // Convert color 
+        return converted;
     }
 }
