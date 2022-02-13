@@ -3,12 +3,15 @@
 
 #include "ofMain.h"
 #include "Renderer.h"
+#include "Interface.h"
+#include "Curseur.h"
 
 namespace ift3100 {
 	class Application : public ofBaseApp {
 	public:
 
 	Renderer renderer;
+    Interface interface;
 
 	void setup();
 	void update();
@@ -16,6 +19,8 @@ namespace ift3100 {
 	void dragEvent(ofDragInfo dragInfo);
 	void draw();
 	void exit();
+
+    void windowResized(int w, int h);
 
 	void addImage(ofImage * image);
 	};

@@ -21,7 +21,8 @@ namespace ift3100 {
 
 	void Renderer::draw()
 	{
-		if (_image != nullptr) {
+
+        if (_image != nullptr) {
 			ofSetWindowShape(  _image->getWidth(), _image->getHeight());
 			_image->draw(0, 0, _image->getWidth(), _image->getHeight());
 		} else {
@@ -29,5 +30,10 @@ namespace ift3100 {
 			c.setHsb(ofGetFrameNum(), 255, 255); // Cool gradiant using HSL 
 			ofClear(c);
 		}
-	}
+
+        //afficher le curseur
+        curseur.dessiner_curseur(curseur.souris_courant_x, curseur.souris_courant_y);
+    }
+
+
 }

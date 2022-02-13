@@ -2,11 +2,24 @@
 #define RENDERER_H
 
 #include "ofMain.h"
+#include "Interface.h"
+#include "Curseur.h"
 
 namespace ift3100 {
 	class Renderer
 	{
 	public:
+
+        Curseur curseur;
+
+        ofTrueTypeFont font;
+        ofColor background_color;
+        ofColor stroke_color;
+        ofRectangle bounding_box;
+        string text;
+        float stroke_weight;
+        float line_offset;
+        int font_size;
 
 		float _time_current;
 		float _time_last;
