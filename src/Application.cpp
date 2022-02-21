@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ImageUtils.h"
+#include "Hierarchy.h"
 
 namespace ift3100 {
 	// fonction d'initialisation de l'application
