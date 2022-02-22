@@ -6,6 +6,10 @@
 
 namespace ift3100 {
 
+    /**
+     * A simple tree representing hierarchy.
+     * @tparam T
+     */
     template <class T>
     class Hierarchy {
         T *_ref;
@@ -31,6 +35,10 @@ namespace ift3100 {
             delete _ref;
         }
 
+        /**
+         * Will add a child to the current node
+         * @param child
+         */
         void addChild(T *child) {
             _children.push_back(child);
         }
@@ -51,12 +59,29 @@ namespace ift3100 {
             }
         }
 
-
+        /**
+         *
+         * @param index
+         * @return the index-th child of the node
+         * @throw out_of_range
+         */
         Hierarchy<T> &operator[](std::size_t index) {
             try {
                 return _children.at(index);
             } catch (std::out_of_range & e) {
                 throw e;
+            }
+        }
+
+        /**
+         * Will apply "func" method to the node value and all its children (grand-children etc...)
+         * Usefull for parent transformation.
+         * @param func
+         */
+        void map(void (*func)(T*)) {
+            func(_ref);
+            for(T * child : _children) {
+                child->map(func);
             }
         }
 
