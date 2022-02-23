@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdexcept>
 #include <memory>
+#include <algorithm>
 
 namespace ift3100 {
 
@@ -91,6 +92,33 @@ namespace ift3100 {
 
         std::shared_ptr<T> getRef() {
             return _ref;
+        }
+
+        /**
+         * Move the index-th element of the node to the dest node.
+         * Will erase the branch from the node children and add it 
+         * to the end of the dest node.
+         * 
+         * @param index 
+         * @param dest 
+         */
+        void move(std::size_t index, Hierarchy<T> * dest) {
+            dest->addChild(_children[index]);
+
+            // Erase the child from the vector, do not desallocate it
+            _children.erase(std::begin() + index);
+        }
+
+        /**
+         * Swap two children between them. Only available at the same depth.
+         * 
+         * @param srcIndex 
+         * @param destIndex 
+         */
+        void swap(std::size_t srcIndex, std::size_t destIndex) {
+            if(srcIndex == destIndex) return;
+
+            std::iter_swap(_children.begin() + srcIndex, _children.begin() + destIndex);
         }
     };
 }
