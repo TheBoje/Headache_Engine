@@ -2,6 +2,7 @@
 #define INTERFACE_ITEM_HPP
 
 #include "Hierarchy.h"
+
 namespace ift3100 {
     /**
      * This class is an interface to mondel onto to add an UI element.

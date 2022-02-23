@@ -8,7 +8,7 @@ namespace ift3100 {
 
     /**
      * A simple tree representing hierarchy.
-     * @tparam T
+     * @param T
      */
     template <class T>
     class Hierarchy {
@@ -32,7 +32,7 @@ namespace ift3100 {
             for(Hierarchy<T> *child : _children) {
                 delete child;
             }
-            delete _ref;
+            // delete _ref; // Hierarchy does not have property of pointers.
         }
 
         /**
