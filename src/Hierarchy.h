@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stdexcept>
+#include <memory>
 
 namespace ift3100 {
 
@@ -12,14 +13,14 @@ namespace ift3100 {
      */
     template <class T>
     class Hierarchy {
-        T *_ref;
+        std::shared_ptr<T> _ref;
         std::vector<Hierarchy<T> *> _children;
 
     public:
         Hierarchy() : _ref(nullptr) {}
-        Hierarchy(T *ref) : _ref(ref) {}
+        Hierarchy(std::shared_ptr<T> ref) : _ref(ref) {}
 
-        Hierarchy(const Hierarchy<T> &cpy) : _ref(new T(cpy._ref)) {
+        Hierarchy(const Hierarchy<T> &cpy) : _ref(cpy._ref)) {
             int children_size = cpy._children.size();
             _children.reserve(children_size);
 
@@ -39,7 +40,7 @@ namespace ift3100 {
          * Will add a child to the current node
          * @param child
          */
-        void addChild(T *child) {
+        void addChild(std::shared_ptr<T> child) {
             _children.push_back(child);
         }
 
@@ -48,7 +49,6 @@ namespace ift3100 {
                 for(Hierarchy<T> *child : _children) {
                     delete child;
                 }
-                delete _ref;
 
                 int children_size = other._children.size();
                 _children.reserve(children_size);
@@ -78,19 +78,18 @@ namespace ift3100 {
          * Usefull for parent transformation.
          * @param func
          */
-        void map(void (*func)(T*)) {
+        void map(void (*func)(std::shared_ptr<T>)) {
             func(_ref);
-            for(T * child : _children) {
+            for(Hierarchy<T> child : _children) {
                 child->map(func);
             }
         }
 
-        void setRef(T *ref) {
-            delete _ref;
+        void setRef(std::shared_ptr<T> ref) {
             _ref = ref;
         }
 
-        T *getRef() {
+        std::shared_ptr<T> getRef() {
             return _ref;
         }
     };
