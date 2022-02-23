@@ -18,17 +18,6 @@ namespace ift3100 {
             */
             virtual void draw() = 0;
     };
-
-    /**
-     * Override Hierarchy.map for InterfaceItem to draw them.
-     * @param func ignored parameter
-    */
-    void Hierarchy<InterfaceItem>::map(void (*func)(InterfaceItem*) = nullptr) {
-            _ref->draw();
-            for(auto child : _children) {
-                child->map(nullptr);
-        }
-    }
 }
 
 #endif // !INTERFACE_ITEM_HPP
