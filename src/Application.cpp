@@ -39,11 +39,6 @@ namespace ift3100 {
         ofLog() << "<app::exit>";
 	}
 
-	void Application::addImage(ofImage * image) {
-		ofLog() << "<app:addImage> x:" << image->getHeight() << " y:" << image->getWidth();
-		renderer._image = image;
-	}
-
 	void Application::keyReleased(int key)
 	{
 		ofLog() << "<app::keyReleased: " << key << ">";
@@ -108,15 +103,6 @@ namespace ift3100 {
 
 	void Application::dragEvent(ofDragInfo dragInfo) {
 		ofLog() << "<app::ofDragInfo> " << dragInfo.files.at(0);
-
-		if (renderer._image == nullptr) {
-			renderer._image = new ofImage();
-		}
-
-		renderer._image->load(dragInfo.files.at(0));
-
-		if (renderer._image->getWidth() > 0 && renderer._image->getHeight() > 0)
-			ofSetWindowShape(renderer._image->getWidth(), renderer._image->getHeight());
 
 		interface.loadImage(dragInfo.files.at(0));
 	}

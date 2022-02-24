@@ -77,94 +77,45 @@ namespace ift3100 {
 		ofSetBackgroundColor(backgroundColor);
 		// Draw primitives based on their data
 		for (VectorPrimitive p : primitives) {
-			if (p.fill) {
-				ofFill();
-			} else {
-				ofNoFill();
-			}
-			ofSetLineWidth(p.strokeWidth);
-			/* TODO(Louis): This section could use some refactoring by using a method, or a method
-			per primitive type. There is a lot of code duplication over here... */
-			switch (p.type) {
-				case Point:
-					if (p.fill) {
-						ofFill();
-						ofSetColor(p.fillColor);
+			for (int i = 0; i < 2; i++) {
+				if (i == 0 && p.fill) {
+					ofFill();
+					ofSetColor(p.fillColor);
+				} else { 
+					ofNoFill();
+					ofSetColor(p.strokeColor);
+				}
+
+				switch (p.type) {
+					case Point: 
 						ofDrawRectRounded(p.position2 - (p.strokeWidth / 2.0f), p.strokeWidth, p.strokeWidth, DEFAULT_RECTANGLE_ROUNDING);
-					}
-					ofNoFill();
-					ofSetColor(p.strokeColor);
-					ofDrawRectRounded(p.position2 - (p.strokeWidth / 2.0f), p.strokeWidth, p.strokeWidth, DEFAULT_RECTANGLE_ROUNDING);
-					break;
-				case Line:
-					if (p.fill) {
-						ofFill();
-						ofSetColor(p.fillColor);
+						break;
+					case Line:
 						ofDrawLine(p.position1, p.position2);
-					}
-					ofNoFill();
-					ofSetColor(p.strokeColor);
-					ofDrawLine(p.position1, p.position2);
-					break;
-				case Rectangle:
-					if (p.fill) {
-						ofFill();
-						ofSetColor(p.fillColor);
+						break;
+					case Rectangle:
 						ofDrawRectRounded(p.position1, p.position2.x - p.position1.x, p.position2.y - p.position1.y, DEFAULT_RECTANGLE_ROUNDING);
-					}
-					ofNoFill();
-					ofSetColor(p.strokeColor);
-					ofDrawRectRounded(p.position1, p.position2.x - p.position1.x, p.position2.y - p.position1.y, DEFAULT_RECTANGLE_ROUNDING);
-					break;
-				case Ellipse:
-					if (p.fill) {
-						ofFill();
-						ofSetColor(p.fillColor);
+						break;
+					case Ellipse:
 						ofDrawEllipse(p.position1.x + (p.position2.x - p.position1.x) / 2.0f, p.position1.y + (p.position2.y - p.position1.y) / 2.0f, p.position2.x - p.position1.x, p.position2.y - p.position1.y);
-					}
-					ofNoFill();
-					ofSetColor(p.strokeColor);
-					ofDrawEllipse(p.position1.x + (p.position2.x - p.position1.x) / 2.0f, p.position1.y + (p.position2.y - p.position1.y) / 2.0f, p.position2.x - p.position1.x, p.position2.y - p.position1.y);
-					break;
-				case Triangle:
-					if (p.fill) {
-						ofFill();
-						ofSetColor(p.fillColor);
+						break;
+					case Triangle:
 						ofDrawTriangle(p.position1.x, p.position2.y, p.position1.x + (p.position2.x - p.position1.x) / 2.0f, p.position1.y, p.position2.x, p.position2.y);
-					}
-					ofNoFill();
-					ofSetColor(p.strokeColor);
-					ofDrawTriangle(p.position1.x, p.position2.y, p.position1.x + (p.position2.x - p.position1.x) / 2.0f, p.position1.y, p.position2.x, p.position2.y);
-					break;
-				case Cross: {
-					int sizeX = p.position1.x - p.position2.x;
-					int sizeY = p.position1.y - p.position2.y;
-					if (p.fill) {
-						ofFill();
-						ofSetColor(p.fillColor);
+						break;
+					case Cross: {
+						int sizeX = p.position1.x - p.position2.x;
+						int sizeY = p.position1.y - p.position2.y;
 						ofDrawRectRounded(p.position2.x, p.position2.y + 2.0f*(sizeY / 5.0f), sizeX, sizeY / 5.0f, DEFAULT_RECTANGLE_ROUNDING);
 						ofDrawRectRounded(p.position2.x + 2.0f*(sizeX / 5.0f), p.position2.y, sizeX / 5.0f, sizeY, DEFAULT_RECTANGLE_ROUNDING);
+						break;
 					}
-					ofNoFill();
-					ofSetColor(p.strokeColor);
-					ofDrawRectRounded(p.position2.x, p.position2.y + 2.0f*(sizeY / 5.0f), sizeX, sizeY / 5.0f, DEFAULT_RECTANGLE_ROUNDING);
-					ofDrawRectRounded(p.position2.x + 2.0f*(sizeX / 5.0f), p.position2.y, sizeX / 5.0f, sizeY, DEFAULT_RECTANGLE_ROUNDING);
-					break;
-				}
-				case Star: {
-					int sizeX = p.position1.x - p.position2.x;
-					int sizeY = p.position1.y - p.position2.y;
-					if (p.fill) {
-						ofFill();
-						ofSetColor(p.fillColor);
+					case Star: {
+						int sizeX = p.position1.x - p.position2.x;
+						int sizeY = p.position1.y - p.position2.y;
 						ofDrawTriangle(p.position2.x, p.position2.y + (sizeY / 4.0f), p.position1.x, p.position2.y + (sizeY / 4.0f), p.position2.x + (sizeX / 2.0f), p.position1.y);
 						ofDrawTriangle(p.position2.x, p.position1.y - (sizeY / 4.0f), p.position1.x, p.position1.y - (sizeY / 4.0f), p.position2.x + (sizeX / 2.0f), p.position2.y);
+						break;
 					}
-					ofNoFill();
-					ofSetColor(p.strokeColor);
-					ofDrawTriangle(p.position2.x, p.position2.y + (sizeY / 4.0f), p.position1.x, p.position2.y + (sizeY / 4.0f), p.position2.x + (sizeX / 2.0f), p.position1.y);
-					ofDrawTriangle(p.position2.x, p.position1.y - (sizeY / 4.0f), p.position1.x, p.position1.y - (sizeY / 4.0f), p.position2.x + (sizeX / 2.0f), p.position2.y);
-					break;
 				}
 			}
 		}

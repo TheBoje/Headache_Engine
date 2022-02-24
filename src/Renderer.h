@@ -29,8 +29,6 @@ namespace ift3100 {
 		float _time_last;
 		float _time_elapsed;
 
-		ofImage * _image;
-
 		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type, 
 						float strokeWidth, ofColor strokeColor,
 						bool fill, ofColor fillColor);
