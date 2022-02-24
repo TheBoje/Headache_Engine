@@ -5,6 +5,9 @@
 #include "ofxImGui.h"
 #include "DrawingProperties.h"
 #include "InterfaceUtils.h"
+#include "Hierarchy.h"
+#include "Renderer.h"
+
 #include <string.h>
 
 namespace ift3100 {
@@ -12,6 +15,8 @@ class Interface {
     public:
         ofxImGui::Gui _gui;
         ofVec4f mousePos;
+
+        unsigned int ** _rgb;
 
         bool primitiveUndo = false;
         bool primitiveRedo = false;
@@ -24,8 +29,17 @@ class Interface {
 
         PrimitiveType drawMode;
         MouseAction mouseAction = None;
-        
+
+        ofTexture textureSource;
+        GLuint textureSourceID; 
+        ofImage image;
+        bool isHistComputed;
+
+        Hierarchy<std::string> * tree;
+
         void setup();
+        void loadImage(std::string path);
+        void imageInterface();
         void draw();
         void button_pressed();
     };

@@ -117,6 +117,8 @@ namespace ift3100 {
 
 		if (renderer._image->getWidth() > 0 && renderer._image->getHeight() > 0)
 			ofSetWindowShape(renderer._image->getWidth(), renderer._image->getHeight());
+
+		interface.loadImage(dragInfo.files.at(0));
 	}
 
     void Application::windowResized(int w, int h)
