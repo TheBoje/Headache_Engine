@@ -77,7 +77,7 @@ void Interface::draw() {
             imageInterface();
         }
 
-        if(ImGui::CollapsingHeader("tree")) {
+        if(ImGui::CollapsingHeader("Tree")) {
             tree->drawGUIHierarchy();
         }
 
