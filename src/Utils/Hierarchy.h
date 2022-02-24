@@ -21,7 +21,7 @@ namespace ift3100 {
         Hierarchy() : _ref(nullptr) {}
         Hierarchy(std::shared_ptr<T> ref) : _ref(ref) {}
 
-        Hierarchy(const Hierarchy<T> &cpy) : _ref(cpy._ref)) {
+        Hierarchy(const Hierarchy<T> &cpy) : _ref(cpy._ref) {
             int children_size = cpy._children.size();
             _children.reserve(children_size);
 
@@ -106,7 +106,7 @@ namespace ift3100 {
             dest->addChild(_children[index]);
 
             // Erase the child from the vector, do not desallocate it
-            _children.erase(std::begin() + index);
+            _children.erase(_children.begin() + index);
         }
 
         /**

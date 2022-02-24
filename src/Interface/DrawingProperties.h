@@ -3,7 +3,6 @@
 
 #include "ofColor.h"
 #include "Constant.h"
-#include "ofxGui.h"
 
 namespace ift3100 {
 
@@ -21,7 +20,7 @@ namespace ift3100 {
     public:
 
         ofColor STROKE_COLOR = DEFAULT_STROKE_COLOR;
-        ofColor FILLED_COLOR = DEFAULT_FILLED_COLOR;
+        ofColor FILLED_COLOR = DEFAULT_FILL_COLOR;
         
         float STROKE_WIDTH = DEFAULT_STROKE_WIDTH;
 
