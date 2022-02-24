@@ -6,27 +6,34 @@
 #include "Curseur.h"
 
 namespace ift3100 {
-	class Renderer
-	{
+	struct VectorPrimitive {
+		PrimitiveType type;            
+		ofVec2f position1; 
+		ofVec2f position2;
+		float   strokeWidth;
+		ofColor strokeColor;
+		bool	fill;
+		ofColor fillColor;
+	};
+
+	class Renderer {
 	public:
+		std::vector<VectorPrimitive> primitives{};
+		std::stack<VectorPrimitive> redoPrimitives{};
+        ofColor backgroundColor;
 
         Curseur curseur;
 
-        ofTrueTypeFont font;
-        ofColor background_color;
-        ofColor stroke_color;
-        ofRectangle bounding_box;
-        string text;
-        float stroke_weight;
-        float line_offset;
-        int font_size;
 
 		float _time_current;
 		float _time_last;
 		float _time_elapsed;
 
-		ofImage * _image;
-
+		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type, 
+						float strokeWidth, ofColor strokeColor,
+						bool fill, ofColor fillColor);
+		void undoPrimitive();
+		void redoPrimitive();
 		void setup();
 		void update();
 		void draw();

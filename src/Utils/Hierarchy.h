@@ -6,6 +6,8 @@
 #include <memory>
 #include <algorithm>
 
+#include "ofxImGui.h"
+
 namespace ift3100 {
 
     /**
@@ -21,7 +23,7 @@ namespace ift3100 {
         Hierarchy() : _ref(nullptr) {}
         Hierarchy(std::shared_ptr<T> ref) : _ref(ref) {}
 
-        Hierarchy(const Hierarchy<T> &cpy) : _ref(cpy._ref)) {
+        Hierarchy(const Hierarchy<T> &cpy) : _ref(cpy._ref) {
             int children_size = cpy._children.size();
             _children.reserve(children_size);
 
@@ -42,7 +44,7 @@ namespace ift3100 {
          * @param child
          */
         void addChild(std::shared_ptr<T> child) {
-            _children.push_back(child);
+            _children.push_back(new Hierarchy<T>(child));
         }
 
         Hierarchy<T> &operator=(const Hierarchy<T> &other) {
@@ -61,17 +63,44 @@ namespace ift3100 {
         }
 
         /**
-         *
          * @param index
          * @return the index-th child of the node
          * @throw out_of_range
          */
-        Hierarchy<T> &operator[](std::size_t index) {
+        Hierarchy<T> * at(std::size_t index) {
             try {
+                cout << index << *_ref << endl;
                 return _children.at(index);
             } catch (std::out_of_range & e) {
                 throw e;
             }
+        }
+
+        /**
+         * @brief get the number of child for the current node
+         * 
+         * @return std::size_t 
+         */
+        std::size_t getChildrenSize() { return this->_children.size(); }
+
+        /**
+         * @brief Will draw the hierarchy in the interface (need to be wrapped)
+         * around gui.begin() and gui.end() from ofxImGui. Will display the name
+         * of the name using the operator<< of the class T
+         * @see Interface.cpp
+         */
+        void drawGUIHierarchy() {
+            std::stringstream ss;
+            ss << *_ref;
+            if(ImGui::TreeNode(ss.str().c_str())) {
+
+                for(auto child : _children) {
+                    child->drawGUIHierarchy();
+                }
+
+                ImGui::TreePop();
+            }
+
         }
 
         /**
@@ -81,7 +110,7 @@ namespace ift3100 {
          */
         void map(void (*func)(std::shared_ptr<T>)) {
             func(_ref);
-            for(Hierarchy<T> child : _children) {
+            for(auto child : _children) {
                 child->map(func);
             }
         }
@@ -106,7 +135,7 @@ namespace ift3100 {
             dest->addChild(_children[index]);
 
             // Erase the child from the vector, do not desallocate it
-            _children.erase(std::begin() + index);
+            _children.erase(_children.begin() + index);
         }
 
         /**
