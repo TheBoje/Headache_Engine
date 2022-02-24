@@ -1,4 +1,6 @@
 #include "Interface.h"
+#include "ofImage.h"
+#include "ImageUtils.h"
 
 using namespace ift3100;
 
@@ -15,7 +17,36 @@ void Interface::setup() {
     primitiveFill = true;
     mouseAction = None;
 
+    isHistComputed = false;
+
     ofLog() << "<interface::setup> primitiveFillColor:" << primitiveFillColor;
+}
+
+float getter(void * data, int index) {
+    return (float)((int*)data)[index];
+}
+
+void Interface::loadImage(std::string path) {
+    image.load(path);
+    textureSourceID = _gui.loadTexture(textureSource, path);
+}
+
+void Interface::imageInterface() {
+    if(ImGui::CollapsingHeader("Image")) {
+        if(ImGui::Button("compute histogram") && image.isAllocated()){
+            _rgb = ImageUtils::computeHistRGB(image);
+            isHistComputed = true;
+        }
+
+        if(isHistComputed) {
+            ImGui::PlotHistogram("R", &getter, _rgb[0], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
+            ImGui::PlotHistogram("G", &getter, _rgb[1], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
+            ImGui::PlotHistogram("B", &getter, _rgb[2], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
+        }
+        
+        if(image.isAllocated()) 
+            ImGui::Image((ImTextureID)(uintptr_t)textureSourceID, ImVec2(textureSource.getWidth()/ 4, textureSource.getHeight()/4));
+    }
 }
 
 void Interface::draw() {
@@ -29,6 +60,8 @@ void Interface::draw() {
         if (ImGui::CollapsingHeader("Hierarchy")) {
             ImGui::Text("This is empty... for now");
         }
+
+        imageInterface();
 
         if (ImGui::CollapsingHeader("Drawing")) {
             int drawModeTmp = drawMode;
