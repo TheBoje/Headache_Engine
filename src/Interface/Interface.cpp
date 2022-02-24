@@ -31,13 +31,25 @@ void Interface::draw() {
         }
 
         if (ImGui::CollapsingHeader("Drawing")) {
-            int drawModeTmp = drawMode;
-            ImGui::RadioButton("Line", &drawModeTmp, 0); ImGui::SameLine();
-            ImGui::RadioButton("Rectangle", &drawModeTmp, 1); ImGui::SameLine();
-            ImGui::RadioButton("Ellipse", &drawModeTmp, 2); ImGui::SameLine();
-            drawMode = InterfaceUtils::intToPrimitiveType(drawModeTmp);
+            // ImGui::RadioButton("Line", &drawModeTmp, 0); ImGui::SameLine();
+            // ImGui::RadioButton("Rectangle", &drawModeTmp, 1); ImGui::SameLine();
+            // ImGui::RadioButton("Ellipse", &drawModeTmp, 2); ImGui::SameLine();
+            const char* items[] = {"Point", "Line", "Rectangle", "Ellipse", "Triangle", "Cross", "Star"};
+            int drawModeCurrentIndex = drawMode;
+            if (ImGui::BeginCombo("Primitive type", items[drawModeCurrentIndex])) {
+            for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+            {
+                bool is_selected = (drawModeCurrentIndex == n);
+                if (ImGui::Selectable(items[n], is_selected))
+                    drawModeCurrentIndex = n;
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+            }
+            ImGui::EndCombo();
+            }
+            drawMode = InterfaceUtils::intToPrimitiveType(drawModeCurrentIndex);
 
-            ImGui::SliderFloat("Stroke Width", &primitiveStrokeWidth, 0.0f, 100.0f);
+            ImGui::SliderFloat("Stroke Width", &primitiveStrokeWidth, 0.0f, 20.0f);
             ImGui::ColorEdit4("Stroke Color", (float*)&primitiveStrokeColor);
             ImGui::ColorEdit4("Fill Color", (float*)&primitiveFillColor);
             ImGui::Checkbox("Enable fill", &primitiveFill);

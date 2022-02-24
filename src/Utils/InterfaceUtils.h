@@ -3,7 +3,7 @@
 
 namespace ift3100 {
     // Available primitive to draw
-    enum PrimitiveType { Line, Rectangle, Ellipse };;
+    enum PrimitiveType { Point, Line, Rectangle, Ellipse, Triangle, Cross, Star };;
 
     // Supported mouse actions
     enum MouseAction { None, DrawPrimitive };
@@ -16,11 +16,19 @@ namespace ift3100 {
         static PrimitiveType intToPrimitiveType(int v) {
             switch (v) {
                 case 0:
-                    return Line;
+                    return Point;
                 case 1:
-                    return Rectangle;
+                    return Line;
                 case 2:
+                    return Rectangle;
+                case 3:
                     return Ellipse;
+                case 4:
+                    return Triangle;
+                case 5:
+                    return Cross;
+                case 6:
+                    return Star;
                 default:
                     ofLog() << "<interfaceUtils::intToPrimitiveType> unknown primitive type " << v << ", returning Line";
                     return Line;

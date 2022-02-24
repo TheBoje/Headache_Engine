@@ -36,6 +36,9 @@ namespace ift3100 {
 		VectorPrimitive p;
 		p.strokeWidth = strokeWidth;
 		p.strokeColor = strokeColor;
+		if (strokeWidth == 0.0f) {
+			p.strokeColor.a = 0; // If no stroke width, stroke color is transparent.
+		}
 		p.fillColor = fillColor;
 		p.type = type;
 		p.position1.x = pos.x;
@@ -80,8 +83,26 @@ namespace ift3100 {
 				ofNoFill();
 			}
 			ofSetLineWidth(p.strokeWidth);
+			/* TODO(Louis): This section could use some refactoring by using a method, or a method
+			per primitive type. There is a lot of code duplication over here... */
 			switch (p.type) {
+				case Point:
+					if (p.fill) {
+						ofFill();
+						ofSetColor(p.fillColor);
+						ofDrawRectRounded(p.position2 - (p.strokeWidth / 2.0f), p.strokeWidth, p.strokeWidth, DEFAULT_RECTANGLE_ROUNDING);
+					}
+					ofNoFill();
+					ofSetColor(p.strokeColor);
+					ofDrawRectRounded(p.position2 - (p.strokeWidth / 2.0f), p.strokeWidth, p.strokeWidth, DEFAULT_RECTANGLE_ROUNDING);
+					break;
 				case Line:
+					if (p.fill) {
+						ofFill();
+						ofSetColor(p.fillColor);
+						ofDrawLine(p.position1, p.position2);
+					}
+					ofNoFill();
 					ofSetColor(p.strokeColor);
 					ofDrawLine(p.position1, p.position2);
 					break;
@@ -89,11 +110,11 @@ namespace ift3100 {
 					if (p.fill) {
 						ofFill();
 						ofSetColor(p.fillColor);
-						ofDrawRectangle(p.position1, p.position2.x - p.position1.x, p.position2.y - p.position1.y);
+						ofDrawRectRounded(p.position1, p.position2.x - p.position1.x, p.position2.y - p.position1.y, DEFAULT_RECTANGLE_ROUNDING);
 					}
 					ofNoFill();
 					ofSetColor(p.strokeColor);
-					ofDrawRectangle(p.position1, p.position2.x - p.position1.x, p.position2.y - p.position1.y);
+					ofDrawRectRounded(p.position1, p.position2.x - p.position1.x, p.position2.y - p.position1.y, DEFAULT_RECTANGLE_ROUNDING);
 					break;
 				case Ellipse:
 					if (p.fill) {
@@ -105,9 +126,46 @@ namespace ift3100 {
 					ofSetColor(p.strokeColor);
 					ofDrawEllipse(p.position1.x + (p.position2.x - p.position1.x) / 2.0f, p.position1.y + (p.position2.y - p.position1.y) / 2.0f, p.position2.x - p.position1.x, p.position2.y - p.position1.y);
 					break;
-				default:
-					ofLog() << "<renderer::draw> unknown type of primitive";
+				case Triangle:
+					if (p.fill) {
+						ofFill();
+						ofSetColor(p.fillColor);
+						ofDrawTriangle(p.position1.x, p.position2.y, p.position1.x + (p.position2.x - p.position1.x) / 2.0f, p.position1.y, p.position2.x, p.position2.y);
+					}
+					ofNoFill();
+					ofSetColor(p.strokeColor);
+					ofDrawTriangle(p.position1.x, p.position2.y, p.position1.x + (p.position2.x - p.position1.x) / 2.0f, p.position1.y, p.position2.x, p.position2.y);
 					break;
+				case Cross: {
+					int sizeX = p.position1.x - p.position2.x;
+					int sizeY = p.position1.y - p.position2.y;
+					if (p.fill) {
+						ofFill();
+						ofSetColor(p.fillColor);
+						ofDrawRectRounded(p.position2.x, p.position2.y + 2.0f*(sizeY / 5.0f), sizeX, sizeY / 5.0f, DEFAULT_RECTANGLE_ROUNDING);
+						ofDrawRectRounded(p.position2.x + 2.0f*(sizeX / 5.0f), p.position2.y, sizeX / 5.0f, sizeY, DEFAULT_RECTANGLE_ROUNDING);
+					}
+					ofNoFill();
+					ofSetColor(p.strokeColor);
+					ofDrawRectRounded(p.position2.x, p.position2.y + 2.0f*(sizeY / 5.0f), sizeX, sizeY / 5.0f, DEFAULT_RECTANGLE_ROUNDING);
+					ofDrawRectRounded(p.position2.x + 2.0f*(sizeX / 5.0f), p.position2.y, sizeX / 5.0f, sizeY, DEFAULT_RECTANGLE_ROUNDING);
+					break;
+				}
+				case Star: {
+					int sizeX = p.position1.x - p.position2.x;
+					int sizeY = p.position1.y - p.position2.y;
+					if (p.fill) {
+						ofFill();
+						ofSetColor(p.fillColor);
+						ofDrawTriangle(p.position2.x, p.position2.y + (sizeY / 4.0f), p.position1.x, p.position2.y + (sizeY / 4.0f), p.position2.x + (sizeX / 2.0f), p.position1.y);
+						ofDrawTriangle(p.position2.x, p.position1.y - (sizeY / 4.0f), p.position1.x, p.position1.y - (sizeY / 4.0f), p.position2.x + (sizeX / 2.0f), p.position2.y);
+					}
+					ofNoFill();
+					ofSetColor(p.strokeColor);
+					ofDrawTriangle(p.position2.x, p.position2.y + (sizeY / 4.0f), p.position1.x, p.position2.y + (sizeY / 4.0f), p.position2.x + (sizeX / 2.0f), p.position1.y);
+					ofDrawTriangle(p.position2.x, p.position1.y - (sizeY / 4.0f), p.position1.x, p.position1.y - (sizeY / 4.0f), p.position2.x + (sizeX / 2.0f), p.position2.y);
+					break;
+				}
 			}
 		}
 		// As ofFill / ofNoFill is modified with primitives
