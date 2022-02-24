@@ -6,6 +6,8 @@
 #include <memory>
 #include <algorithm>
 
+#include "ofxImGui.h"
+
 namespace ift3100 {
 
     /**
@@ -42,7 +44,7 @@ namespace ift3100 {
          * @param child
          */
         void addChild(std::shared_ptr<T> child) {
-            _children.push_back(child);
+            _children.push_back(new Hierarchy<T>(child));
         }
 
         Hierarchy<T> &operator=(const Hierarchy<T> &other) {
@@ -61,17 +63,44 @@ namespace ift3100 {
         }
 
         /**
-         *
          * @param index
          * @return the index-th child of the node
          * @throw out_of_range
          */
-        Hierarchy<T> &operator[](std::size_t index) {
+        Hierarchy<T> * at(std::size_t index) {
             try {
+                cout << index << *_ref << endl;
                 return _children.at(index);
             } catch (std::out_of_range & e) {
                 throw e;
             }
+        }
+
+        /**
+         * @brief get the number of child for the current node
+         * 
+         * @return std::size_t 
+         */
+        std::size_t getChildrenSize() { return this->_children.size(); }
+
+        /**
+         * @brief Will draw the hierarchy in the interface (need to be wrapped)
+         * around gui.begin() and gui.end() from ofxImGui. Will display the name
+         * of the name using the operator<< of the class T
+         * @see Interface.cpp
+         */
+        void drawGUIHierarchy() {
+            std::stringstream ss;
+            ss << *_ref;
+            if(ImGui::TreeNode(ss.str().c_str())) {
+
+                for(auto child : _children) {
+                    child->drawGUIHierarchy();
+                }
+
+                ImGui::TreePop();
+            }
+
         }
 
         /**
@@ -81,7 +110,7 @@ namespace ift3100 {
          */
         void map(void (*func)(std::shared_ptr<T>)) {
             func(_ref);
-            for(Hierarchy<T> child : _children) {
+            for(auto child : _children) {
                 child->map(func);
             }
         }

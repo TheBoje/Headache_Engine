@@ -5,6 +5,9 @@
 #include "ofxImGui.h"
 #include "DrawingProperties.h"
 #include "InterfaceUtils.h"
+#include "Hierarchy.h"
+#include "Renderer.h"
+
 #include <string.h>
 
 namespace ift3100 {
@@ -31,6 +34,8 @@ class Interface {
         GLuint textureSourceID; 
         ofImage image;
         bool isHistComputed;
+
+        Hierarchy<std::string> * tree;
 
         void setup();
         void loadImage(std::string path);
