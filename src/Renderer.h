@@ -14,6 +14,7 @@ namespace ift3100 {
 		ofColor strokeColor;
 		bool	fill;
 		ofColor fillColor;
+		int 	ttl; // Time to live, number of frames, -1 = +infinity
 	};
 
 	class Renderer {
@@ -31,7 +32,7 @@ namespace ift3100 {
 
 		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type, 
 						float strokeWidth, ofColor strokeColor,
-						bool fill, ofColor fillColor);
+						bool fill, ofColor fillColor, int ttl = -1);
 		void undoPrimitive();
 		void redoPrimitive();
 		void setup();

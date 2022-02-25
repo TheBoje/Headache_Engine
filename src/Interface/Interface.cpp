@@ -7,7 +7,6 @@ using namespace ift3100;
 void Interface::setup() {
     _gui.setup();
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
     primitiveStrokeWidth = DEFAULT_STROKE_WIDTH;
     primitiveStrokeColor = ofColor::white;
@@ -33,7 +32,7 @@ void Interface::setup() {
     tree->addChild(s3);
     tree->addChild(s4);
 
-    ofLog() << "<interface::setup> primitiveFillColor:" << primitiveFillColor;
+    ofLog() << "<interface::setup> done";
 }
 
 float getter(void * data, int index) {
@@ -82,21 +81,17 @@ void Interface::draw() {
         }
 
         if (ImGui::CollapsingHeader("Drawing")) {
-            // ImGui::RadioButton("Line", &drawModeTmp, 0); ImGui::SameLine();
-            // ImGui::RadioButton("Rectangle", &drawModeTmp, 1); ImGui::SameLine();
-            // ImGui::RadioButton("Ellipse", &drawModeTmp, 2); ImGui::SameLine();
             const char* items[] = {"Point", "Line", "Rectangle", "Ellipse", "Triangle", "Cross", "Star"};
             int drawModeCurrentIndex = drawMode;
             if (ImGui::BeginCombo("Primitive type", items[drawModeCurrentIndex])) {
-            for (int n = 0; n < IM_ARRAYSIZE(items); n++)
-            {
-                bool is_selected = (drawModeCurrentIndex == n);
-                if (ImGui::Selectable(items[n], is_selected))
-                    drawModeCurrentIndex = n;
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
-            }
-            ImGui::EndCombo();
+                for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
+                    bool is_selected = (drawModeCurrentIndex == n);
+                    if (ImGui::Selectable(items[n], is_selected))
+                        drawModeCurrentIndex = n;
+                    if (is_selected)
+                        ImGui::SetItemDefaultFocus();  
+                }
+                ImGui::EndCombo();
             }
             drawMode = InterfaceUtils::intToPrimitiveType(drawModeCurrentIndex);
 
