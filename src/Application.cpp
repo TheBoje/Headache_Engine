@@ -8,6 +8,7 @@ namespace ift3100 {
 	{
 		ofSetWindowTitle("IFT-3100 Main");
 
+		isMouseDown = false;
         interface.setup();
 		renderer.setup();
 
@@ -17,7 +18,7 @@ namespace ift3100 {
 	// fonction de mise à jour de la logique de l'application
 	void Application::update() {
         renderer.update();
-		
+
 		// UI - call proper function after changing state
 		if (interface.primitiveUndo) {
 			interface.primitiveUndo = false;
@@ -25,6 +26,10 @@ namespace ift3100 {
 		} else if (interface.primitiveRedo) {
 			interface.primitiveRedo = false;
 			renderer.redoPrimitive();
+		}
+
+		if (isMouseDown && interface.mouseAction == DrawPrimitive) {
+			drawPrimitivePreview();
 		}
 	}
 
@@ -68,11 +73,13 @@ namespace ift3100 {
 		interface.mousePos.y = y;
 		interface.mousePos.z = x;
 		interface.mousePos.w = y;
+		isMouseDown = true;
 	}
 
 	void Application::mouseReleased(int x, int y, int button) {
 		interface.mousePos.x = x;
 		interface.mousePos.y = y;
+		isMouseDown = false;
 		// Don't draw anything if clicking on the UI - one of these flag will be triggered
 		if (ImGui::IsAnyWindowFocused() || ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered()) return;
 		// Call proper render method based on UI state / mouse action
@@ -92,23 +99,39 @@ namespace ift3100 {
 	
 
 	void Application::mouseEntered(int x, int y) {
+		ofLog() << "<app::mouseEntered> at (" << x << ", " << y << ")";
 		interface.mousePos.x = x;
 		interface.mousePos.y = y;
 	}
 
 	void Application::mouseExited(int x, int y) {
+		ofLog() << "<app::mouseExited> at (" << x << ", " << y << ")";
 		interface.mousePos.x = x;
 		interface.mousePos.y = y;
 	}
 
 	void Application::dragEvent(ofDragInfo dragInfo) {
 		ofLog() << "<app::ofDragInfo> " << dragInfo.files.at(0);
-
 		interface.loadImage(dragInfo.files.at(0));
 	}
 
-    void Application::windowResized(int w, int h)
-    {
+    void Application::windowResized(int w, int h) {
         ofLog() << "<app::windowResized: (" << w << ", " << h << ")>";
     }
+
+	void Application::drawPrimitivePreview() {
+		// Don't draw anything if clicking on the UI - one of these flag will be triggered
+		if (ImGui::IsAnyWindowFocused() || ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered()) return;
+		// Call proper render method based on UI state / mouse action
+		ofColor primitiveStrokeColorPreview = interface.primitiveStrokeColor;
+		primitiveStrokeColorPreview.a = 80;
+		ofColor primitiveFillColorPreview = interface.primitiveFillColor;
+		primitiveFillColorPreview.a = 80;
+		// Draw transparent preview primitive for 1 frame
+		renderer.addPrimitive(interface.mousePos, interface.drawMode, 
+							interface.primitiveStrokeWidth, primitiveStrokeColorPreview, 
+							interface.primitiveFill, primitiveFillColorPreview, 1);
+		// Draw bounding box of drawing
+		renderer.addPrimitive(interface.mousePos, Rectangle, 1, ofColor(0, 80), false, ofColor::white, 1);
+	}
 }

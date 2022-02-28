@@ -13,6 +13,8 @@ namespace ift3100 {
 	Renderer renderer;
     Interface interface;
 
+	bool isMouseDown;
+
 	void setup();
 	void update();
 	void keyReleased(int key);
@@ -27,6 +29,8 @@ namespace ift3100 {
 	void mouseEntered(int x, int y);
 	void mouseExited(int x, int y);
     void windowResized(int w, int h);
+
+	void drawPrimitivePreview();
 	};
 }
 
