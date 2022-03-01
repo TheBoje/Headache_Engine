@@ -9,11 +9,7 @@ namespace ift3100 {
 		ofLog() << "<renderer::setup> done";
 	}
 
-	void Renderer::update()
-	{
-		_time_current = ofGetElapsedTimef();
-		_time_elapsed = _time_current - _time_last;
-		_time_last = _time_current;
+	void Renderer::update() {
 		// Low framerate warning
 		if (ofGetFrameRate() < 5 && ofGetFrameNum() > 5) {
 			ofLog(OF_LOG_WARNING) << std::setprecision(2)
@@ -60,6 +56,8 @@ namespace ift3100 {
 			VectorPrimitive p = primitives.back(); 
 			primitives.pop_back();
 			redoPrimitives.push(p);
+		} else {
+			ofLog() << "<renderer::undoPrimitive> nothing to undo";
 		}
 	}
 
@@ -71,11 +69,12 @@ namespace ift3100 {
 		if (!redoPrimitives.empty()) {
 			primitives.push_back(redoPrimitives.top());
 			redoPrimitives.pop();
+		} else {
+			ofLog() << "<renderer::redoPrimitive> nothing to redo";
 		}
 	}
 
-	void Renderer::draw()
-	{
+	void Renderer::draw() {
 		ofSetBackgroundColor(backgroundColor);
 		// Draw primitives based on their data
 		for (auto p = primitives.begin(); p != primitives.end();) {
