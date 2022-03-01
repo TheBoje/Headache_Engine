@@ -11,15 +11,15 @@
 #include <string.h>
 
 namespace ift3100 {
+class Application;
 class Interface {
     public:
+        Application& application; // Reference to main application for callbacks
+
         ofxImGui::Gui _gui;
         ofVec4f mousePos;
 
         unsigned int ** _rgb;
-
-        bool primitiveUndo = false;
-        bool primitiveRedo = false;
 
         float primitiveStrokeWidth;
         ImVec4 primitiveStrokeColor; // Dont question it.
@@ -34,12 +34,16 @@ class Interface {
         GLuint textureSourceID; 
         ofImage image;
         bool isHistComputed;
+        char imageRenderName[64];
 
         Hierarchy<std::string> * tree;
 
+        Interface(Application& _application);
+
         void setup();
         void loadImage(std::string path);
-        void imageInterface();
+        void imageUI();
+        void drawingUI();
         void draw();
         void button_pressed();
     };

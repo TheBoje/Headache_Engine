@@ -9,7 +9,7 @@
 namespace ift3100 {
 	class Application : public ofBaseApp {
 	public:
-
+	Application();
 	Renderer renderer;
     Interface interface;
 
@@ -31,6 +31,9 @@ namespace ift3100 {
     void windowResized(int w, int h);
 
 	void drawPrimitivePreview();
+	void rendererUndo();
+	void rendererRedo();
+	void exportRender(std::string filename);
 	};
 }
 
