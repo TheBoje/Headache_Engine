@@ -30,22 +30,8 @@ namespace ift3100 {
 	 * 
 	*/
 	void Renderer::addPrimitive(const ofVec4f& pos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor, int ttl) {
-		VectorPrimitive p;
-		p.strokeWidth = strokeWidth;
-		p.strokeColor = strokeColor;
-		if (strokeWidth == 0.0f) {
-			p.strokeColor.a = 0; // If no stroke width, stroke color is transparent.
+		primitives.push_back(VectorPrimitive(pos, type, strokeWidth, strokeColor, fill, fillColor, ttl));
 		}
-		p.fillColor = fillColor;
-		p.type = type;
-		p.position1.x = pos.x;
-		p.position1.y = pos.y;
-		p.position2.x = pos.z;
-		p.position2.y = pos.w;
-		p.fill = fill;
-		p.ttl = ttl;
-		primitives.push_back(p);
-	}
 
 	/**
 	 * Undo the last primitive added to the primitive stack (via Renderer::addPrimitive).
@@ -79,48 +65,48 @@ namespace ift3100 {
 		// Draw primitives based on their data
 		for (auto p = primitives.begin(); p != primitives.end();) {
 			for (int i = 0; i < 2; i++) {
-				if (i == 0 && p->fill) {
+				if (i == 0 && p->FILL) {
 					ofFill();
-					ofSetColor(p->fillColor);
+					ofSetColor(p->FILL_COLOR);
 				} else { 
 					ofNoFill();
-					ofSetColor(p->strokeColor);
+					ofSetColor(p->STROKE_COLOR);
 				}
 
-				switch (p->type) {
+				switch (p->getPrimitiveType()) {
 					case Point: 
-						ofDrawRectRounded(p->position2 - (p->strokeWidth / 2.0f), p->strokeWidth, p->strokeWidth, DEFAULT_RECTANGLE_ROUNDING);
+						ofDrawRectRounded(p->POSITION_2 - (p->STROKE_WIDTH / 2.0f), p->STROKE_WIDTH, p->STROKE_WIDTH, DEFAULT_RECTANGLE_ROUNDING);
 						break;
 					case Line:
-						ofDrawLine(p->position1, p->position2);
+						ofDrawLine(p->POSITION_1, p->POSITION_2);
 						break;
 					case Rectangle:
-						ofDrawRectRounded(p->position1, p->position2.x - p->position1.x, p->position2.y - p->position1.y, DEFAULT_RECTANGLE_ROUNDING);
+						ofDrawRectRounded(p->POSITION_1, p->POSITION_2.x - p->POSITION_1.x, p->POSITION_2.y - p->POSITION_1.y, DEFAULT_RECTANGLE_ROUNDING);
 						break;
 					case Ellipse:
-						ofDrawEllipse(p->position1.x + (p->position2.x - p->position1.x) / 2.0f, p->position1.y + (p->position2.y - p->position1.y) / 2.0f, p->position2.x - p->position1.x, p->position2.y - p->position1.y);
+						ofDrawEllipse(p->POSITION_1.x + (p->POSITION_2.x - p->POSITION_1.x) / 2.0f, p->POSITION_1.y + (p->POSITION_2.y - p->POSITION_1.y) / 2.0f, p->POSITION_2.x - p->POSITION_1.x, p->POSITION_2.y - p->POSITION_1.y);
 						break;
 					case Triangle:
-						ofDrawTriangle(p->position1.x, p->position2.y, p->position1.x + (p->position2.x - p->position1.x) / 2.0f, p->position1.y, p->position2.x, p->position2.y);
+						ofDrawTriangle(p->POSITION_1.x, p->POSITION_2.y, p->POSITION_1.x + (p->POSITION_2.x - p->POSITION_1.x) / 2.0f, p->POSITION_1.y, p->POSITION_2.x, p->POSITION_2.y);
 						break;
 					case Cross: {
-						int sizeX = p->position1.x - p->position2.x;
-						int sizeY = p->position1.y - p->position2.y;
-						ofDrawRectRounded(p->position2.x, p->position2.y + 2.0f*(sizeY / 5.0f), sizeX, sizeY / 5.0f, DEFAULT_RECTANGLE_ROUNDING);
-						ofDrawRectRounded(p->position2.x + 2.0f*(sizeX / 5.0f), p->position2.y, sizeX / 5.0f, sizeY, DEFAULT_RECTANGLE_ROUNDING);
+						int sizeX = p->POSITION_1.x - p->POSITION_2.x;
+						int sizeY = p->POSITION_1.y - p->POSITION_2.y;
+						ofDrawRectRounded(p->POSITION_2.x, p->POSITION_2.y + 2.0f*(sizeY / 5.0f), sizeX, sizeY / 5.0f, DEFAULT_RECTANGLE_ROUNDING);
+						ofDrawRectRounded(p->POSITION_2.x + 2.0f*(sizeX / 5.0f), p->POSITION_2.y, sizeX / 5.0f, sizeY, DEFAULT_RECTANGLE_ROUNDING);
 						break;
 					}
 					case Star: {
-						int sizeX = p->position1.x - p->position2.x;
-						int sizeY = p->position1.y - p->position2.y;
-						ofDrawTriangle(p->position2.x, p->position2.y + (sizeY / 4.0f), p->position1.x, p->position2.y + (sizeY / 4.0f), p->position2.x + (sizeX / 2.0f), p->position1.y);
-						ofDrawTriangle(p->position2.x, p->position1.y - (sizeY / 4.0f), p->position1.x, p->position1.y - (sizeY / 4.0f), p->position2.x + (sizeX / 2.0f), p->position2.y);
+						int sizeX = p->POSITION_1.x - p->POSITION_2.x;
+						int sizeY = p->POSITION_1.y - p->POSITION_2.y;
+						ofDrawTriangle(p->POSITION_2.x, p->POSITION_2.y + (sizeY / 4.0f), p->POSITION_1.x, p->POSITION_2.y + (sizeY / 4.0f), p->POSITION_2.x + (sizeX / 2.0f), p->POSITION_1.y);
+						ofDrawTriangle(p->POSITION_2.x, p->POSITION_1.y - (sizeY / 4.0f), p->POSITION_1.x, p->POSITION_1.y - (sizeY / 4.0f), p->POSITION_2.x + (sizeX / 2.0f), p->POSITION_2.y);
 						break;
 					}
 				}
 			}
 			// Update time to live
-			p->ttl-=1;
+			p->TTL-=1;
 			// Update vector iterator
 			p++;
 		}
@@ -128,7 +114,7 @@ namespace ift3100 {
 		// Remove ttl = 0 (dead) primitives
 		primitives.erase(std::remove_if(primitives.begin(), primitives.end(),
 		[](const VectorPrimitive& p) { 
-			return p.ttl == 0; // put your condition here
+			return p.TTL == 0; // put your condition here
 		}), primitives.end());
 
 

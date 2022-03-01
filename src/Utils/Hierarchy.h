@@ -12,6 +12,7 @@ namespace ift3100 {
 
     /**
      * A simple tree representing hierarchy.
+     * The toString() method of the class T needs to be implemented
      * @param T
      */
     template <class T>
@@ -21,7 +22,7 @@ namespace ift3100 {
 
     public:
         Hierarchy() : _ref(nullptr) {}
-        Hierarchy(std::shared_ptr<T> ref) : _ref(ref) {}
+        Hierarchy(std::shared_ptr<T> ref) : _ref(std::move(ref)) {}
 
         Hierarchy(const Hierarchy<T> &cpy) : _ref(cpy._ref) {
             int children_size = cpy._children.size();
@@ -69,7 +70,6 @@ namespace ift3100 {
          */
         Hierarchy<T> * at(std::size_t index) {
             try {
-                cout << index << *_ref << endl;
                 return _children.at(index);
             } catch (std::out_of_range & e) {
                 throw e;
@@ -90,9 +90,7 @@ namespace ift3100 {
          * @see Interface.cpp
          */
         void drawGUIHierarchy() {
-            std::stringstream ss;
-            ss << *_ref;
-            if(ImGui::TreeNode(ss.str().c_str())) {
+            if(ImGui::TreeNode(_ref->toString().c_str())) {
 
                 for(auto child : _children) {
                     child->drawGUIHierarchy();
