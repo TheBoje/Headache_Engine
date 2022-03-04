@@ -2,18 +2,25 @@
 #define RENDERER_H
 
 #include "ofMain.h"
+#include "Curseur.h"
+#include "InterfaceUtils.h"
+#include "Constant.h"
+
 
 namespace ift3100 {
-	class Renderer
-	{
+	class Renderer {
 	public:
+		std::vector<VectorPrimitive> primitives{};
+		std::stack<VectorPrimitive> redoPrimitives{};
+		ofColor backgroundColor;
 
-		float _time_current;
-		float _time_last;
-		float _time_elapsed;
+		Curseur curseur;
 
-		ofImage * _image;
-
+		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type, 
+				float strokeWidth, ofColor strokeColor,
+				bool fill, ofColor fillColor, int ttl = -1);
+		void undoPrimitive();
+		void redoPrimitive();
 		void setup();
 		void update();
 		void draw();

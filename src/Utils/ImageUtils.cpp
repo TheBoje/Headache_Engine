@@ -2,12 +2,12 @@
 
 namespace ift3100 {
     ofImage * ImageUtils::importImage(const std::string& path) {
-        ofLog() << "<utils:import> from " << path;
+        ofLog() << "<utils::import> from " << path;
         return new ofImage(path);
     }
 
     void ImageUtils::exportImage(const std::string& name) {
-        ofLog() << "<utils:export> " << name
+        ofLog() << "<utils::export> " << name
                 << " (" << ofGetWindowWidth() 
                 << ", " << ofGetWindowHeight()  << ")";
         ofImage res;
@@ -25,7 +25,7 @@ namespace ift3100 {
      * @return a 3 lengthen array of 256 lengthen unsigned int vectors for rbg colors
      */
     unsigned int ** ImageUtils::computeHistRGB(const ofImage &image) {
-
+        ofLog() << "<utils::computeHistRGB>";
         int channels = 3;
         unsigned int ** hist = new unsigned int * [channels];
 
