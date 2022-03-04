@@ -3,9 +3,11 @@
 #include "Hierarchy.h"
 
 namespace ift3100 {
+	// Create application, and give interface a reference of itself
+	Application::Application() : interface(*this) {}
+
 	// fonction d'initialisation de l'application
-	void Application::setup()
-	{
+	void Application::setup() {
 		ofSetWindowTitle("IFT-3100 Main");
 
 		isMouseDown = false;
@@ -18,15 +20,6 @@ namespace ift3100 {
 	// fonction de mise à jour de la logique de l'application
 	void Application::update() {
         renderer.update();
-
-		// UI - call proper function after changing state
-		if (interface.primitiveUndo) {
-			interface.primitiveUndo = false;
-			renderer.undoPrimitive();
-		} else if (interface.primitiveRedo) {
-			interface.primitiveRedo = false;
-			renderer.redoPrimitive();
-		}
 
 		if (isMouseDown && interface.mouseAction == DrawPrimitive) {
 			drawPrimitivePreview();
@@ -44,8 +37,7 @@ namespace ift3100 {
         ofLog() << "<app::exit>";
 	}
 
-	void Application::keyReleased(int key)
-	{
+	void Application::keyReleased(int key) {
 		ofLog() << "<app::keyReleased: " << key << ">";
 
 		if (key == ' ') {
@@ -133,5 +125,18 @@ namespace ift3100 {
 							interface.primitiveFill, primitiveFillColorPreview, 1);
 		// Draw bounding box of drawing
 		renderer.addPrimitive(interface.mousePos, Rectangle, 1, ofColor(0, 80), false, ofColor::white, 1);
+	}
+
+	void Application::rendererUndo() {
+		renderer.undoPrimitive();
+	}
+
+	void Application::rendererRedo() {
+		renderer.redoPrimitive();
+	}
+
+	void Application::exportRender(std::string name) {
+		name += ".png";
+		ImageUtils::exportImage(name);
 	}
 }
