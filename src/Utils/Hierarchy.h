@@ -86,7 +86,7 @@ namespace ift3100 {
         /**
          * @brief Will draw the hierarchy in the interface (need to be wrapped)
          * around gui.begin() and gui.end() from ofxImGui. Will display the name
-         * of the name using the operator<< of the class T
+         * of the name using a toString() returning std::string method that need to be defined 
          * @see Interface.cpp
          */
         void drawGUIHierarchy() {

@@ -36,8 +36,6 @@ class Interface {
         bool isHistComputed;
         char imageRenderName[64];
 
-        Hierarchy<std::string> * tree;
-
         Interface(Application& _application);
 
         void setup();
