@@ -5,6 +5,7 @@
 #include "Curseur.h"
 #include "InterfaceUtils.h"
 #include "Constant.h"
+#include "VectorPrimitive.h"
 
 
 namespace ift3100 {

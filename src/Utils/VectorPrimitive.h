@@ -9,10 +9,10 @@ namespace ift3100 {
 	/**
 	 * @brief Class used to store each Vector Primitive attributs 
 	 */
-  class VectorPrimitive  {
+    class VectorPrimitive  {
         PrimitiveType 	_type;            
 
-  	public:
+    public:
         ofVec2f 		POSITION_1; 
         ofVec2f 		POSITION_2;
         float 	 	 	STROKE_WIDTH;
