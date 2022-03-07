@@ -24,6 +24,18 @@ namespace ift3100 {
 		if (isMouseDown && interface.mouseAction == DrawPrimitive) {
 			drawPrimitivePreview();
 		}
+
+		if(!renderer.prims.selected_nodes.empty()) {
+			for(Hierarchy<VectorPrimitive> * selected : renderer.prims.selected_nodes) {
+				selected->map([=](std::shared_ptr<VectorPrimitive> p)
+				{
+					p->FILL = interface.primitiveFill;
+					p->FILL_COLOR = interface.primitiveFillColor;
+					p->STROKE_WIDTH = interface.primitiveStrokeWidth;
+					p->STROKE_COLOR = interface.primitiveStrokeColor;
+				});
+			}
+		}
 	}
 
 	// fonction de mise à jour du rendu de la fenêtre d'affichage de l'application

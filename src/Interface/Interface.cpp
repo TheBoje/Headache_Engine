@@ -86,7 +86,7 @@ void Interface::drawingUI() {
     } ImGui::SameLine();
     if (ImGui::Button("Redo")) {
         application.rendererRedo();
-            }
+    }
 }
 
 
@@ -107,7 +107,7 @@ void Interface::draw() {
         }
 
         if(ImGui::CollapsingHeader("Tree")) {
-            tree->drawGUIHierarchy();
+            application.renderer.prims.drawGUI();
         }
 
         if (ImGui::CollapsingHeader("Drawing")) {

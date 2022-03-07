@@ -5,10 +5,13 @@
 #include <stdexcept>
 #include <memory>
 #include <algorithm>
+#include <functional>
 
 #include "ofxImGui.h"
 
 namespace ift3100 {
+
+
 
     /**
      * A simple tree representing hierarchy.
@@ -16,15 +19,24 @@ namespace ift3100 {
      * @param T
      */
     template <class T>
-    class Hierarchy {
+    class Hierarchy {        
+
+        static const ImGuiTreeNodeFlags NODE_FLAGS = 
+             ImGuiTreeNodeFlags_OpenOnArrow | 
+             ImGuiTreeNodeFlags_OpenOnDoubleClick | 
+             ImGuiTreeNodeFlags_SpanAvailWidth;
+
         std::shared_ptr<T> _ref;
         std::vector<Hierarchy<T> *> _children;
 
-    public:
-        Hierarchy() : _ref(nullptr) {}
-        Hierarchy(std::shared_ptr<T> ref) : _ref(std::move(ref)) {}
+        int _index;
 
-        Hierarchy(const Hierarchy<T> &cpy) : _ref(cpy._ref) {
+    public:
+        Hierarchy() : _ref(nullptr), _index(0) {}
+
+        Hierarchy(std::shared_ptr<T> ref, int index) : _ref(std::move(ref)), _index(index) {}
+
+        Hierarchy(const Hierarchy<T> &cpy) : _ref(cpy._ref), _index(cpy._index) {
             int children_size = cpy._children.size();
             _children.reserve(children_size);
 
@@ -44,8 +56,8 @@ namespace ift3100 {
          * Will add a child to the current node
          * @param child
          */
-        void addChild(std::shared_ptr<T> child) {
-            _children.push_back(new Hierarchy<T>(child));
+        void addChild(std::shared_ptr<T> child, int index) {
+            _children.push_back(new Hierarchy<T>(child, index));
         }
 
         Hierarchy<T> &operator=(const Hierarchy<T> &other) {
@@ -89,12 +101,36 @@ namespace ift3100 {
          * of the name using the operator<< of the class T
          * @see Interface.cpp
          */
-        void drawGUIHierarchy() {
-            if(ImGui::TreeNode(_ref->toString().c_str())) {
+        void drawGUIHierarchy(std::vector<Hierarchy<T>*> & selected) {
+            // check if the node is selected and apply the flag if true
+            ImGuiTreeNodeFlags flags = NODE_FLAGS;
+            int selected_index = -1;
+
+            for(int i = 0; i < selected.size(); i++) {
+                if(selected[i]->_index == _index) {
+                    flags |= ImGuiTreeNodeFlags_Selected;
+                    selected_index = i;
+                    break;
+                }
+            }
+
+            bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)_index, flags, _ref->toString().c_str(), _index); 
+            if(node_open) {
+
+                if (ImGui::IsItemClicked()) {
+                    
+                    if(selected_index == -1) {
+                        selected.push_back(this);
+                        ofLog() << "select node " << _index;
+                    } else if(ImGui::GetIO().KeyCtrl) { 
+                        selected.erase(selected.begin() + selected_index);
+                        ofLog() << "unselect node " << _index;
+                    }
+                }
 
                 for(auto child : _children) {
-                    child->drawGUIHierarchy();
-                }
+                    child->drawGUIHierarchy(selected);
+                }                
 
                 ImGui::TreePop();
             }
@@ -106,7 +142,7 @@ namespace ift3100 {
          * Usefull for parent transformation.
          * @param func
          */
-        void map(void (*func)(std::shared_ptr<T>)) {
+        void map(std::function<void(std::shared_ptr<T>)> func) {
             func(_ref);
             for(auto child : _children) {
                 child->map(func);

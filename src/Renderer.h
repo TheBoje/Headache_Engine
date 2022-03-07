@@ -5,12 +5,16 @@
 #include "Curseur.h"
 #include "InterfaceUtils.h"
 #include "Constant.h"
-
+#include "VectorPrimitive.h"
+#include "HierarchyItem.h"
+#include "HierarchyContainer.h"
 
 namespace ift3100 {
 	class Renderer {
 	public:
-		std::vector<VectorPrimitive> primitives{};
+		HierarchyContainer<VectorPrimitive> prims;
+
+		std::vector<std::shared_ptr<VectorPrimitive>> primitives{};
 		std::stack<VectorPrimitive> redoPrimitives{};
 		ofColor backgroundColor;
 
