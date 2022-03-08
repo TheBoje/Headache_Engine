@@ -16,6 +16,7 @@ namespace ift3100 {
 		ofColor backgroundColor;
 
 		Curseur curseur;
+		ofEasyCam camera;
 
 		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type, 
 				float strokeWidth, ofColor strokeColor,

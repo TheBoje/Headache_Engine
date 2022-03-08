@@ -86,7 +86,7 @@ void Interface::drawingUI() {
     } ImGui::SameLine();
     if (ImGui::Button("Redo")) {
         application.rendererRedo();
-            }
+    }
 }
 
 
