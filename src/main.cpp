@@ -2,6 +2,7 @@
 #include "ofMain.h"
 #include "Application.h"
 #include "ImageUtils.h"
+#include "Logger.h"
 
 int main(int argc, char**argv) {
 	ofSetLogLevel(OF_LOG_VERBOSE);
