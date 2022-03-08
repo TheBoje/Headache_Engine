@@ -20,7 +20,6 @@ namespace ift3100 {
      */
     template <class T>
     class Hierarchy {        
-
         static const ImGuiTreeNodeFlags NODE_FLAGS = 
              ImGuiTreeNodeFlags_OpenOnArrow | 
              ImGuiTreeNodeFlags_OpenOnDoubleClick | 
@@ -28,10 +27,10 @@ namespace ift3100 {
 
         std::shared_ptr<T> _ref;
 
+        int _index;
+
         Hierarchy<T> * _parent;
         std::vector<Hierarchy<T> *> _children;
-
-        int _index;
 
     public:
         Hierarchy() : _ref(nullptr), _index(0) {}
@@ -51,13 +50,23 @@ namespace ift3100 {
             }
         }
 
-        ~Hierarchy() {           
-            for(Hierarchy<T> *child : _children) {
-                delete child;
+        /**
+         * @brief Delete the node and its children. Remove self from 
+         * the parent children vector. If the shared_ptr used for the 
+         * item is still used somewhere, will decrease by 1 is use_count.
+         */
+        ~Hierarchy() {
+
+            // Recursion here, depth-first-search in suffix order
+            std::size_t children_size = _children.size();
+            for(std::size_t i = 0; i < children_size; i++) {
+                delete _children[0]; // Delete each time the first element because deleting child will remove itself from parent vector
             }
             
+            // if this is not the root 
+            // will search and erase his occurence in the parent children vector
             if(_parent != nullptr) {
-                int i;
+                std::size_t i;
                 for(i = 0; i < _parent->_children.size(); i++) {
                     if(this == _parent->_children[i])
                         break;
@@ -67,11 +76,20 @@ namespace ift3100 {
                 ofLog() << "<Hierarchy::drawGUIHierarchy> parent children size " << _parent->_children.size();
             }
             
-
             _parent = nullptr;
             _ref = nullptr; 
 
             ofLog() << "<Hierarchy::drawGUIHierarchy> delete node " << _index;
+        }
+
+        /**
+         * @brief Will destroy all children of the node
+         */
+        void  clear() {
+            std::size_t children_size = _children.size();
+            for(std::size_t i = 0; i < children_size; i++) {
+                delete _children[0]; // Delete each time the first element because deleting child will remove itself from parent vector
+            }
         }
 
         /**
@@ -98,7 +116,7 @@ namespace ift3100 {
         }
 
         bool operator==(const Hierarchy<T>& h) const {
-            return h->_index == this->_index;
+            return h._index == this->_index;
         }   
 
         /**
@@ -125,6 +143,9 @@ namespace ift3100 {
          * @brief Will draw the hierarchy in the interface (need to be wrapped)
          * around gui.begin() and gui.end() from ofxImGui. Will display the name
          * of the name using the operator<< of the class T
+         * The templated class need to implemente the HierarchyItem interface in order
+         * to implement the toString method.
+         * @see HierarchyItem.h
          * @see Interface.cpp
          */
         void drawGUIHierarchy(std::vector<Hierarchy<T>*> & selected) {
@@ -132,7 +153,7 @@ namespace ift3100 {
             ImGuiTreeNodeFlags flags = NODE_FLAGS;
             int selected_index = -1;
 
-            for(int i = 0; i < selected.size(); i++) {
+            for(std::size_t i = 0; i < selected.size(); i++) {
                 if(selected[i]->_index == _index) {
                     flags |= ImGuiTreeNodeFlags_Selected;
                     selected_index = i;
@@ -144,7 +165,8 @@ namespace ift3100 {
             if(node_open) {
 
                 if (ImGui::IsItemClicked()) {
-                    
+                    // will select the node if it is clicked and unselect it 
+                    // when already selected and clicked with ctrl key pushed
                     if(selected_index == -1) {
                         selected.push_back(this);
                         ofLog() << "<Hierarchy::drawGUIHierarchy> select node " << _index;
@@ -154,6 +176,7 @@ namespace ift3100 {
                     }
                 }
 
+                // Recursion here, depth-first-search in prefix order
                 for(auto child : _children) {
                     child->drawGUIHierarchy(selected);
                 }                

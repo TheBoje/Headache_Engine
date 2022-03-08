@@ -6,6 +6,12 @@
 
 namespace ift3100
 {
+    /**
+     * @brief Container for hierarchy containing the root and
+     * the selected nodes of the hierarchy.
+     * 
+     * @tparam T 
+     */
     template <class T>
     class HierarchyContainer
     {
@@ -25,8 +31,26 @@ namespace ift3100
             _root.setRef(ref);
         }
 
+        bool isRoot(const Hierarchy<T>& h) {
+            return h == _root;
+        }
+
+        void clear() {
+            _root.clear();
+        }
+
+        /**
+         * @brief Add child to the root and attributing him
+         * a new index.
+         * 
+         * @param ref 
+         */
         void addChild(std::shared_ptr<T> ref) {
-            _root.addChild(ref, CURRENT_INDEX);
+            
+            if(selected_nodes.empty())
+                _root.addChild(ref, CURRENT_INDEX);
+            else
+                selected_nodes[0]->addChild(ref, CURRENT_INDEX);
             CURRENT_INDEX++;
         }
 

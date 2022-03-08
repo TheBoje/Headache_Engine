@@ -64,13 +64,18 @@ namespace ift3100 {
 
 	void Application::keyPressed(int key) {
 		if(key == OF_KEY_DEL) {
+
+			// Delete each selected VectorPrimitive in hierarchy
 			for(Hierarchy<VectorPrimitive> * selected : renderer.prims.selected_nodes) {
-				delete selected;
+				if(renderer.prims.isRoot(*selected))
+					renderer.prims.clear();
+				else
+					delete selected;
 			}
 
 			for (auto it = renderer.primitives.begin(); it != renderer.primitives.end(); it++)
 			{
-				// remove odd numbers
+				// remove shared_ptr that are only in the primitives vector (meaning that there are not in the hierarchy)
 				if (it->use_count() == 1)
 				{
 					renderer.primitives.erase(it--);
