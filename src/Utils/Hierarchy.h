@@ -27,6 +27,8 @@ namespace ift3100 {
              ImGuiTreeNodeFlags_SpanAvailWidth;
 
         std::shared_ptr<T> _ref;
+
+        Hierarchy<T> * _parent;
         std::vector<Hierarchy<T> *> _children;
 
         int _index;
@@ -34,7 +36,11 @@ namespace ift3100 {
     public:
         Hierarchy() : _ref(nullptr), _index(0) {}
 
-        Hierarchy(std::shared_ptr<T> ref, int index) : _ref(std::move(ref)), _index(index) {}
+        Hierarchy(std::shared_ptr<T> ref, int index, Hierarchy<T> * parent = nullptr) : 
+            _ref(std::move(ref)), 
+            _index(index),
+            _parent(parent) 
+        {}
 
         Hierarchy(const Hierarchy<T> &cpy) : _ref(cpy._ref), _index(cpy._index) {
             int children_size = cpy._children.size();
@@ -45,11 +51,27 @@ namespace ift3100 {
             }
         }
 
-        ~Hierarchy() {
+        ~Hierarchy() {           
             for(Hierarchy<T> *child : _children) {
                 delete child;
             }
-            // delete _ref; // Hierarchy does not have property of pointers.
+            
+            if(_parent != nullptr) {
+                int i;
+                for(i = 0; i < _parent->_children.size(); i++) {
+                    if(this == _parent->_children[i])
+                        break;
+                }
+
+                _parent->_children.erase(_parent->_children.begin() + i);
+                ofLog() << "<Hierarchy::drawGUIHierarchy> parent children size " << _parent->_children.size();
+            }
+            
+
+            _parent = nullptr;
+            _ref = nullptr; 
+
+            ofLog() << "<Hierarchy::drawGUIHierarchy> delete node " << _index;
         }
 
         /**
@@ -57,7 +79,7 @@ namespace ift3100 {
          * @param child
          */
         void addChild(std::shared_ptr<T> child, int index) {
-            _children.push_back(new Hierarchy<T>(child, index));
+            _children.push_back(new Hierarchy<T>(child, index, this));
         }
 
         Hierarchy<T> &operator=(const Hierarchy<T> &other) {
@@ -70,10 +92,14 @@ namespace ift3100 {
                 _children.reserve(children_size);
 
                 for (Hierarchy<T> *child : other._children) {
-                    _children.push_back(new Hierarchy<T>(*child));
+                    _children.push_back(new Hierarchy<T>(*child));  
                 }
             }
         }
+
+        bool operator==(const Hierarchy<T>& h) const {
+            return h->_index == this->_index;
+        }   
 
         /**
          * @param index
@@ -121,10 +147,10 @@ namespace ift3100 {
                     
                     if(selected_index == -1) {
                         selected.push_back(this);
-                        ofLog() << "select node " << _index;
+                        ofLog() << "<Hierarchy::drawGUIHierarchy> select node " << _index;
                     } else if(ImGui::GetIO().KeyCtrl) { 
                         selected.erase(selected.begin() + selected_index);
-                        ofLog() << "unselect node " << _index;
+                        ofLog() << "<Hierarchy::drawGUIHierarchy> unselect node " << _index;
                     }
                 }
 

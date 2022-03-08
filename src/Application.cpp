@@ -62,6 +62,15 @@ namespace ift3100 {
         // }
 	}
 
+	void Application::keyPressed(int key) {
+		if(key == OF_KEY_DEL) {
+			for(Hierarchy<VectorPrimitive> * selected : renderer.prims.selected_nodes) {
+				delete selected;
+			}
+			renderer.prims.selected_nodes.clear();
+		} 
+	}
+
 	void Application::mouseMoved(int x, int y) {
 		interface.mousePos.x = x;
 		interface.mousePos.y = y;
