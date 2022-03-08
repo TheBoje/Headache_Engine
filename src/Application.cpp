@@ -67,6 +67,15 @@ namespace ift3100 {
 			for(Hierarchy<VectorPrimitive> * selected : renderer.prims.selected_nodes) {
 				delete selected;
 			}
+
+			for (auto it = renderer.primitives.begin(); it != renderer.primitives.end(); it++)
+			{
+				// remove odd numbers
+				if (it->use_count() == 1)
+				{
+					renderer.primitives.erase(it--);
+				}
+			}
 			renderer.prims.selected_nodes.clear();
 		} 
 	}
