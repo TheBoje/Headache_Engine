@@ -9,6 +9,7 @@ Interface::Interface(Application & _application) : application(_application) {}
 
 void Interface::setup() {
     _gui.setup();
+    _gui.setTheme(new Theme());
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     primitiveStrokeWidth = DEFAULT_STROKE_WIDTH;

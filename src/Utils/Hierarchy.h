@@ -21,9 +21,7 @@ namespace ift3100 {
     template <class T>
     class Hierarchy {
         static const ImGuiTreeNodeFlags NODE_FLAGS =
-            ImGuiTreeNodeFlags_OpenOnArrow |
-            ImGuiTreeNodeFlags_OpenOnDoubleClick |
-            ImGuiTreeNodeFlags_SpanAvailWidth;
+            ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
         std::shared_ptr<T> _ref;
 
@@ -163,20 +161,18 @@ namespace ift3100 {
             }
 
             bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)_index, flags, _ref->toString().c_str(), _index);
-            if(node_open) {
-
-                if (ImGui::IsItemClicked()) {
-                    // Select the node if it is clicked and unselect it
-                    // when already selected and clicked with ctrl key pushed
-                    if(selected_index == -1) {
-                        selected.push_back(this);
-                        ofLog() << "<Hierarchy::drawGUIHierarchy> select node " << _index;
-                    } else if(ImGui::GetIO().KeyCtrl) {
-                        selected.erase(selected.begin() + selected_index);
-                        ofLog() << "<Hierarchy::drawGUIHierarchy> unselect node " << _index;
-                    }
+            if (ImGui::IsItemClicked()) {
+                // Select the node if it is clicked and unselect it
+                // when already selected and clicked with ctrl key pushed
+                if(selected_index == -1) {
+                    selected.push_back(this);
+                    ofLog() << "<Hierarchy::drawGUIHierarchy> select node " << _index;
+                } else if(ImGui::GetIO().KeyCtrl) {
+                    selected.erase(selected.begin() + selected_index);
+                    ofLog() << "<Hierarchy::drawGUIHierarchy> unselect node " << _index;
                 }
-
+            }
+            if(node_open) {
                 // Recursion here, depth-first-search in prefix order
                 for(auto child : _children) {
                     child->drawUI(selected);

@@ -7,7 +7,7 @@
 #include "InterfaceUtils.h"
 #include "Hierarchy.h"
 #include "Renderer.h"
-
+#include "Theme.h"
 #include <string.h>
 
 namespace ift3100 {
@@ -17,6 +17,7 @@ class Interface {
         Application& application; // Reference to main application for callbacks
 
         ofxImGui::Gui _gui;
+        Theme theme;
         ofVec4f mousePos;
 
         unsigned int ** _rgb;
@@ -31,7 +32,7 @@ class Interface {
         MouseAction mouseAction = None;
 
         ofTexture textureSource;
-        GLuint textureSourceID; 
+        GLuint textureSourceID;
         ofImage image;
         bool isHistComputed;
         char imageRenderName[64];
