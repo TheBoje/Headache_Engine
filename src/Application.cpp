@@ -32,6 +32,7 @@ namespace ift3100 {
 	void Application::draw() {
         renderer.draw();
 		interface.draw();
+		cursor.draw(interface.mousePos.x, interface.mousePos.y, interface.mouseAction);
 	}
 
 	// fonction appelée juste avant de quitter l'application
@@ -41,7 +42,6 @@ namespace ift3100 {
 
 	void Application::addImage(ofImage * image) {
 		ofLog() << "<app:addImage> x:" << image->getHeight() << " y:" << image->getWidth();
-		renderer._image = image;
 	}
 
 	void Application::keyReleased(int key)
@@ -61,9 +61,6 @@ namespace ift3100 {
 	void Application::mouseMoved(int x, int y) {
 		interface.mousePos.x = x;
 		interface.mousePos.y = y;
-        renderer.curseur.souris_courant_x = x;
-        renderer.curseur.souris_courant_y = y;
-
 	}
 
 	void Application::mouseDragged(int x, int y, int button) {
@@ -111,15 +108,6 @@ namespace ift3100 {
 
 	void Application::dragEvent(ofDragInfo dragInfo) {
 		ofLog() << "<app::ofDragInfo> " << dragInfo.files.at(0);
-
-		if (renderer._image == nullptr) {
-			renderer._image = new ofImage();
-		}
-
-		renderer._image->load(dragInfo.files.at(0));
-
-		if (renderer._image->getWidth() > 0 && renderer._image->getHeight() > 0)
-			ofSetWindowShape(renderer._image->getWidth(), renderer._image->getHeight());
 	}
 
     void Application::windowResized(int w, int h)

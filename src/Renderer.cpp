@@ -5,16 +5,10 @@ namespace ift3100 {
 		ofSetFrameRate(60);
 		ofSetCircleResolution(32);
 		backgroundColor = ofColor::darkGray;
-        curseur.mouse_press_x = curseur.mouse_press_y = curseur.souris_courant_x = curseur.souris_courant_y = 0;
-        curseur.is_mouse_button_pressed = false;
 		ofLog() << "<renderer::setup> done";
 	}
 
-	void Renderer::update()
-	{
-		_time_current = ofGetElapsedTimef();
-		_time_elapsed = _time_current - _time_last;
-		_time_last = _time_current;
+	void Renderer::update() {
 		// Low framerate warning
 		if (ofGetFrameRate() < 5 && ofGetFrameNum() > 5) {
 			ofLog(OF_LOG_WARNING) << std::setprecision(2)
@@ -71,8 +65,7 @@ namespace ift3100 {
 		}
 	}
 
-	void Renderer::draw()
-	{
+	void Renderer::draw() {
 		ofSetBackgroundColor(backgroundColor);
 		// Draw primitives based on their data
 		for (VectorPrimitive p : primitives) {
@@ -114,9 +107,5 @@ namespace ift3100 {
 		}
 		// As ofFill / ofNoFill is modified with primitives
 		ofFill();
-
-
-        //afficher le curseur
-        curseur.dessiner_curseur(curseur.souris_courant_x, curseur.souris_courant_y, curseur.interface.optionCursor);
     }
 }

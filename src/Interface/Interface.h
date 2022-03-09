@@ -23,16 +23,7 @@ class Interface {
 
 
         PrimitiveType drawMode;
-        MouseAction mouseAction = None;
-
-        enum ModeCursor
-        {
-            Mode_Select,
-            Mode_Move,
-            Mode_Delete
-        };
-
-        ModeCursor optionCursor;
+        MouseAction mouseAction;
 
         void setup();
         void draw();

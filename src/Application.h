@@ -4,7 +4,7 @@
 #include "ofMain.h"
 #include "Renderer.h"
 #include "Interface.h"
-#include "Curseur.h"
+#include "Cursor.h"
 
 namespace ift3100 {
 	class Application : public ofBaseApp {
@@ -12,6 +12,7 @@ namespace ift3100 {
 
 	Renderer renderer;
     Interface interface;
+	Cursor cursor;
 
 	void setup();
 	void update();
