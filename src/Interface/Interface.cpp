@@ -103,6 +103,7 @@ void Interface::drawInspector() {
     strcpy(bufx, std::to_string(primitivePosition.x).c_str());
     
     if(ImGui::InputText("x", bufx, 64, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_EnterReturnsTrue)) {
+        IFT_LOG << "Change x value to " << bufx;
         float disp = atof(bufx) - primitivePosition.x;
         
         for(auto node : *vvp) {
@@ -116,6 +117,7 @@ void Interface::drawInspector() {
     char bufy[64] = "";
     strcpy(bufy, std::to_string(primitivePosition.y).c_str());
     if(ImGui::InputText("y", bufy, 64, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_EnterReturnsTrue)) {
+        IFT_LOG << "Change y value to " << bufy;
         float disp = atof(bufx) - primitivePosition.y;
         
         for(auto node : *vvp) {
@@ -133,8 +135,6 @@ void Interface::drawInspector() {
             node->getRef()->NAME = name;
         }
     }
-
-    
 }
 
 
