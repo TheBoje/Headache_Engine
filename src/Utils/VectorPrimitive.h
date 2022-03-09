@@ -7,13 +7,13 @@
 namespace ift3100 {
 
 	/**
-	 * @brief Class used to store each Vector Primitive attributs 
+	 * @brief Class used to store each Vector Primitive attributs
 	 */
     class VectorPrimitive  {
-        PrimitiveType 	_type;            
+        PrimitiveType 	_type;
 
     public:
-        ofVec2f 		POSITION_1; 
+        ofVec2f 		POSITION_1;
         ofVec2f 		POSITION_2;
         float 	 	 	STROKE_WIDTH;
         ofColor 		STROKE_COLOR;
@@ -22,17 +22,17 @@ namespace ift3100 {
         std::string	    NAME;
         int 		    TTL; // Time to live, number of frames, -1 = +infinity
 
-        
+
         VectorPrimitive(
-            const ofVec4f& pos, 
-            const PrimitiveType& type, 
-            float strokeWidth, 
-            ofColor strokeColor, 
-            bool fill, 
-            ofColor fillColor, 
+            const ofVec4f& pos,
+            const PrimitiveType& type,
+            float strokeWidth,
+            ofColor strokeColor,
+            bool fill,
+            ofColor fillColor,
             int ttl,
             std::string name = "temp"
-        ) : 
+        ) :
         _type(type),
         STROKE_WIDTH(strokeWidth),
         STROKE_COLOR(strokeColor),
@@ -50,9 +50,8 @@ namespace ift3100 {
         PrimitiveType getPrimitiveType() { return _type; }
 
         std::string toString() const { return NAME; }
-        
-  };
 
+    };
 }
 
 #endif

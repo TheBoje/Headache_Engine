@@ -4,7 +4,7 @@ using namespace ift3100;
 
 void Theme::setup() {
     ImGuiStyle* style = &ImGui::GetStyle();
-    
+
     style->WindowMinSize = ImVec2(160, 65);
     style->FramePadding = ImVec2(4, 2);
     style->ItemSpacing = ImVec2(6, 2);

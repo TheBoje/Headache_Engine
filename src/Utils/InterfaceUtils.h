@@ -1,6 +1,8 @@
 #ifndef INTERFACE_UTILS_H
 #define INTERFACE_UTILS_H
 
+#include "Logger.h"
+
 namespace ift3100 {
     // Available primitive to draw
     enum PrimitiveType { Point, Line, Rectangle, Ellipse, Triangle, Cross, Star };;
@@ -30,7 +32,7 @@ namespace ift3100 {
                 case 6:
                     return Star;
                 default:
-                    ofLog() << "<interfaceUtils::intToPrimitiveType> unknown primitive type " << v << ", returning Line";
+                    IFT_LOG << "unknown primitive type " << v << ", returning Line";
                     return Line;
             }
         }
