@@ -125,6 +125,16 @@ void Interface::drawInspector() {
             });
         }
     }
+
+    char name[64] = "";
+    strcpy(name, vvp->at(0)->getRef()->NAME.c_str());
+    if(ImGui::InputText("Name", name, 64, ImGuiInputTextFlags_EnterReturnsTrue)) {
+        for(auto node : *vvp) {
+            node->getRef()->NAME = name;
+        }
+    }
+
+    
 }
 
 
