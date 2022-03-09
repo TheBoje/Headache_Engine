@@ -101,12 +101,19 @@ namespace ift3100 {
 		interface.mousePos.z = x;
 		interface.mousePos.w = y;
 		isMouseDown = true;
+		if (interface.mouseAction != None) {
+			renderer.camera.disableMouseInput();
+		}
 	}
 
 	void Application::mouseReleased(int x, int y, int button) {
 		interface.mousePos.x = x;
 		interface.mousePos.y = y;
+		//renderer.camera.getGlobalTransformMatrix()
 		isMouseDown = false;
+		if (interface.mouseAction != None) {
+			renderer.camera.enableMouseInput();
+		}
 		// Don't draw anything if clicking on the UI - one of these flag will be triggered
 		if (ImGui::IsAnyWindowFocused() || ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered()) return;
 		// Call proper render method based on UI state / mouse action

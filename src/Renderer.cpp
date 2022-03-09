@@ -117,18 +117,18 @@ namespace ift3100 {
 			// Update vector iterator
 			//p++;
 		}
-
 		// Remove ttl = 0 (dead) primitives
 		primitives.erase(std::remove_if(primitives.begin(), primitives.end(),
 		[](const std::shared_ptr<VectorPrimitive> p) { 
 			return p->TTL == 0; // put your condition here
 		}), primitives.end());
 
-
+		camera.begin();
 		// As ofFill / ofNoFill is modified with primitives
-		ofFill();
-
+		ofNoFill();
+		ofSetColor(ofColor::red);
         //afficher le curseur
         // curseur.dessiner_curseur(curseur.souris_courant_x, curseur.souris_courant_y);
+		camera.end();
     }
 }

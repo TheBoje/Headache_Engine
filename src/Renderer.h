@@ -9,6 +9,7 @@
 #include "HierarchyItem.h"
 #include "HierarchyContainer.h"
 
+
 namespace ift3100 {
 	class Renderer {
 	public:
@@ -19,6 +20,7 @@ namespace ift3100 {
 		ofColor backgroundColor;
 
 		Curseur curseur;
+		ofEasyCam camera;
 
 		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type, 
 				float strokeWidth, ofColor strokeColor,

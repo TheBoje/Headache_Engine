@@ -13,7 +13,7 @@ namespace ift3100 {
     class VectorPrimitive : public HierarchyItem {
         PrimitiveType 	_type;            
 
-  	public:
+    public:
         ofVec2f 		POSITION_1; 
         ofVec2f 		POSITION_2;
         float 	 	 	STROKE_WIDTH;
