@@ -7,6 +7,7 @@
 #include "InterfaceUtils.h"
 #include "Hierarchy.h"
 #include "Renderer.h"
+#include "Theme.h"
 #include "ofImage.h"
 #include "ImageUtils.h"
 #include "Logger.h"
@@ -20,6 +21,7 @@ class Interface {
         Application& application; // Reference to main application for callbacks
 
         ofxImGui::Gui _gui;
+        Theme theme;
         ofVec4f mousePos;
 
         unsigned int ** _rgb;

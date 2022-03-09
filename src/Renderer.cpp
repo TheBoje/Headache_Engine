@@ -6,6 +6,7 @@ namespace ift3100 {
 		ofSetCircleResolution(32);
 		backgroundColor = ofColor::darkGray;
 		primitives.reserve(1000);
+		hierarchyPrimitives.setRoot(std::make_shared<VectorPrimitive>(ofVec4f(0, 0, 0, 0), PrimitiveType::Point, 0, ofColor(0), true, ofColor(0)));
 		IFT_LOG << "done";
 	}
 
@@ -29,8 +30,13 @@ namespace ift3100 {
 	 * @param fillColor
 	*/
 	void Renderer::addPrimitive(const ofVec4f& pos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor, int ttl) {
-		primitives.push_back(VectorPrimitive(pos, type, strokeWidth, strokeColor, fill, fillColor, ttl));
+		std::shared_ptr<VectorPrimitive> sharedPrimitive = std::make_shared<VectorPrimitive>(pos, type, strokeWidth, strokeColor, fill, fillColor, ttl, "child");
+		primitives.push_back(sharedPrimitive);
+
+		if(ttl == -1) {
+			hierarchyPrimitives.addChild(sharedPrimitive);
 		}
+	}
 
 	/**
 	 * Undo the last primitive added to the primitive stack (via Renderer::addPrimitive).
@@ -38,7 +44,7 @@ namespace ift3100 {
 	void Renderer::undoPrimitive() {
 		// Remove last primitive and give it to redoPrimitive, serving as history stack
 		if (!primitives.empty()) {
-			VectorPrimitive p = primitives.back();
+			VectorPrimitive p = *primitives.back();
 			primitives.pop_back();
 			redoPrimitives.push(p);
 		} else {
@@ -52,7 +58,7 @@ namespace ift3100 {
 	void Renderer::redoPrimitive() {
 		// Push the newest primitive in stack history and remove it from stack
 		if (!redoPrimitives.empty()) {
-			primitives.push_back(redoPrimitives.top());
+			primitives.push_back(std::make_shared<VectorPrimitive>(redoPrimitives.top()));
 			redoPrimitives.pop();
 		} else {
 			IFT_LOG << "nothing to redo";
@@ -62,7 +68,8 @@ namespace ift3100 {
 	void Renderer::draw() {
 		ofSetBackgroundColor(backgroundColor);
 		// Draw primitives based on their data
-		for (auto p = primitives.begin(); p != primitives.end();) {
+		for (auto p : primitives) {
+			ofSetLineWidth(p->STROKE_WIDTH);
 			for (int i = 0; i < 2; i++) {
 				if (i == 0 && p->FILL) {
 					ofFill();
@@ -106,13 +113,11 @@ namespace ift3100 {
 			}
 			// Update time to live
 			p->TTL-=1;
-			// Update vector iterator
-			p++;
 		}
 		// Remove ttl = 0 (dead) primitives
 		primitives.erase(std::remove_if(primitives.begin(), primitives.end(),
-		[](const VectorPrimitive& p) {
-			return p.TTL == 0; // put your condition here
+		[](const std::shared_ptr<VectorPrimitive> p) {
+			return p->TTL == 0;
 		}), primitives.end());
 
 		camera.begin();

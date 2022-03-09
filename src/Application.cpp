@@ -21,6 +21,18 @@ namespace ift3100 {
 		if (isMouseDown && interface.mouseAction == DrawPrimitive) {
 			drawPrimitivePreview();
 		}
+
+		if(!renderer.hierarchyPrimitives.selected_nodes.empty()) {
+			for(Hierarchy<VectorPrimitive> * selected : renderer.hierarchyPrimitives.selected_nodes) {
+				selected->map([=](std::shared_ptr<VectorPrimitive> p)
+				{
+					p->FILL = interface.primitiveFill;
+					p->FILL_COLOR = interface.primitiveFillColor;
+					p->STROKE_WIDTH = interface.primitiveStrokeWidth;
+					p->STROKE_COLOR = interface.primitiveStrokeColor;
+				});
+			}
+		}
 	}
 
 	// fonction de mise à jour du rendu de la fenêtre d'affichage de l'application
@@ -37,6 +49,26 @@ namespace ift3100 {
 	void Application::keyReleased(int key) {
 		if (key == ' ') {
 			ift3100::ImageUtils::exportImage("render.png");
+		}
+	}
+
+	void Application::keyPressed(int key) {
+		if(key == OF_KEY_DEL) {
+			// Delete each selected VectorPrimitive in hierarchy
+			for(Hierarchy<VectorPrimitive> * selected : renderer.hierarchyPrimitives.selected_nodes) {
+				if(renderer.hierarchyPrimitives.isRoot(*selected))
+					renderer.hierarchyPrimitives.clear();
+				else
+					delete selected;
+			}
+
+			for (auto it = renderer.primitives.begin(); it != renderer.primitives.end(); it++) {
+				// remove shared_ptr that are only in the primitives vector (meaning that there are not in the hierarchy)
+				if (it->use_count() == 1) {
+					renderer.primitives.erase(it--);
+				}
+			}
+			renderer.hierarchyPrimitives.selected_nodes.clear();
 		}
 	}
 
@@ -74,8 +106,8 @@ namespace ift3100 {
 		// Call proper render method based on UI state / mouse action
 		switch (interface.mouseAction) {
 			case DrawPrimitive:
-				renderer.addPrimitive(interface.mousePos, interface.drawMode, 
-									interface.primitiveStrokeWidth, interface.primitiveStrokeColor, 
+				renderer.addPrimitive(interface.mousePos, interface.drawMode,
+									interface.primitiveStrokeWidth, interface.primitiveStrokeColor,
 									interface.primitiveFill, interface.primitiveFillColor);
 				break;
 			case None:
@@ -85,7 +117,7 @@ namespace ift3100 {
 				break;
 		};
 	}
-	
+
 
 	void Application::mouseEntered(int x, int y) {
 		interface.mousePos.x = x;

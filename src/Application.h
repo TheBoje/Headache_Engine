@@ -23,6 +23,7 @@ namespace ift3100 {
 	void setup();
 	void update();
 	void keyReleased(int key);
+	void keyPressed(int key);
 	void dragEvent(ofDragInfo dragInfo);
 	void draw();
 	void exit();
