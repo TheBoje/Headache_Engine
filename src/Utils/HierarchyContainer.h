@@ -9,13 +9,13 @@ namespace ift3100
     /**
      * @brief Container for hierarchy containing the root and
      * the selected nodes of the hierarchy.
-     * 
-     * @tparam T 
+     *
+     * @tparam T
      */
     template <class T>
     class HierarchyContainer
     {
-    private:        
+    private:
         int CURRENT_INDEX = 1;
 
         Hierarchy<T> _root;
@@ -42,11 +42,10 @@ namespace ift3100
         /**
          * @brief Add child to the root and attributing him
          * a new index.
-         * 
-         * @param ref 
+         *
+         * @param ref
          */
         void addChild(std::shared_ptr<T> ref) {
-            
             if(selected_nodes.empty())
                 _root.addChild(ref, CURRENT_INDEX);
             else

@@ -25,8 +25,8 @@ namespace ift3100 {
 			drawPrimitivePreview();
 		}
 
-		if(!renderer.prims.selected_nodes.empty()) {
-			for(Hierarchy<VectorPrimitive> * selected : renderer.prims.selected_nodes) {
+		if(!renderer.hierarchyPrimitives.selected_nodes.empty()) {
+			for(Hierarchy<VectorPrimitive> * selected : renderer.hierarchyPrimitives.selected_nodes) {
 				selected->map([=](std::shared_ptr<VectorPrimitive> p)
 				{
 					p->FILL = interface.primitiveFill;
@@ -64,25 +64,22 @@ namespace ift3100 {
 
 	void Application::keyPressed(int key) {
 		if(key == OF_KEY_DEL) {
-
 			// Delete each selected VectorPrimitive in hierarchy
-			for(Hierarchy<VectorPrimitive> * selected : renderer.prims.selected_nodes) {
-				if(renderer.prims.isRoot(*selected))
-					renderer.prims.clear();
+			for(Hierarchy<VectorPrimitive> * selected : renderer.hierarchyPrimitives.selected_nodes) {
+				if(renderer.hierarchyPrimitives.isRoot(*selected))
+					renderer.hierarchyPrimitives.clear();
 				else
 					delete selected;
 			}
 
-			for (auto it = renderer.primitives.begin(); it != renderer.primitives.end(); it++)
-			{
+			for (auto it = renderer.primitives.begin(); it != renderer.primitives.end(); it++) {
 				// remove shared_ptr that are only in the primitives vector (meaning that there are not in the hierarchy)
-				if (it->use_count() == 1)
-				{
+				if (it->use_count() == 1) {
 					renderer.primitives.erase(it--);
 				}
 			}
-			renderer.prims.selected_nodes.clear();
-		} 
+			renderer.hierarchyPrimitives.selected_nodes.clear();
+		}
 	}
 
 	void Application::mouseMoved(int x, int y) {
@@ -119,8 +116,8 @@ namespace ift3100 {
 		// Call proper render method based on UI state / mouse action
 		switch (interface.mouseAction) {
 			case DrawPrimitive:
-				renderer.addPrimitive(interface.mousePos, interface.drawMode, 
-									interface.primitiveStrokeWidth, interface.primitiveStrokeColor, 
+				renderer.addPrimitive(interface.mousePos, interface.drawMode,
+									interface.primitiveStrokeWidth, interface.primitiveStrokeColor,
 									interface.primitiveFill, interface.primitiveFillColor);
 				break;
 			case None:
@@ -130,7 +127,7 @@ namespace ift3100 {
 				break;
 		};
 	}
-	
+
 
 	void Application::mouseEntered(int x, int y) {
 		ofLog() << "<app::mouseEntered> at (" << x << ", " << y << ")";
@@ -162,8 +159,8 @@ namespace ift3100 {
 		ofColor primitiveFillColorPreview = interface.primitiveFillColor;
 		primitiveFillColorPreview.a = 80;
 		// Draw transparent preview primitive for 1 frame
-		renderer.addPrimitive(interface.mousePos, interface.drawMode, 
-							interface.primitiveStrokeWidth, primitiveStrokeColorPreview, 
+		renderer.addPrimitive(interface.mousePos, interface.drawMode,
+							interface.primitiveStrokeWidth, primitiveStrokeColorPreview,
 							interface.primitiveFill, primitiveFillColorPreview, 1);
 		// Draw bounding box of drawing
 		renderer.addPrimitive(interface.mousePos, Rectangle, 1, ofColor(0, 80), false, ofColor::white, 1);

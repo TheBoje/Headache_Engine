@@ -13,7 +13,7 @@
 namespace ift3100 {
 	class Renderer {
 	public:
-		HierarchyContainer<VectorPrimitive> prims;
+		HierarchyContainer<VectorPrimitive> hierarchyPrimitives;
 
 		std::vector<std::shared_ptr<VectorPrimitive>> primitives{};
 		std::stack<VectorPrimitive> redoPrimitives{};
@@ -22,7 +22,7 @@ namespace ift3100 {
 		Curseur curseur;
 		ofEasyCam camera;
 
-		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type, 
+		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type,
 				float strokeWidth, ofColor strokeColor,
 				bool fill, ofColor fillColor, int ttl = -1);
 		void undoPrimitive();

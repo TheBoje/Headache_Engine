@@ -6,37 +6,36 @@ namespace ift3100 {
 		ofSetCircleResolution(32);
 		backgroundColor = ofColor::darkGray;
 		primitives.reserve(1000);
-		prims.setRoot(std::make_shared<VectorPrimitive>(ofVec4f(0, 0, 0, 0), PrimitiveType::Point, 0, ofColor(0), true, ofColor(0)));
+		hierarchyPrimitives.setRoot(std::make_shared<VectorPrimitive>(ofVec4f(0, 0, 0, 0), PrimitiveType::Point, 0, ofColor(0), true, ofColor(0)));
 		ofLog() << "<renderer::setup> done";
-
-
 	}
+
 	void Renderer::update() {
 		// Low framerate warning
 		if (ofGetFrameRate() < 5 && ofGetFrameNum() > 5) {
 			ofLog(OF_LOG_WARNING) << std::setprecision(2)
-			<< "<renderer::update> frame:" << ofGetFrameNum() 
+			<< "<renderer::update> frame:" << ofGetFrameNum()
 			<< " fps: " << ofGetFrameRate();
 		}
 	}
 
 	/**
 	 * Add a primitive in the render stack
-	 * 
+	 *
 	 * @param mousePos position top-left & bottom-right corners of primitive (from mouse position)
-	 * @param type type of primitive to draw. eg Line 
+	 * @param type type of primitive to draw. eg Line
 	 * @param strokeWidth
 	 * @param strokeColor
 	 * @param fill enable primitive filling
-	 * @param fillColor 
-	 * 
+	 * @param fillColor
+	 *
 	*/
 	void Renderer::addPrimitive(const ofVec4f& pos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor, int ttl) {
-		std::shared_ptr<VectorPrimitive> vect = std::make_shared<VectorPrimitive>(pos, type, strokeWidth, strokeColor, fill, fillColor, ttl, "child");
-		primitives.push_back(vect);
+		std::shared_ptr<VectorPrimitive> sharedPrimitive = std::make_shared<VectorPrimitive>(pos, type, strokeWidth, strokeColor, fill, fillColor, ttl, "child");
+		primitives.push_back(sharedPrimitive);
 
 		if(ttl == -1) {
-			prims.addChild(vect);
+			hierarchyPrimitives.addChild(sharedPrimitive);
 		}
 	}
 
@@ -46,7 +45,7 @@ namespace ift3100 {
 	void Renderer::undoPrimitive() {
 		// Remove last primitive and give it to redoPrimitive, serving as history stack
 		if (!primitives.empty()) {
-			VectorPrimitive p = *primitives.back(); 
+			VectorPrimitive p = *primitives.back();
 			primitives.pop_back();
 			redoPrimitives.push(p);
 		} else {
@@ -75,13 +74,13 @@ namespace ift3100 {
 				if (i == 0 && p->FILL) {
 					ofFill();
 					ofSetColor(p->FILL_COLOR);
-				} else { 
+				} else {
 					ofNoFill();
 					ofSetColor(p->STROKE_COLOR);
 				}
 
 				switch (p->getPrimitiveType()) {
-					case Point: 
+					case Point:
 						ofDrawRectRounded(p->POSITION_2 - (p->STROKE_WIDTH / 2.0f), p->STROKE_WIDTH, p->STROKE_WIDTH, DEFAULT_RECTANGLE_ROUNDING);
 						break;
 					case Line:
@@ -114,13 +113,11 @@ namespace ift3100 {
 			}
 			// Update time to live
 			p->TTL-=1;
-			// Update vector iterator
-			//p++;
 		}
 		// Remove ttl = 0 (dead) primitives
 		primitives.erase(std::remove_if(primitives.begin(), primitives.end(),
-		[](const std::shared_ptr<VectorPrimitive> p) { 
-			return p->TTL == 0; // put your condition here
+		[](const std::shared_ptr<VectorPrimitive> p) {
+			return p->TTL == 0;
 		}), primitives.end());
 
 		camera.begin();

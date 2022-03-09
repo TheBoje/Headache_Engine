@@ -19,10 +19,10 @@ namespace ift3100 {
      * @param T
      */
     template <class T>
-    class Hierarchy {        
-        static const ImGuiTreeNodeFlags NODE_FLAGS = 
-             ImGuiTreeNodeFlags_OpenOnArrow | 
-             ImGuiTreeNodeFlags_OpenOnDoubleClick | 
+    class Hierarchy {
+        static const ImGuiTreeNodeFlags NODE_FLAGS =
+             ImGuiTreeNodeFlags_OpenOnArrow |
+             ImGuiTreeNodeFlags_OpenOnDoubleClick |
              ImGuiTreeNodeFlags_SpanAvailWidth;
 
         std::shared_ptr<T> _ref;
@@ -35,10 +35,10 @@ namespace ift3100 {
     public:
         Hierarchy() : _ref(nullptr), _index(0) {}
 
-        Hierarchy(std::shared_ptr<T> ref, int index, Hierarchy<T> * parent = nullptr) : 
-            _ref(std::move(ref)), 
+        Hierarchy(std::shared_ptr<T> ref, int index, Hierarchy<T> * parent = nullptr) :
+            _ref(std::move(ref)),
             _index(index),
-            _parent(parent) 
+            _parent(parent)
         {}
 
         Hierarchy(const Hierarchy<T> &cpy) : _ref(cpy._ref), _index(cpy._index) {
@@ -51,8 +51,8 @@ namespace ift3100 {
         }
 
         /**
-         * @brief Delete the node and its children. Remove self from 
-         * the parent children vector. If the shared_ptr used for the 
+         * @brief Delete the node and its children. Remove self from
+         * the parent children vector. If the shared_ptr used for the
          * item is still used somewhere, will decrease by 1 is use_count.
          */
         ~Hierarchy() {
@@ -62,9 +62,9 @@ namespace ift3100 {
             for(std::size_t i = 0; i < children_size; i++) {
                 delete _children[0]; // Delete each time the first element because deleting child will remove itself from parent vector
             }
-            
-            // if this is not the root 
-            // will search and erase his occurence in the parent children vector
+
+            // If this is not the root
+            // search and erase his occurrence in the parent children vector
             if(_parent != nullptr) {
                 std::size_t i;
                 for(i = 0; i < _parent->_children.size(); i++) {
@@ -75,15 +75,15 @@ namespace ift3100 {
                 _parent->_children.erase(_parent->_children.begin() + i);
                 ofLog() << "<Hierarchy::drawGUIHierarchy> parent children size " << _parent->_children.size();
             }
-            
+
             _parent = nullptr;
-            _ref = nullptr; 
+            _ref = nullptr;
 
             ofLog() << "<Hierarchy::drawGUIHierarchy> delete node " << _index;
         }
 
         /**
-         * @brief Will destroy all children of the node
+         * @brief Delete all children of the node
          */
         void  clear() {
             std::size_t children_size = _children.size();
@@ -93,7 +93,7 @@ namespace ift3100 {
         }
 
         /**
-         * Will add a child to the current node
+         * @brief Add a child to the current node
          * @param child
          */
         void addChild(std::shared_ptr<T> child, int index) {
@@ -110,14 +110,14 @@ namespace ift3100 {
                 _children.reserve(children_size);
 
                 for (Hierarchy<T> *child : other._children) {
-                    _children.push_back(new Hierarchy<T>(*child));  
+                    _children.push_back(new Hierarchy<T>(*child));
                 }
             }
         }
 
         bool operator==(const Hierarchy<T>& h) const {
             return h._index == this->_index;
-        }   
+        }
 
         /**
          * @param index
@@ -133,17 +133,18 @@ namespace ift3100 {
         }
 
         /**
-         * @brief get the number of child for the current node
-         * 
-         * @return std::size_t 
+         * @brief Get the number of child for the current node
+         *
+         * @return std::size_t
          */
         std::size_t getChildrenSize() { return this->_children.size(); }
 
         /**
-         * @brief Will draw the hierarchy in the interface (need to be wrapped)
-         * around gui.begin() and gui.end() from ofxImGui. Will display the name
-         * of the name using the operator<< of the class T
-         * The templated class need to implemente the HierarchyItem interface in order
+         * @brief Draw the hierarchy in the interface (need to be wrapped)
+         * around gui.begin() and gui.end() from ofxImGui. Displays the name
+         * of the name using the operator<< of the class T.
+         *
+         * The templated class need to implement the HierarchyItem interface in order
          * to implement the toString method.
          * @see HierarchyItem.h
          * @see Interface.cpp
@@ -161,16 +162,16 @@ namespace ift3100 {
                 }
             }
 
-            bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)_index, flags, _ref->toString().c_str(), _index); 
+            bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)_index, flags, _ref->toString().c_str(), _index);
             if(node_open) {
 
                 if (ImGui::IsItemClicked()) {
-                    // will select the node if it is clicked and unselect it 
+                    // Select the node if it is clicked and unselect it
                     // when already selected and clicked with ctrl key pushed
                     if(selected_index == -1) {
                         selected.push_back(this);
                         ofLog() << "<Hierarchy::drawGUIHierarchy> select node " << _index;
-                    } else if(ImGui::GetIO().KeyCtrl) { 
+                    } else if(ImGui::GetIO().KeyCtrl) {
                         selected.erase(selected.begin() + selected_index);
                         ofLog() << "<Hierarchy::drawGUIHierarchy> unselect node " << _index;
                     }
@@ -179,7 +180,7 @@ namespace ift3100 {
                 // Recursion here, depth-first-search in prefix order
                 for(auto child : _children) {
                     child->drawGUIHierarchy(selected);
-                }                
+                }
 
                 ImGui::TreePop();
             }
@@ -187,7 +188,7 @@ namespace ift3100 {
         }
 
         /**
-         * Will apply "func" method to the node value and all its children (grand-children etc...)
+         * Apply "func" method to the node value and all its children (grand-children etc...)
          * Usefull for parent transformation.
          * @param func
          */
@@ -207,12 +208,11 @@ namespace ift3100 {
         }
 
         /**
-         * Move the index-th element of the node to the dest node.
-         * Will erase the branch from the node children and add it 
-         * to the end of the dest node.
-         * 
-         * @param index 
-         * @param dest 
+         * @brief Move the index-th element of the node to the dest node.
+         * Erase the branch from the node children and add it to the end of the dest node.
+         *
+         * @param index
+         * @param dest
          */
         void move(std::size_t index, Hierarchy<T> * dest) {
             dest->addChild(_children[index]);
@@ -223,9 +223,9 @@ namespace ift3100 {
 
         /**
          * Swap two children between them. Only available at the same depth.
-         * 
-         * @param srcIndex 
-         * @param destIndex 
+         *
+         * @param srcIndex
+         * @param destIndex
          */
         void swap(std::size_t srcIndex, std::size_t destIndex) {
             if(srcIndex == destIndex) return;
