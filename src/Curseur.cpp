@@ -13,23 +13,34 @@ void Curseur::sourisDep(int x, int y)
 }
 
 // fonction qui dessine un curseur
-void Curseur::dessiner_curseur(float x, float y) const
-{
+void Curseur::dessiner_curseur(float x, float y, const Interface::ModeCursor mode) const {
     // paramètres de dessin
     float length = 10.0f;
     float offset = 5.0f;
 
-    // dessiner le curseur en rouge si un des boutons du périphérique de pointage est appuyé
-    //if (is_mouse_button_pressed)
-    //    ofSetColor(255, 0, 0);
-    //else
-        ofSetColor(255,25,25);
+    ofSetColor(255, 0, 0);
+    switch (mode) {
+        case interface.Mode_Select:
+            // dessiner la forme vectorielle
+            ofDrawLine(x + offset, y, x + offset + length, y);
+            ofDrawLine(x - offset, y, x - offset - length, y);
+            ofDrawLine(x, y + offset, x, y + offset + length);
+            ofDrawLine(x, y - offset, x, y - offset - length);
+            break;
+        case interface.Mode_Move:
+            ofDrawLine(x + offset*2, y, x + offset + length, y);
+            ofDrawLine(x - offset*2, y, x - offset - length, y);
+            ofDrawLine(x, y + offset*2, x, y + offset + length);
+            ofDrawLine(x, y - offset*2, x, y - offset - length);
 
-    // dessiner la forme vectorielle
-    ofDrawLine(x + offset, y, x + offset + length, y);
-    ofDrawLine(x - offset, y, x - offset - length, y);
-    ofDrawLine(x, y + offset, x, y + offset + length);
-    ofDrawLine(x, y - offset, x, y - offset - length);
+            break;
+        case interface.Mode_Delete:
 
+            break;
+
+        default:
+            ofLog() << "<renderer::draw> unknown type of cursor";
+            break;
+    }
 }
 

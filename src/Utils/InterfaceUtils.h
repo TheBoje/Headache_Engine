@@ -3,7 +3,7 @@
 
 namespace ift3100 {
     // Available primitive to draw
-    enum PrimitiveType { Line, Rectangle, Ellipse };;
+    enum PrimitiveType { Line, Rectangle, Ellipse };
 
     // Supported mouse actions
     enum MouseAction { None, DrawPrimitive };

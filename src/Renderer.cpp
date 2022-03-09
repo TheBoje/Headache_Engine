@@ -5,6 +5,8 @@ namespace ift3100 {
 		ofSetFrameRate(60);
 		ofSetCircleResolution(32);
 		backgroundColor = ofColor::darkGray;
+        curseur.mouse_press_x = curseur.mouse_press_y = curseur.souris_courant_x = curseur.souris_courant_y = 0;
+        curseur.is_mouse_button_pressed = false;
 		ofLog() << "<renderer::setup> done";
 	}
 
@@ -80,7 +82,7 @@ namespace ift3100 {
 				ofNoFill();
 			}
 			ofSetLineWidth(p.strokeWidth);
-			switch (p.type) {
+            switch (p.type) {
 				case Line:
 					ofSetColor(p.strokeColor);
 					ofDrawLine(p.position1, p.position2);
@@ -113,7 +115,8 @@ namespace ift3100 {
 		// As ofFill / ofNoFill is modified with primitives
 		ofFill();
 
+
         //afficher le curseur
-        // curseur.dessiner_curseur(curseur.souris_courant_x, curseur.souris_courant_y);
+        curseur.dessiner_curseur(curseur.souris_courant_x, curseur.souris_courant_y, curseur.interface.optionCursor);
     }
 }

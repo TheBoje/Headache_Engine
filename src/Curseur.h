@@ -8,19 +8,29 @@
 #pragma once
 
 #include "ofMain.h"
+#include "Interface.h"
 
 namespace ift3100 {
-    class Curseur {
 
+
+    class Curseur {
     public:
+
+        Interface interface;
+
+        int choixCursor = interface.optionCursor;
+
+        int mouse_press_x;
+        int mouse_press_y;
 
         int souris_courant_x;
         int souris_courant_y;
 
-        void dessiner_curseur(float x, float y) const;
+        bool is_mouse_button_pressed;
+
+        void dessiner_curseur(float x, float y, Interface::ModeCursor) const;
 
         void sourisDep(int x, int y);
-
     };
 }
 

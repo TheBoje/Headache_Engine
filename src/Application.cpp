@@ -61,6 +61,9 @@ namespace ift3100 {
 	void Application::mouseMoved(int x, int y) {
 		interface.mousePos.x = x;
 		interface.mousePos.y = y;
+        renderer.curseur.souris_courant_x = x;
+        renderer.curseur.souris_courant_y = y;
+
 	}
 
 	void Application::mouseDragged(int x, int y, int button) {
