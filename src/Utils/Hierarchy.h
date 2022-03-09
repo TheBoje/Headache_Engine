@@ -71,13 +71,10 @@ namespace ift3100 {
                 }
 
                 _parent->_children.erase(_parent->_children.begin() + i);
-                ofLog() << "<Hierarchy::drawGUIHierarchy> parent children size " << _parent->_children.size();
             }
 
             _parent = nullptr;
             _ref = nullptr;
-
-            ofLog() << "<Hierarchy::drawGUIHierarchy> delete node " << _index;
         }
 
         /**
@@ -166,10 +163,10 @@ namespace ift3100 {
                 // when already selected and clicked with ctrl key pushed
                 if(selected_index == -1) {
                     selected.push_back(this);
-                    ofLog() << "<Hierarchy::drawGUIHierarchy> select node " << _index;
+                    IFT_LOG << "selected node: " << _index;
                 } else if(ImGui::GetIO().KeyCtrl) {
                     selected.erase(selected.begin() + selected_index);
-                    ofLog() << "<Hierarchy::drawGUIHierarchy> unselect node " << _index;
+                    IFT_LOG << "unselect node: " << _index;
                 }
             }
             if(node_open) {
