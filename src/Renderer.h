@@ -6,6 +6,7 @@
 #include "InterfaceUtils.h"
 #include "Constant.h"
 #include "VectorPrimitive.h"
+#include "ofxAssimpModelLoader.h"
 
 
 namespace ift3100 {
@@ -17,6 +18,7 @@ namespace ift3100 {
 
 		Curseur curseur;
 		ofEasyCam camera;
+		ofxAssimpModelLoader jarjar;
 
 		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type, 
 				float strokeWidth, ofColor strokeColor,

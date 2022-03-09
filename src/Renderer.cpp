@@ -6,6 +6,7 @@ namespace ift3100 {
 		ofSetCircleResolution(32);
 		backgroundColor = ofColor::darkGray;
 		primitives.reserve(1000);
+		jarjar.loadModel("armadillo.obj", true);
 		ofLog() << "<renderer::setup> done";
 	}
 
@@ -115,11 +116,11 @@ namespace ift3100 {
 		[](const VectorPrimitive& p) { 
 			return p.TTL == 0; // put your condition here
 		}), primitives.end());
-
 		camera.begin();
 		// As ofFill / ofNoFill is modified with primitives
-		ofNoFill();
-		ofSetColor(ofColor::red);
+		ofFill();
+		ofColor(ofColor::black);
+		jarjar.draw(OF_MESH_FILL);
         //afficher le curseur
         // curseur.dessiner_curseur(curseur.souris_courant_x, curseur.souris_courant_y);
 		camera.end();
