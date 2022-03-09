@@ -53,8 +53,8 @@ namespace ift3100
             CURRENT_INDEX++;
         }
 
-        void drawGUI() {
-            _root.drawGUIHierarchy(selected_nodes);
+        void drawUI() {
+            _root.drawUI(selected_nodes);
         }
     };
 } // namespace ift3100

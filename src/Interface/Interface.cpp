@@ -107,7 +107,7 @@ void Interface::draw() {
         }
 
         if(ImGui::CollapsingHeader("Tree")) {
-            application.renderer.hierarchyPrimitives.drawGUI();
+            application.renderer.hierarchyPrimitives.drawUI();
         }
 
         if (ImGui::CollapsingHeader("Drawing")) {

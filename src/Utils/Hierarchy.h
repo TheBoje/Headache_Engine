@@ -21,9 +21,9 @@ namespace ift3100 {
     template <class T>
     class Hierarchy {
         static const ImGuiTreeNodeFlags NODE_FLAGS =
-             ImGuiTreeNodeFlags_OpenOnArrow |
-             ImGuiTreeNodeFlags_OpenOnDoubleClick |
-             ImGuiTreeNodeFlags_SpanAvailWidth;
+            ImGuiTreeNodeFlags_OpenOnArrow |
+            ImGuiTreeNodeFlags_OpenOnDoubleClick |
+            ImGuiTreeNodeFlags_SpanAvailWidth;
 
         std::shared_ptr<T> _ref;
 
@@ -149,7 +149,7 @@ namespace ift3100 {
          * @see HierarchyItem.h
          * @see Interface.cpp
          */
-        void drawGUIHierarchy(std::vector<Hierarchy<T>*> & selected) {
+        void drawUI(std::vector<Hierarchy<T>*> & selected) {
             // check if the node is selected and apply the flag if true
             ImGuiTreeNodeFlags flags = NODE_FLAGS;
             int selected_index = -1;
@@ -179,7 +179,7 @@ namespace ift3100 {
 
                 // Recursion here, depth-first-search in prefix order
                 for(auto child : _children) {
-                    child->drawGUIHierarchy(selected);
+                    child->drawUI(selected);
                 }
 
                 ImGui::TreePop();
