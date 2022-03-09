@@ -44,14 +44,14 @@ void Interface::imageUI() {
         ImGui::PlotHistogram("G", &getter, _rgb[1], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
         ImGui::PlotHistogram("B", &getter, _rgb[2], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
     }
-    
+
 
     ImGui::InputText("Output file name", imageRenderName, IM_ARRAYSIZE(imageRenderName));
     if (ImGui::Button("Export")) {
         application.exportRender(std::string(imageRenderName));
     }
 
-    if(image.isAllocated()) 
+    if(image.isAllocated())
         ImGui::Image((ImTextureID)(uintptr_t)textureSourceID, ImVec2(textureSource.getWidth()/ 4, textureSource.getHeight()/4));
 }
 
@@ -64,7 +64,7 @@ void Interface::drawingUI() {
             if (ImGui::Selectable(items[n], is_selected))
                 drawModeCurrentIndex = n;
             if (is_selected)
-                ImGui::SetItemDefaultFocus();  
+                ImGui::SetItemDefaultFocus();
         }
         ImGui::EndCombo();
     }
@@ -107,7 +107,7 @@ void Interface::draw() {
         }
 
         if(ImGui::CollapsingHeader("Tree")) {
-            application.renderer.prims.drawGUI();
+            application.renderer.hierarchyPrimitives.drawGUI();
         }
 
         if (ImGui::CollapsingHeader("Drawing")) {
