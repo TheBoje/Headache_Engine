@@ -70,6 +70,7 @@ namespace ift3100 {
 		ofSetBackgroundColor(backgroundColor);
 		// Draw primitives based on their data
 		for (auto p : primitives) {
+			ofSetLineWidth(p->STROKE_WIDTH);
 			for (int i = 0; i < 2; i++) {
 				if (i == 0 && p->FILL) {
 					ofFill();
