@@ -6,28 +6,27 @@ namespace ift3100 {
 		ofSetCircleResolution(32);
 		backgroundColor = ofColor::darkGray;
 		primitives.reserve(1000);
-		ofLog() << "<renderer::setup> done";
+		IFT_LOG << "done";
 	}
 
 	void Renderer::update() {
 		// Low framerate warning
 		if (ofGetFrameRate() < 5 && ofGetFrameNum() > 5) {
-			ofLog(OF_LOG_WARNING) << std::setprecision(2)
-			<< "<renderer::update> frame:" << ofGetFrameNum() 
+			IFT_LOG_WARNING << std::setprecision(2)
+			<< "<renderer::update> frame:" << ofGetFrameNum()
 			<< " fps: " << ofGetFrameRate();
 		}
 	}
 
 	/**
 	 * Add a primitive in the render stack
-	 * 
+	 *
 	 * @param mousePos position top-left & bottom-right corners of primitive (from mouse position)
-	 * @param type type of primitive to draw. eg Line 
+	 * @param type type of primitive to draw. eg Line
 	 * @param strokeWidth
 	 * @param strokeColor
 	 * @param fill enable primitive filling
-	 * @param fillColor 
-	 * 
+	 * @param fillColor
 	*/
 	void Renderer::addPrimitive(const ofVec4f& pos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor, int ttl) {
 		primitives.push_back(VectorPrimitive(pos, type, strokeWidth, strokeColor, fill, fillColor, ttl));
@@ -39,11 +38,11 @@ namespace ift3100 {
 	void Renderer::undoPrimitive() {
 		// Remove last primitive and give it to redoPrimitive, serving as history stack
 		if (!primitives.empty()) {
-			VectorPrimitive p = primitives.back(); 
+			VectorPrimitive p = primitives.back();
 			primitives.pop_back();
 			redoPrimitives.push(p);
 		} else {
-			ofLog() << "<renderer::undoPrimitive> nothing to undo";
+			IFT_LOG << "nothing to undo";
 		}
 	}
 
@@ -56,7 +55,7 @@ namespace ift3100 {
 			primitives.push_back(redoPrimitives.top());
 			redoPrimitives.pop();
 		} else {
-			ofLog() << "<renderer::redoPrimitive> nothing to redo";
+			IFT_LOG << "nothing to redo";
 		}
 	}
 
@@ -68,13 +67,13 @@ namespace ift3100 {
 				if (i == 0 && p->FILL) {
 					ofFill();
 					ofSetColor(p->FILL_COLOR);
-				} else { 
+				} else {
 					ofNoFill();
 					ofSetColor(p->STROKE_COLOR);
 				}
 
 				switch (p->getPrimitiveType()) {
-					case Point: 
+					case Point:
 						ofDrawRectRounded(p->POSITION_2 - (p->STROKE_WIDTH / 2.0f), p->STROKE_WIDTH, p->STROKE_WIDTH, DEFAULT_RECTANGLE_ROUNDING);
 						break;
 					case Line:
@@ -112,7 +111,7 @@ namespace ift3100 {
 		}
 		// Remove ttl = 0 (dead) primitives
 		primitives.erase(std::remove_if(primitives.begin(), primitives.end(),
-		[](const VectorPrimitive& p) { 
+		[](const VectorPrimitive& p) {
 			return p.TTL == 0; // put your condition here
 		}), primitives.end());
 

@@ -1,6 +1,4 @@
 #include "Interface.h"
-#include "ofImage.h"
-#include "ImageUtils.h"
 #include "Application.h"
 
 using namespace ift3100;
@@ -21,7 +19,7 @@ void Interface::setup() {
 
     isHistComputed = false;
 
-    ofLog() << "<interface::setup> done";
+    IFT_LOG << "done";
 }
 
 float getter(void * data, int index) {
@@ -44,14 +42,13 @@ void Interface::imageUI() {
         ImGui::PlotHistogram("G", &getter, _rgb[1], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
         ImGui::PlotHistogram("B", &getter, _rgb[2], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
     }
-    
 
     ImGui::InputText("Output file name", imageRenderName, IM_ARRAYSIZE(imageRenderName));
     if (ImGui::Button("Export")) {
         application.exportRender(std::string(imageRenderName));
     }
 
-    if(image.isAllocated()) 
+    if(image.isAllocated())
         ImGui::Image((ImTextureID)(uintptr_t)textureSourceID, ImVec2(textureSource.getWidth()/ 4, textureSource.getHeight()/4));
 }
 
@@ -64,7 +61,7 @@ void Interface::drawingUI() {
             if (ImGui::Selectable(items[n], is_selected))
                 drawModeCurrentIndex = n;
             if (is_selected)
-                ImGui::SetItemDefaultFocus();  
+                ImGui::SetItemDefaultFocus();
         }
         ImGui::EndCombo();
     }
@@ -114,9 +111,4 @@ void Interface::draw() {
         }
     }
     _gui.end();
-}
-
-void Interface::button_pressed()
-{
-    ofLog() << "<interface::button_pressed>";
 }

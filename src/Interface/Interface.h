@@ -7,6 +7,9 @@
 #include "InterfaceUtils.h"
 #include "Hierarchy.h"
 #include "Renderer.h"
+#include "ofImage.h"
+#include "ImageUtils.h"
+#include "Logger.h"
 
 #include <string.h>
 
@@ -31,7 +34,7 @@ class Interface {
         MouseAction mouseAction = None;
 
         ofTexture textureSource;
-        GLuint textureSourceID; 
+        GLuint textureSourceID;
         ofImage image;
         bool isHistComputed;
         char imageRenderName[64];

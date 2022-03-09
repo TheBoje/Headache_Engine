@@ -6,6 +6,7 @@
 #include "InterfaceUtils.h"
 #include "Constant.h"
 #include "VectorPrimitive.h"
+#include "Logger.h"
 
 
 namespace ift3100 {
@@ -18,7 +19,7 @@ namespace ift3100 {
 		Curseur curseur;
 		ofEasyCam camera;
 
-		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type, 
+		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type,
 				float strokeWidth, ofColor strokeColor,
 				bool fill, ofColor fillColor, int ttl = -1);
 		void undoPrimitive();

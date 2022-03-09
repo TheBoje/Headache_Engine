@@ -2,18 +2,23 @@
 #define APPLICATION_H
 
 #include "ofMain.h"
-#include "Renderer.h"
 #include "Interface.h"
+#include "Renderer.h"
 #include "Curseur.h"
+#include "ImageUtils.h"
+#include "Hierarchy.h"
+#include "Logger.h"
+
 
 namespace ift3100 {
 	class Application : public ofBaseApp {
 	public:
-	Application();
 	Renderer renderer;
     Interface interface;
 
 	bool isMouseDown;
+
+	Application();
 
 	void setup();
 	void update();
