@@ -31,7 +31,7 @@ namespace ift3100 {
         std::vector<Hierarchy<T> *> _children;
 
     public:
-        Hierarchy() : _ref(nullptr), _index(0) {}
+        Hierarchy() : _ref(nullptr), _index(0), _parent(nullptr) {}
 
         Hierarchy(std::shared_ptr<T> ref, int index, Hierarchy<T> * parent = nullptr) :
             _ref(std::move(ref)),
