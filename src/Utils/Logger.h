@@ -18,12 +18,15 @@ namespace ift3100 {
     // - FATAL
     
     // Usage :
-    // IF_LOG_{LOGLEVEL}("your message in here" + "concatenation works or %s text too", "formatted");
+    // IFT_LOG_{LEVEL} << "your message in here" << "concatenation works or " << " text too"
 
-    #define IFT_LOG_NOTICE(...)  ofLog(OF_LOG_NOTICE,      "<%s::%s::%d> %s", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__)
-    #define IFT_LOG_WARNING(...) ofLog(OF_LOG_WARNING,     "<%s::%s::%d> %s", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__)
-    #define IFT_LOG_ERROR(...)   ofLog(OF_LOG_ERROR,       "<%s::%s::%d> %s", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__)
-    #define IFT_LOG_FATAL(...)   ofLog(OF_LOG_FATAL_ERROR, "<%s::%s::%d> %s", __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__)
+    #define FORMAT_STREAM "<" << __FILENAME__ << "::" << __FUNCTION__ << "::" << __LINE__ << "> "
+
+    #define IFT_LOG              ofLogNotice()     << FORMAT_STREAM
+    #define IFT_LOG_WARNING      ofLogWarning()    << FORMAT_STREAM
+    #define IFT_LOG_ERROR        ofLogError()      << FORMAT_STREAM
+    #define IFT_LOG_FATAL        ofLogFatalError() << FORMAT_STREAM
+
 }
 
 #endif
