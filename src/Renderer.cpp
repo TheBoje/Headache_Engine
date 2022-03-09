@@ -7,13 +7,13 @@ namespace ift3100 {
 		backgroundColor = ofColor::darkGray;
 		primitives.reserve(1000);
 		hierarchyPrimitives.setRoot(std::make_shared<VectorPrimitive>(ofVec4f(0, 0, 0, 0), PrimitiveType::Point, 0, ofColor(0), true, ofColor(0)));
-		ofLog() << "<renderer::setup> done";
+		IFT_LOG << "done";
 	}
 
 	void Renderer::update() {
 		// Low framerate warning
 		if (ofGetFrameRate() < 5 && ofGetFrameNum() > 5) {
-			ofLog(OF_LOG_WARNING) << std::setprecision(2)
+			IFT_LOG_WARNING << std::setprecision(2)
 			<< "<renderer::update> frame:" << ofGetFrameNum()
 			<< " fps: " << ofGetFrameRate();
 		}
@@ -28,7 +28,6 @@ namespace ift3100 {
 	 * @param strokeColor
 	 * @param fill enable primitive filling
 	 * @param fillColor
-	 *
 	*/
 	void Renderer::addPrimitive(const ofVec4f& pos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor, int ttl) {
 		std::shared_ptr<VectorPrimitive> sharedPrimitive = std::make_shared<VectorPrimitive>(pos, type, strokeWidth, strokeColor, fill, fillColor, ttl, "child");
@@ -49,7 +48,7 @@ namespace ift3100 {
 			primitives.pop_back();
 			redoPrimitives.push(p);
 		} else {
-			ofLog() << "<renderer::undoPrimitive> nothing to undo";
+			IFT_LOG << "nothing to undo";
 		}
 	}
 
@@ -62,7 +61,7 @@ namespace ift3100 {
 			primitives.push_back(std::make_shared<VectorPrimitive>(redoPrimitives.top()));
 			redoPrimitives.pop();
 		} else {
-			ofLog() << "<renderer::redoPrimitive> nothing to redo";
+			IFT_LOG << "nothing to redo";
 		}
 	}
 

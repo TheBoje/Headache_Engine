@@ -8,6 +8,8 @@
 #include "VectorPrimitive.h"
 #include "HierarchyItem.h"
 #include "HierarchyContainer.h"
+#include "Logger.h"
+
 
 
 namespace ift3100 {

@@ -1,6 +1,4 @@
 #include "Interface.h"
-#include "ofImage.h"
-#include "ImageUtils.h"
 #include "Application.h"
 
 using namespace ift3100;
@@ -22,7 +20,7 @@ void Interface::setup() {
 
     isHistComputed = false;
 
-    ofLog() << "<interface::setup> done";
+    IFT_LOG << "done";
 }
 
 float getter(void * data, int index) {
@@ -45,7 +43,6 @@ void Interface::imageUI() {
         ImGui::PlotHistogram("G", &getter, _rgb[1], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
         ImGui::PlotHistogram("B", &getter, _rgb[2], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
     }
-
 
     ImGui::InputText("Output file name", imageRenderName, IM_ARRAYSIZE(imageRenderName));
     if (ImGui::Button("Export")) {
@@ -116,9 +113,4 @@ void Interface::draw() {
         }
     }
     _gui.end();
-}
-
-void Interface::button_pressed()
-{
-    ofLog() << "<interface::button_pressed>";
 }

@@ -8,6 +8,10 @@
 #include "Hierarchy.h"
 #include "Renderer.h"
 #include "Theme.h"
+#include "ofImage.h"
+#include "ImageUtils.h"
+#include "Logger.h"
+
 #include <string.h>
 
 namespace ift3100 {

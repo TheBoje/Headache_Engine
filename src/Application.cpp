@@ -1,7 +1,4 @@
 #include "Application.h"
-#include "ImageUtils.h"
-#include "Hierarchy.h"
-
 namespace ift3100 {
 	// Create application, and give interface a reference of itself
 	Application::Application() : interface(*this) {}
@@ -14,7 +11,7 @@ namespace ift3100 {
         interface.setup();
 		renderer.setup();
 
-		ofLog() << "<app::setup> done";
+		IFT_LOG << "done";
 	}
 
 	// fonction de mise à jour de la logique de l'application
@@ -46,20 +43,13 @@ namespace ift3100 {
 
 	// fonction appelée juste avant de quitter l'application
 	void Application::exit() {
-        ofLog() << "<app::exit>";
+        IFT_LOG;
 	}
 
 	void Application::keyReleased(int key) {
-		ofLog() << "<app::keyReleased: " << key << ">";
-
 		if (key == ' ') {
 			ift3100::ImageUtils::exportImage("render.png");
 		}
-        // if (key == 117) // touche u
-        // {
-        //     interface.checkbox = !interface.checkbox;
-        //     ofLog() << "<toggle ui: " << interface.checkbox << ">";
-        // }
 	}
 
 	void Application::keyPressed(int key) {
@@ -123,31 +113,29 @@ namespace ift3100 {
 			case None:
 				break;
 			default:
-				ofLog() << "<app::mouseReleased> Mouse Action:" << interface.mouseAction << " unknown";
+				IFT_LOG << "Mouse Action:" << interface.mouseAction << " unknown";
 				break;
 		};
 	}
 
 
 	void Application::mouseEntered(int x, int y) {
-		ofLog() << "<app::mouseEntered> at (" << x << ", " << y << ")";
 		interface.mousePos.x = x;
 		interface.mousePos.y = y;
 	}
 
 	void Application::mouseExited(int x, int y) {
-		ofLog() << "<app::mouseExited> at (" << x << ", " << y << ")";
 		interface.mousePos.x = x;
 		interface.mousePos.y = y;
 	}
 
 	void Application::dragEvent(ofDragInfo dragInfo) {
-		ofLog() << "<app::ofDragInfo> " << dragInfo.files.at(0);
+		IFT_LOG << dragInfo.files.at(0);
 		interface.loadImage(dragInfo.files.at(0));
 	}
 
     void Application::windowResized(int w, int h) {
-        ofLog() << "<app::windowResized: (" << w << ", " << h << ")>";
+        IFT_LOG << "(" << w << ", " << h << ")";
     }
 
 	void Application::drawPrimitivePreview() {
