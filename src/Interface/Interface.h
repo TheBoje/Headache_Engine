@@ -30,6 +30,7 @@ class Interface {
         ImVec4 primitiveStrokeColor; // Dont question it.
         bool primitiveFill;
         ImVec4 primitiveFillColor; // Forget it.
+        ImVec2 primitivePosition;
 
 
         PrimitiveType drawMode;
@@ -47,6 +48,7 @@ class Interface {
         void loadImage(std::string path);
         void imageUI();
         void drawingUI();
+        void drawInspector();
         void draw();
         void button_pressed();
     };

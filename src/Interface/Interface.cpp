@@ -1,3 +1,5 @@
+#include <string>
+
 #include "Interface.h"
 #include "Application.h"
 
@@ -87,6 +89,44 @@ void Interface::drawingUI() {
     }
 }
 
+void Interface::drawInspector() {
+    std::vector<Hierarchy<VectorPrimitive> *> * vvp = &application.renderer.hierarchyPrimitives.selected_nodes;
+    std::size_t vvp_size = vvp->size(); 
+    ImVec2 sum(0, 0);
+    for(auto node : *vvp) {
+        sum = sum + (node->getRef()->POSITION_1 + node->getRef()->POSITION_2)/2;
+    }
+    primitivePosition.x = sum.x / vvp_size;
+    primitivePosition.y = sum.y / vvp_size;
+
+    char bufx[64] = "";
+    strcpy(bufx, std::to_string(primitivePosition.x).c_str());
+    
+    if(ImGui::InputText("x", bufx, 64, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_EnterReturnsTrue)) {
+        float disp = atof(bufx) - primitivePosition.x;
+        
+        for(auto node : *vvp) {
+            node->map([=](std::shared_ptr<VectorPrimitive> vp) {
+                vp->POSITION_1.x += disp;
+                vp->POSITION_2.x += disp;
+            });
+        }
+    }
+    
+    char bufy[64] = "";
+    strcpy(bufy, std::to_string(primitivePosition.y).c_str());
+    if(ImGui::InputText("y", bufy, 64, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_EnterReturnsTrue)) {
+        float disp = atof(bufx) - primitivePosition.y;
+        
+        for(auto node : *vvp) {
+            node->map([=](std::shared_ptr<VectorPrimitive> vp) {
+                vp->POSITION_1.y += disp;
+                vp->POSITION_2.y += disp;
+            });
+        }
+    }
+}
+
 
 void Interface::draw() {
     _gui.begin();
@@ -110,6 +150,13 @@ void Interface::draw() {
 
         if (ImGui::CollapsingHeader("Drawing")) {
             drawingUI();
+        }
+    }
+
+    if(!application.renderer.hierarchyPrimitives.selected_nodes.empty()) {
+        ImGui::Begin("Inspector"); 
+        {
+            drawInspector();
         }
     }
     _gui.end();
