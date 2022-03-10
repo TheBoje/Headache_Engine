@@ -12,6 +12,8 @@ void Interface::setup() {
     _gui.setTheme(new Theme());
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
+    inspector.setup();
+
     primitiveStrokeWidth = DEFAULT_STROKE_WIDTH;
     primitiveStrokeColor = ofColor::white;
     primitiveStrokeColor.w = 1;
@@ -89,55 +91,6 @@ void Interface::drawingUI() {
     }
 }
 
-void Interface::drawInspector() {
-    std::vector<Hierarchy<VectorPrimitive> *> * vvp = &application.renderer.hierarchyPrimitives.selected_nodes;
-    std::size_t vvp_size = vvp->size(); 
-    ImVec2 sum(0, 0);
-    for(auto node : *vvp) {
-        sum = sum + (node->getRef()->POSITION_1 + node->getRef()->POSITION_2)/2;
-    }
-    primitivePosition.x = sum.x / vvp_size;
-    primitivePosition.y = sum.y / vvp_size;
-
-    char bufx[64] = "";
-    strcpy(bufx, std::to_string(primitivePosition.x).c_str());
-    
-    if(ImGui::InputText("x", bufx, 64, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_EnterReturnsTrue)) {
-        IFT_LOG << "Change x value to " << bufx;
-        float disp = atof(bufx) - primitivePosition.x;
-        
-        for(auto node : *vvp) {
-            node->map([=](std::shared_ptr<VectorPrimitive> vp) {
-                vp->POSITION_1.x += disp;
-                vp->POSITION_2.x += disp;
-            });
-        }
-    }
-    
-    char bufy[64] = "";
-    strcpy(bufy, std::to_string(primitivePosition.y).c_str());
-    if(ImGui::InputText("y", bufy, 64, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_EnterReturnsTrue)) {
-        IFT_LOG << "Change y value to " << bufy;
-        float disp = atof(bufx) - primitivePosition.y;
-        
-        for(auto node : *vvp) {
-            node->map([=](std::shared_ptr<VectorPrimitive> vp) {
-                vp->POSITION_1.y += disp;
-                vp->POSITION_2.y += disp;
-            });
-        }
-    }
-
-    char name[64] = "";
-    strcpy(name, vvp->at(0)->getRef()->NAME.c_str());
-    if(ImGui::InputText("Name", name, 64, ImGuiInputTextFlags_EnterReturnsTrue)) {
-        for(auto node : *vvp) {
-            node->getRef()->NAME = name;
-        }
-    }
-}
-
-
 void Interface::draw() {
     _gui.begin();
     ImGui::Begin("Main menu");
@@ -166,7 +119,7 @@ void Interface::draw() {
     if(!application.renderer.hierarchyPrimitives.selected_nodes.empty()) {
         ImGui::Begin("Inspector"); 
         {
-            drawInspector();
+            inspector.drawInspectorVectorPrimitive(&application.renderer.hierarchyPrimitives.selected_nodes);
         }
     }
     _gui.end();

@@ -11,6 +11,7 @@
 #include "ofImage.h"
 #include "ImageUtils.h"
 #include "Logger.h"
+#include "InspectorInterface.h"
 
 #include <string.h>
 
@@ -19,6 +20,8 @@ class Application;
 class Interface {
     public:
         Application& application; // Reference to main application for callbacks
+
+        InspectorInterface inspector;
 
         ofxImGui::Gui _gui;
         Theme theme;
@@ -30,7 +33,6 @@ class Interface {
         ImVec4 primitiveStrokeColor; // Dont question it.
         bool primitiveFill;
         ImVec4 primitiveFillColor; // Forget it.
-        ImVec2 primitivePosition;
 
 
         PrimitiveType drawMode;
