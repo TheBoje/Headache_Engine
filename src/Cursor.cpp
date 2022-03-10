@@ -4,8 +4,8 @@
 using namespace ift3100;
 
 void Cursor::setup(){
-    cursorDefault.load("default.png");
-    cursorDraw.load("draw.png");
+    cursorDefault.load("../../data/default.png");
+    cursorDraw.load("../../data/draw.png");
 }
 
 // fonction qui dessine un curseur
