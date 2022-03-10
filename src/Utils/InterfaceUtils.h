@@ -56,6 +56,20 @@ namespace ift3100 {
                 default:
                     IFT_LOG << "unknown primitive type " << pt << ", returning Line";
                     return "Line";
+
+        static const char * MouseActionToChar(MouseAction action) {
+            switch (action) {
+                case None:
+                    return "None";
+                case DrawPrimitive:
+                    return "DrawPrimitive";
+                /* NOTE: as some usage of this function requires certitude of
+                * output, default is required. Please don't forget to implement this
+                * when adding new MouseAction actions!
+                */
+                default:
+                    ofLog(OF_LOG_WARNING) << "<InterfaceUtils::MouseActionToChar> unknown mouse action" << action << ", please update me.";
+                    return "";
             }
         }
     };

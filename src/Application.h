@@ -3,18 +3,19 @@
 
 #include "ofMain.h"
 #include "Interface.h"
+#include "Cursor.h"
 #include "Renderer.h"
 #include "Curseur.h"
 #include "ImageUtils.h"
 #include "Hierarchy.h"
 #include "Logger.h"
 
-
 namespace ift3100 {
 	class Application : public ofBaseApp {
 	public:
 	Renderer renderer;
     Interface interface;
+	Cursor cursor;
 
 	bool isMouseDown;
 

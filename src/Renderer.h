@@ -2,7 +2,8 @@
 #define RENDERER_H
 
 #include "ofMain.h"
-#include "Curseur.h"
+#include "Interface.h"
+#include "Cursor.h"
 #include "InterfaceUtils.h"
 #include "Constant.h"
 #include "VectorPrimitive.h"
