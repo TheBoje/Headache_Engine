@@ -1,5 +1,5 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#ifndef RENDERER_2D_H
+#define RENDERER_2D_H
 
 #include "ofMain.h"
 #include "Curseur.h"
@@ -14,18 +14,20 @@
 
 
 namespace ift3100 {
-	class Renderer {
+	class Application;
+	class Renderer2D {
 	public:
-		HierarchyContainer<VectorPrimitive> hierarchyPrimitives;
+		Application& application;
 
+		HierarchyContainer<VectorPrimitive> hierarchyPrimitives;
 		std::vector<std::shared_ptr<VectorPrimitive>> primitives{};
 		std::stack<VectorPrimitive> redoPrimitives{};
+
 		ofColor backgroundColor;
 
 		Curseur curseur;
-		ofEasyCam camera;
-		ofxAssimpModelLoader jarjar;
 
+		Renderer2D(Application& _application);
 		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type,
 				float strokeWidth, ofColor strokeColor,
 				bool fill, ofColor fillColor, int ttl = -1);
@@ -37,4 +39,4 @@ namespace ift3100 {
 	};
 }
 
-#endif // !RENDERER_H
+#endif // !RENDERER_2D_H

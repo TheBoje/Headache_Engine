@@ -1,7 +1,8 @@
 #include "Application.h"
 namespace ift3100 {
-	// Create application, and give interface a reference of itself
-	Application::Application() : interface(*this) {}
+	// Create application, and give interface and renderers a reference of itself
+	Application::Application() : interface(*this), renderer2D(*this) {}
+	Application::~Application() {}
 
 	// fonction d'initialisation de l'application
 	void Application::setup() {
@@ -9,35 +10,23 @@ namespace ift3100 {
 
 		isMouseDown = false;
         interface.setup();
-		renderer.setup();
+		renderer2D.setup();
 
 		IFT_LOG << "done";
 	}
 
 	// fonction de mise à jour de la logique de l'application
 	void Application::update() {
-        renderer.update();
+        renderer2D.update();
 
 		if (isMouseDown && interface.mouseAction == DrawPrimitive) {
 			drawPrimitivePreview();
-		}
-
-		if(!renderer.hierarchyPrimitives.selected_nodes.empty()) {
-			for(Hierarchy<VectorPrimitive> * selected : renderer.hierarchyPrimitives.selected_nodes) {
-				selected->map([=](std::shared_ptr<VectorPrimitive> p)
-				{
-					p->FILL = interface.primitiveFill;
-					p->FILL_COLOR = interface.primitiveFillColor;
-					p->STROKE_WIDTH = interface.primitiveStrokeWidth;
-					p->STROKE_COLOR = interface.primitiveStrokeColor;
-				});
-			}
 		}
 	}
 
 	// fonction de mise à jour du rendu de la fenêtre d'affichage de l'application
 	void Application::draw() {
-        renderer.draw();
+        renderer2D.draw();
 		interface.draw();
 	}
 
@@ -55,20 +44,20 @@ namespace ift3100 {
 	void Application::keyPressed(int key) {
 		if(key == OF_KEY_DEL) {
 			// Delete each selected VectorPrimitive in hierarchy
-			for(Hierarchy<VectorPrimitive> * selected : renderer.hierarchyPrimitives.selected_nodes) {
-				if(renderer.hierarchyPrimitives.isRoot(*selected))
-					renderer.hierarchyPrimitives.clear();
+			for(Hierarchy<VectorPrimitive> * selected : renderer2D.hierarchyPrimitives.selected_nodes) {
+				if(renderer2D.hierarchyPrimitives.isRoot(*selected))
+					renderer2D.hierarchyPrimitives.clear();
 				else
 					delete selected;
 			}
 
-			for (auto it = renderer.primitives.begin(); it != renderer.primitives.end(); it++) {
+			for (auto it = renderer2D.primitives.begin(); it != renderer2D.primitives.end(); it++) {
 				// remove shared_ptr that are only in the primitives vector (meaning that there are not in the hierarchy)
 				if (it->use_count() == 1) {
-					renderer.primitives.erase(it--);
+					renderer2D.primitives.erase(it--);
 				}
 			}
-			renderer.hierarchyPrimitives.selected_nodes.clear();
+			renderer2D.hierarchyPrimitives.selected_nodes.clear();
 		}
 	}
 
@@ -88,9 +77,9 @@ namespace ift3100 {
 		interface.mousePos.z = x;
 		interface.mousePos.w = y;
 		isMouseDown = true;
-		if (interface.mouseAction != None) {
-			renderer.camera.disableMouseInput();
-		}
+		// if (interface.mouseAction != None) {
+		// 	renderer2D.camera.disableMouseInput();
+		// }
 	}
 
 	void Application::mouseReleased(int x, int y, int button) {
@@ -98,15 +87,15 @@ namespace ift3100 {
 		interface.mousePos.y = y;
 		//renderer.camera.getGlobalTransformMatrix()
 		isMouseDown = false;
-		if (interface.mouseAction != None) {
-			renderer.camera.enableMouseInput();
-		}
+		// if (interface.mouseAction != None) {
+		// 	renderer2D.camera.enableMouseInput();
+		// }
 		// Don't draw anything if clicking on the UI - one of these flag will be triggered
 		if (ImGui::IsAnyWindowFocused() || ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered()) return;
 		// Call proper render method based on UI state / mouse action
 		switch (interface.mouseAction) {
 			case DrawPrimitive:
-				renderer.addPrimitive(interface.mousePos, interface.drawMode,
+				renderer2D.addPrimitive(interface.mousePos, interface.drawMode,
 									interface.primitiveStrokeWidth, interface.primitiveStrokeColor,
 									interface.primitiveFill, interface.primitiveFillColor);
 				break;
@@ -147,19 +136,19 @@ namespace ift3100 {
 		ofColor primitiveFillColorPreview = interface.primitiveFillColor;
 		primitiveFillColorPreview.a = 80;
 		// Draw transparent preview primitive for 1 frame
-		renderer.addPrimitive(interface.mousePos, interface.drawMode,
+		renderer2D.addPrimitive(interface.mousePos, interface.drawMode,
 							interface.primitiveStrokeWidth, primitiveStrokeColorPreview,
 							interface.primitiveFill, primitiveFillColorPreview, 1);
 		// Draw bounding box of drawing
-		renderer.addPrimitive(interface.mousePos, Rectangle, 1, ofColor(0, 80), false, ofColor::white, 1);
+		renderer2D.addPrimitive(interface.mousePos, Rectangle, 1, ofColor(0, 80), false, ofColor::white, 1);
 	}
 
 	void Application::rendererUndo() {
-		renderer.undoPrimitive();
+		renderer2D.undoPrimitive();
 	}
 
 	void Application::rendererRedo() {
-		renderer.redoPrimitive();
+		renderer2D.redoPrimitive();
 	}
 
 	void Application::exportRender(std::string name) {

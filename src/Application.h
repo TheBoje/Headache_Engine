@@ -3,7 +3,7 @@
 
 #include "ofMain.h"
 #include "Interface.h"
-#include "Renderer.h"
+#include "Renderer2D.h"
 #include "Curseur.h"
 #include "ImageUtils.h"
 #include "Hierarchy.h"
@@ -13,12 +13,13 @@
 namespace ift3100 {
 	class Application : public ofBaseApp {
 	public:
-	Renderer renderer;
     Interface interface;
+	Renderer2D renderer2D;
 
 	bool isMouseDown;
 
 	Application();
+	~Application();
 
 	void setup();
 	void update();

@@ -1,22 +1,33 @@
-#include "Renderer.h"
+#include "Renderer2D.h"
+#include "Application.h"
 
 namespace ift3100 {
-	void Renderer::setup() {
+	Renderer2D::Renderer2D(Application& _application) : application(_application) {}
+
+	void Renderer2D::setup() {
 		ofSetFrameRate(60);
 		ofSetCircleResolution(32);
 		backgroundColor = ofColor::darkGray;
 		primitives.reserve(1000);
 		hierarchyPrimitives.setRoot(std::make_shared<VectorPrimitive>(ofVec4f(0, 0, 0, 0), PrimitiveType::Point, 0, ofColor(0), true, ofColor(0)));
-		jarjar.loadModel("armadillo.obj", true);
 		IFT_LOG << "done";
 	}
 
-	void Renderer::update() {
+	void Renderer2D::update() {
 		// Low framerate warning
 		if (ofGetFrameRate() < 5 && ofGetFrameNum() > 5) {
-			IFT_LOG_WARNING << std::setprecision(2)
-			<< "<renderer::update> frame:" << ofGetFrameNum()
-			<< " fps: " << ofGetFrameRate();
+			IFT_LOG_WARNING << std::setprecision(2) << "frame:" << ofGetFrameNum() << " fps: " << ofGetFrameRate();
+		}
+
+		if(!hierarchyPrimitives.selected_nodes.empty()) {
+			for(Hierarchy<VectorPrimitive> * selected : hierarchyPrimitives.selected_nodes) {
+				selected->map([=](std::shared_ptr<VectorPrimitive> p) {
+					p->FILL = application.interface.primitiveFill;
+					p->FILL_COLOR = application.interface.primitiveFillColor;
+					p->STROKE_WIDTH = application.interface.primitiveStrokeWidth;
+					p->STROKE_COLOR = application.interface.primitiveStrokeColor;
+				});
+			}
 		}
 	}
 
@@ -30,7 +41,7 @@ namespace ift3100 {
 	 * @param fill enable primitive filling
 	 * @param fillColor
 	*/
-	void Renderer::addPrimitive(const ofVec4f& pos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor, int ttl) {
+	void Renderer2D::addPrimitive(const ofVec4f& pos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor, int ttl) {
 		std::shared_ptr<VectorPrimitive> sharedPrimitive = std::make_shared<VectorPrimitive>(pos, type, strokeWidth, strokeColor, fill, fillColor, ttl, "child");
 		primitives.push_back(sharedPrimitive);
 
@@ -40,9 +51,9 @@ namespace ift3100 {
 	}
 
 	/**
-	 * Undo the last primitive added to the primitive stack (via Renderer::addPrimitive).
+	 * Undo the last primitive added to the primitive stack (via Renderer2D::addPrimitive).
 	*/
-	void Renderer::undoPrimitive() {
+	void Renderer2D::undoPrimitive() {
 		// Remove last primitive and give it to redoPrimitive, serving as history stack
 		if (!primitives.empty()) {
 			VectorPrimitive p = *primitives.back();
@@ -54,9 +65,9 @@ namespace ift3100 {
 	}
 
 	/**
-	 * Redo the last undo primitive (via Renderer::undoPrimitive).
+	 * Redo the last undo primitive (via Renderer2D::undoPrimitive).
 	*/
-	void Renderer::redoPrimitive() {
+	void Renderer2D::redoPrimitive() {
 		// Push the newest primitive in stack history and remove it from stack
 		if (!redoPrimitives.empty()) {
 			primitives.push_back(std::make_shared<VectorPrimitive>(redoPrimitives.top()));
@@ -66,7 +77,7 @@ namespace ift3100 {
 		}
 	}
 
-	void Renderer::draw() {
+	void Renderer2D::draw() {
 		ofSetBackgroundColor(backgroundColor);
 		// Draw primitives based on their data
 		for (auto p : primitives) {
@@ -120,13 +131,5 @@ namespace ift3100 {
 		[](const std::shared_ptr<VectorPrimitive> p) {
 			return p->TTL == 0;
 		}), primitives.end());
-		camera.begin();
-		// As ofFill / ofNoFill is modified with primitives
-		ofFill();
-		ofColor(ofColor::black);
-		jarjar.draw(OF_MESH_FILL);
-        //afficher le curseur
-        // curseur.dessiner_curseur(curseur.souris_courant_x, curseur.souris_courant_y);
-		camera.end();
     }
 }
