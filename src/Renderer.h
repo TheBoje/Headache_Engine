@@ -4,27 +4,30 @@
 #include "ofMain.h"
 #include "Interface.h"
 #include "Cursor.h"
+#include "InterfaceUtils.h"
+#include "Constant.h"
+#include "VectorPrimitive.h"
+#include "HierarchyItem.h"
+#include "HierarchyContainer.h"
+#include "Logger.h"
+
+
 
 namespace ift3100 {
-	struct VectorPrimitive {
-		PrimitiveType type;            
-		ofVec2f position1; 
-		ofVec2f position2;
-		float   strokeWidth;
-		ofColor strokeColor;
-		bool	fill;
-		ofColor fillColor;
-	};
-
 	class Renderer {
 	public:
-		std::vector<VectorPrimitive> primitives{};
+		HierarchyContainer<VectorPrimitive> hierarchyPrimitives;
+
+		std::vector<std::shared_ptr<VectorPrimitive>> primitives{};
 		std::stack<VectorPrimitive> redoPrimitives{};
-        ofColor backgroundColor;
+		ofColor backgroundColor;
+
+		Curseur curseur;
+		ofEasyCam camera;
 
 		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type,
-						float strokeWidth, ofColor strokeColor,
-						bool fill, ofColor fillColor);
+				float strokeWidth, ofColor strokeColor,
+				bool fill, ofColor fillColor, int ttl = -1);
 		void undoPrimitive();
 		void redoPrimitive();
 		void setup();

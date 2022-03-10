@@ -11,6 +11,7 @@ namespace ift3100 {
     const ofColor DEFAULT_FILL_COLOR = ofColor::white;
 
     const float DEFAULT_STROKE_WIDTH = 1.0f;
+    const float DEFAULT_RECTANGLE_ROUNDING = 5.0f;
 }
 
 #endif

@@ -15,15 +15,13 @@ ift3100::Sprite::Sprite(const ofImage &img, int part_height, int part_width, siz
 {
     const ofPixels& pixels = img.getPixels();
 
-    size_t height = pixels.getHeight();
     size_t width = pixels.getWidth();
 
-    unsigned int nb_rows = height / part_height;
     unsigned int nb_cols = width / part_width;
 
     _image_parts.reserve(_parts_count);
 
-    for(int part_index = 0; part_index < _parts_count; ++part_index) {
+    for(unsigned int part_index = 0; part_index < _parts_count; ++part_index) {
         ofImage part;
         part.allocate(_parts_width, _parts_height, img.getImageType());
 
@@ -37,8 +35,7 @@ ift3100::Sprite::Sprite(const ofImage &img, int part_height, int part_width, siz
                 part.setColor(i - x, j - y, img.getColor(i, j));;
             }
         }
-
-        _image_parts.emplace_back(part);
+        _image_parts.emplace_back(part); 
     }
 }
 

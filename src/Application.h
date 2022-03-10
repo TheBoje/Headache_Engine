@@ -2,21 +2,29 @@
 #define APPLICATION_H
 
 #include "ofMain.h"
-#include "Renderer.h"
 #include "Interface.h"
 #include "Cursor.h"
+#include "Renderer.h"
+#include "Curseur.h"
+#include "ImageUtils.h"
+#include "Hierarchy.h"
+#include "Logger.h"
 
 namespace ift3100 {
 	class Application : public ofBaseApp {
 	public:
-
 	Renderer renderer;
     Interface interface;
 	Cursor cursor;
 
+	bool isMouseDown;
+
+	Application();
+
 	void setup();
 	void update();
 	void keyReleased(int key);
+	void keyPressed(int key);
 	void dragEvent(ofDragInfo dragInfo);
 	void draw();
 	void exit();
@@ -29,7 +37,10 @@ namespace ift3100 {
 	void mouseExited(int x, int y);
     void windowResized(int w, int h);
 
-	void addImage(ofImage * image);
+	void drawPrimitivePreview();
+	void rendererUndo();
+	void rendererRedo();
+	void exportRender(std::string filename);
 	};
 }
 
