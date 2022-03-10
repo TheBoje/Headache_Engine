@@ -6,7 +6,7 @@
 #include "DrawingProperties.h"
 #include "InterfaceUtils.h"
 #include "Hierarchy.h"
-#include "Renderer.h"
+#include "Renderer2D.h"
 #include "Theme.h"
 #include "ofImage.h"
 #include "ImageUtils.h"
@@ -36,7 +36,7 @@ class Interface {
 
 
         PrimitiveType drawMode;
-        MouseAction mouseAction = None;
+        MouseAction mouseAction;
 
         ofTexture textureSource;
         GLuint textureSourceID;

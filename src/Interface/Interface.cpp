@@ -21,6 +21,7 @@ void Interface::setup() {
     primitiveFillColor.w = 1;
     primitiveFill = true;
     mouseAction = None;
+    drawMode = Line;
 
     isHistComputed = false;
 
@@ -109,7 +110,7 @@ void Interface::draw() {
         }
 
         if(ImGui::CollapsingHeader("Tree")) {
-            application.renderer.hierarchyPrimitives.drawUI();
+            application.renderer2D.hierarchyPrimitives.drawUI();
         }
 
         if (ImGui::CollapsingHeader("Drawing")) {
@@ -117,10 +118,10 @@ void Interface::draw() {
         }
     }
 
-    if(!application.renderer.hierarchyPrimitives.selected_nodes.empty()) {
-        ImGui::Begin("Inspector"); 
+    if(!application.renderer2D.hierarchyPrimitives.selected_nodes.empty()) {
+        ImGui::Begin("Inspector");
         {
-            inspector.drawInspectorVectorPrimitive(&application.renderer.hierarchyPrimitives.selected_nodes);
+            inspector.drawInspectorVectorPrimitive(&application.renderer2D.hierarchyPrimitives.selected_nodes);
         }
     }
     _gui.end();
