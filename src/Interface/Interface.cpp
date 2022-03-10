@@ -17,6 +17,7 @@ void Interface::setup() {
     primitiveFillColor.w = 1;
     primitiveFill = true;
     mouseAction = None;
+    drawMode = Line;
 
     isHistComputed = false;
 

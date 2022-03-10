@@ -1,7 +1,7 @@
 #include "Application.h"
 namespace ift3100 {
 	// Create application, and give interface and renderers a reference of itself
-	Application::Application() : interface(*this), renderer2D(*this) {}
+	Application::Application() : interface(*this), renderer2D(*this), renderer3D(*this) {}
 	Application::~Application() {}
 
 	// fonction d'initialisation de l'application
@@ -11,22 +11,30 @@ namespace ift3100 {
 		isMouseDown = false;
         interface.setup();
 		renderer2D.setup();
+		renderer3D.setup();
 
 		IFT_LOG << "done";
 	}
 
 	// fonction de mise à jour de la logique de l'application
 	void Application::update() {
-        renderer2D.update();
-
 		if (isMouseDown && interface.mouseAction == DrawPrimitive) {
 			drawPrimitivePreview();
 		}
+
+		// Low framerate warning
+		if (ofGetFrameRate() < 5 && ofGetFrameNum() > 5) {
+			IFT_LOG_WARNING << std::setprecision(2) << "frame:" << ofGetFrameNum() << " fps: " << ofGetFrameRate();
+		}
+
+        renderer2D.update();
+		renderer3D.update();
 	}
 
 	// fonction de mise à jour du rendu de la fenêtre d'affichage de l'application
 	void Application::draw() {
         renderer2D.draw();
+		renderer3D.draw();
 		interface.draw();
 	}
 
@@ -77,19 +85,12 @@ namespace ift3100 {
 		interface.mousePos.z = x;
 		interface.mousePos.w = y;
 		isMouseDown = true;
-		// if (interface.mouseAction != None) {
-		// 	renderer2D.camera.disableMouseInput();
-		// }
 	}
 
 	void Application::mouseReleased(int x, int y, int button) {
 		interface.mousePos.x = x;
 		interface.mousePos.y = y;
-		//renderer.camera.getGlobalTransformMatrix()
 		isMouseDown = false;
-		// if (interface.mouseAction != None) {
-		// 	renderer2D.camera.enableMouseInput();
-		// }
 		// Don't draw anything if clicking on the UI - one of these flag will be triggered
 		if (ImGui::IsAnyWindowFocused() || ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered()) return;
 		// Call proper render method based on UI state / mouse action

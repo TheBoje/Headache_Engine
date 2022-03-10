@@ -33,7 +33,7 @@ class Interface {
 
 
         PrimitiveType drawMode;
-        MouseAction mouseAction = None;
+        MouseAction mouseAction;
 
         ofTexture textureSource;
         GLuint textureSourceID;

@@ -14,11 +14,6 @@ namespace ift3100 {
 	}
 
 	void Renderer2D::update() {
-		// Low framerate warning
-		if (ofGetFrameRate() < 5 && ofGetFrameNum() > 5) {
-			IFT_LOG_WARNING << std::setprecision(2) << "frame:" << ofGetFrameNum() << " fps: " << ofGetFrameRate();
-		}
-
 		if(!hierarchyPrimitives.selected_nodes.empty()) {
 			for(Hierarchy<VectorPrimitive> * selected : hierarchyPrimitives.selected_nodes) {
 				selected->map([=](std::shared_ptr<VectorPrimitive> p) {

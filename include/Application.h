@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "Interface.h"
 #include "Renderer2D.h"
+#include "Renderer3D.h"
 #include "Curseur.h"
 #include "ImageUtils.h"
 #include "Hierarchy.h"
@@ -15,6 +16,7 @@ namespace ift3100 {
 	public:
     Interface interface;
 	Renderer2D renderer2D;
+	Renderer3D renderer3D;
 
 	bool isMouseDown;
 
