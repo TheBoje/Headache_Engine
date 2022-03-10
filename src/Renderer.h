@@ -7,12 +7,18 @@
 #include "Constant.h"
 #include "VectorPrimitive.h"
 #include "ofxAssimpModelLoader.h"
+#include "HierarchyItem.h"
+#include "HierarchyContainer.h"
+#include "Logger.h"
+
 
 
 namespace ift3100 {
 	class Renderer {
 	public:
-		std::vector<VectorPrimitive> primitives{};
+		HierarchyContainer<VectorPrimitive> hierarchyPrimitives;
+
+		std::vector<std::shared_ptr<VectorPrimitive>> primitives{};
 		std::stack<VectorPrimitive> redoPrimitives{};
 		ofColor backgroundColor;
 
@@ -20,7 +26,7 @@ namespace ift3100 {
 		ofEasyCam camera;
 		ofxAssimpModelLoader jarjar;
 
-		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type, 
+		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type,
 				float strokeWidth, ofColor strokeColor,
 				bool fill, ofColor fillColor, int ttl = -1);
 		void undoPrimitive();
