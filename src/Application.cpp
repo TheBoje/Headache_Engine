@@ -10,6 +10,7 @@ namespace ift3100 {
 
         interface.setup();
 		renderer.setup();
+        cursor.setup();
 
 		ofLog() << "<app::setup> done";
 	}

@@ -3,32 +3,30 @@
 #include "Cursor.h"
 using namespace ift3100;
 
+void Cursor::setup(){
+    cursorDefault.load("default.png");
+    cursorDraw.load("draw.png");
+}
+
 // fonction qui dessine un curseur
 void Cursor::draw(int mouseX, int mouseY, MouseAction mouseAction) {
     // paramètres de dessin
-    float length = 10.0f;
-    float offset = 5.0f;
+    float offset = 50.0f;
+    int size = 30;
 
-    ofSetColor(255, 0, 0);
+
     switch (mouseAction) {
         case DrawPrimitive:
-            ofSetColor(ofColor::red);
-            // dessiner la forme vectorielle
-            ofDrawLine(mouseX + offset, mouseY, mouseX + offset + length, mouseY);
-            ofDrawLine(mouseX - offset, mouseY, mouseX - offset - length, mouseY);
-            ofDrawLine(mouseX, mouseY + offset, mouseX, mouseY + offset + length);
-            ofDrawLine(mouseX, mouseY - offset, mouseX, mouseY - offset - length);
-            break;
-        // case DrawPrimitive:
-        //     ofDrawLine(x + offset*2, y, x + offset + length, y);
-        //     ofDrawLine(x - offset*2, y, x - offset - length, y);
-        //     ofDrawLine(x, y + offset*2, x, y + offset + length);
-        //     ofDrawLine(x, y - offset*2, x, y - offset - length);
+            ofHideCursor();
+
+            cursorDraw.draw(mouseX-offset, mouseY-offset, size, size);
 
             break;
+
         case None:
-            ofSetColor(ofColor::red);
-            ofDrawCircle(mouseX, mouseY, length);
+            ofHideCursor();
+            ofSetColor(ofColor::white);
+            cursorDefault.draw(mouseX-10, mouseY, size, size);
             break;
 
         default:
