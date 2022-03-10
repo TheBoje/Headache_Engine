@@ -30,9 +30,6 @@ namespace ift3100 {
 		void setup();
 		void update();
 		void draw();
-
-        ofImage cursorDraw;
-        ofImage cursorDefault;
 	};
 }
 
