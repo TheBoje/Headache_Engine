@@ -37,6 +37,28 @@ namespace ift3100 {
             }
         }
 
+        static std::string primitiveTypeToString(const PrimitiveType& pt) {
+            switch (pt) {
+                case Point:
+                    return "Point";
+                case Line:
+                    return "Line";
+                case Rectangle:
+                    return "Rectangle";
+                case Ellipse:
+                    return "Ellipse";
+                case Triangle:
+                    return "Triangle";
+                case Cross:
+                    return "Cross";
+                case Star:
+                    return "Star";
+                default:
+                    IFT_LOG << "unknown primitive type " << pt << ", returning Line";
+                    return "Line";
+            }
+        }
+
         static const char * MouseActionToChar(MouseAction action) {
             switch (action) {
                 case None:

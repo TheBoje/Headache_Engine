@@ -8,6 +8,7 @@
 #include <functional>
 
 #include "ofxImGui.h"
+#include "Logger.h"
 
 namespace ift3100 {
 

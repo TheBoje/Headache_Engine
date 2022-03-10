@@ -1,3 +1,5 @@
+#include <string>
+
 #include "Interface.h"
 #include "Application.h"
 
@@ -9,6 +11,8 @@ void Interface::setup() {
     _gui.setup();
     _gui.setTheme(new Theme());
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+    inspector.setup();
 
     primitiveStrokeWidth = DEFAULT_STROKE_WIDTH;
     primitiveStrokeColor = ofColor::white;
@@ -87,7 +91,6 @@ void Interface::drawingUI() {
     }
 }
 
-
 void Interface::draw() {
     _gui.begin();
     ImGui::Begin("Main menu");
@@ -111,6 +114,13 @@ void Interface::draw() {
 
         if (ImGui::CollapsingHeader("Drawing")) {
             drawingUI();
+        }
+    }
+
+    if(!application.renderer.hierarchyPrimitives.selected_nodes.empty()) {
+        ImGui::Begin("Inspector"); 
+        {
+            inspector.drawInspectorVectorPrimitive(&application.renderer.hierarchyPrimitives.selected_nodes);
         }
     }
     _gui.end();
