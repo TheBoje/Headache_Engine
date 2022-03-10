@@ -21,8 +21,11 @@ namespace ift3100 {
 		Application& application;
 
 		HierarchyContainer<VectorPrimitive> hierarchyPrimitives;
+
 		std::vector<std::shared_ptr<VectorPrimitive>> primitives{};
-		std::stack<VectorPrimitive> redoPrimitives{};
+
+		std::stack<HierarchyContainer<VectorPrimitive>> undoPrimitives{};
+		std::stack<HierarchyContainer<VectorPrimitive>> redoPrimitives{};
 
 		ofColor backgroundColor;
 

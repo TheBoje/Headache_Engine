@@ -41,7 +41,9 @@ namespace ift3100 {
 		primitives.push_back(sharedPrimitive);
 
 		if(ttl == -1) {
+			undoPrimitives.push(hierarchyPrimitives); // copy the hierarchyPrimitive when pushing it
 			hierarchyPrimitives.addChild(sharedPrimitive);
+			IFT_LOG << "added primitive";
 		}
 	}
 
@@ -49,14 +51,19 @@ namespace ift3100 {
 	 * Undo the last primitive added to the primitive stack (via Renderer2D::addPrimitive).
 	*/
 	void Renderer2D::undoPrimitive() {
-		// Remove last primitive and give it to redoPrimitive, serving as history stack
-		if (!primitives.empty()) {
-			VectorPrimitive p = *primitives.back();
-			primitives.pop_back();
-			redoPrimitives.push(p);
+		if(!undoPrimitives.empty()) {
+
+			// pop the previous hierarchy and apply it to the current hierarchy
+			HierarchyContainer<VectorPrimitive> p = undoPrimitives.top();
+			undoPrimitives.pop();
+			redoPrimitives.push(hierarchyPrimitives);
+			hierarchyPrimitives = p;
+			primitives.clear();
+			primitives = hierarchyPrimitives.flattenRef();
 		} else {
 			IFT_LOG << "nothing to undo";
 		}
+
 	}
 
 	/**
@@ -65,8 +72,12 @@ namespace ift3100 {
 	void Renderer2D::redoPrimitive() {
 		// Push the newest primitive in stack history and remove it from stack
 		if (!redoPrimitives.empty()) {
-			primitives.push_back(std::make_shared<VectorPrimitive>(redoPrimitives.top()));
+			HierarchyContainer<VectorPrimitive> p = redoPrimitives.top();
 			redoPrimitives.pop();
+			undoPrimitives.push(hierarchyPrimitives);
+			hierarchyPrimitives = p;
+			primitives.clear();
+			primitives = p.flattenRef();
 		} else {
 			IFT_LOG << "nothing to redo";
 		}
