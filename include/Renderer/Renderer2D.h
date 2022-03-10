@@ -2,7 +2,8 @@
 #define RENDERER_2D_H
 
 #include "ofMain.h"
-#include "Curseur.h"
+#include "Interface.h"
+#include "Cursor.h"
 #include "InterfaceUtils.h"
 #include "Constant.h"
 #include "VectorPrimitive.h"
@@ -24,8 +25,6 @@ namespace ift3100 {
 		std::stack<VectorPrimitive> redoPrimitives{};
 
 		ofColor backgroundColor;
-
-		Curseur curseur;
 
 		Renderer2D(Application& _application);
 		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type,

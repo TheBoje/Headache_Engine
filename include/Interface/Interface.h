@@ -11,6 +11,7 @@
 #include "ofImage.h"
 #include "ImageUtils.h"
 #include "Logger.h"
+#include "InspectorInterface.h"
 
 #include <string.h>
 
@@ -19,6 +20,8 @@ class Application;
 class Interface {
     public:
         Application& application; // Reference to main application for callbacks
+
+        InspectorInterface inspector;
 
         ofxImGui::Gui _gui;
         Theme theme;
@@ -47,6 +50,7 @@ class Interface {
         void loadImage(std::string path);
         void imageUI();
         void drawingUI();
+        void drawInspector();
         void draw();
         void button_pressed();
     };

@@ -37,7 +37,7 @@ namespace ift3100 {
 	 * @param fillColor
 	*/
 	void Renderer2D::addPrimitive(const ofVec4f& pos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor, int ttl) {
-		std::shared_ptr<VectorPrimitive> sharedPrimitive = std::make_shared<VectorPrimitive>(pos, type, strokeWidth, strokeColor, fill, fillColor, ttl, "child");
+		std::shared_ptr<VectorPrimitive> sharedPrimitive = std::make_shared<VectorPrimitive>(pos, type, strokeWidth, strokeColor, fill, fillColor, ttl, InterfaceUtils::primitiveTypeToString(type));
 		primitives.push_back(sharedPrimitive);
 
 		if(ttl == -1) {

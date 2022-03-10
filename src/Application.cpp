@@ -12,7 +12,7 @@ namespace ift3100 {
         interface.setup();
 		renderer2D.setup();
 		renderer3D.setup();
-
+        cursor.setup();
 		IFT_LOG << "done";
 	}
 
@@ -36,6 +36,7 @@ namespace ift3100 {
         renderer2D.draw();
 		renderer3D.draw();
 		interface.draw();
+		cursor.draw(interface.mousePos.x, interface.mousePos.y, interface.mouseAction);
 	}
 
 	// fonction appelée juste avant de quitter l'application
@@ -124,9 +125,9 @@ namespace ift3100 {
 		interface.loadImage(dragInfo.files.at(0));
 	}
 
-    void Application::windowResized(int w, int h) {
-        IFT_LOG << "(" << w << ", " << h << ")";
-    }
+	void Application::windowResized(int w, int h) {
+		IFT_LOG << "(" << w << ", " << h << ")";
+	}
 
 	void Application::drawPrimitivePreview() {
 		// Don't draw anything if clicking on the UI - one of these flag will be triggered

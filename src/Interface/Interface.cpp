@@ -1,3 +1,5 @@
+#include <string>
+
 #include "Interface.h"
 #include "Application.h"
 
@@ -9,6 +11,8 @@ void Interface::setup() {
     _gui.setup();
     _gui.setTheme(new Theme());
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+    inspector.setup();
 
     primitiveStrokeWidth = DEFAULT_STROKE_WIDTH;
     primitiveStrokeColor = ofColor::white;
@@ -88,13 +92,13 @@ void Interface::drawingUI() {
     }
 }
 
-
 void Interface::draw() {
     _gui.begin();
     ImGui::Begin("Main menu");
     {
         if (ImGui::CollapsingHeader("Debug")) {
             ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::Text("Mouse action: %s", InterfaceUtils::MouseActionToChar(mouseAction));
         }
 
         if (ImGui::CollapsingHeader("Hierarchy")) {
@@ -111,6 +115,13 @@ void Interface::draw() {
 
         if (ImGui::CollapsingHeader("Drawing")) {
             drawingUI();
+        }
+    }
+
+    if(!application.renderer2D.hierarchyPrimitives.selected_nodes.empty()) {
+        ImGui::Begin("Inspector");
+        {
+            inspector.drawInspectorVectorPrimitive(&application.renderer2D.hierarchyPrimitives.selected_nodes);
         }
     }
     _gui.end();
