@@ -11,22 +11,17 @@ void Cursor::setup(){
 // fonction qui dessine un curseur
 void Cursor::draw(int mouseX, int mouseY, MouseAction mouseAction) {
     // paramètres de dessin
-    float offset = 50.0f;
     int size = 30;
 
-
+    ofHideCursor();
     switch (mouseAction) {
         case DrawPrimitive:
-            ofHideCursor();
-
-            cursorDraw.draw(mouseX-offset, mouseY-offset, size, size);
-
+            ofSetColor(ofColor::white);
+            cursorDraw.draw(mouseX - size, mouseY- size, size, size);
             break;
 
         case None:
-            ofHideCursor();
-            ofSetColor(ofColor::white);
-            cursorDefault.draw(mouseX-10, mouseY, size, size);
+            cursorDefault.draw(mouseX - (size / 2), mouseY, size, size);
             break;
 
         default:
@@ -34,4 +29,3 @@ void Cursor::draw(int mouseX, int mouseY, MouseAction mouseAction) {
             break;
     }
 }
-
