@@ -10,6 +10,7 @@ namespace ift3100 {
 		isMouseDown = false;
         interface.setup();
 		renderer.setup();
+        cursor.setup();
 
 		IFT_LOG << "done";
 	}

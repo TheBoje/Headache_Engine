@@ -9,7 +9,11 @@ namespace ift3100 {
     */
     class Cursor {
     public:
+        void setup();
         void draw(int mouseX, int mouseY, MouseAction mouseAction) ;
+
+        ofImage cursorDraw;
+        ofImage cursorDefault;
     };
 }
 
