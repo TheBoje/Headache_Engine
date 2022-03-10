@@ -56,6 +56,8 @@ namespace ift3100 {
                 default:
                     IFT_LOG << "unknown primitive type " << pt << ", returning Line";
                     return "Line";
+            }
+        }
 
         static const char * MouseActionToChar(MouseAction action) {
             switch (action) {

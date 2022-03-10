@@ -5,7 +5,7 @@
 #include "Interface.h"
 #include "Cursor.h"
 #include "Renderer.h"
-#include "Curseur.h"
+#include "Cursor.h"
 #include "ImageUtils.h"
 #include "Hierarchy.h"
 #include "Logger.h"

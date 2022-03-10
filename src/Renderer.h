@@ -22,7 +22,7 @@ namespace ift3100 {
 		std::stack<VectorPrimitive> redoPrimitives{};
 		ofColor backgroundColor;
 
-		Curseur curseur;
+		Cursor cursor;
 		ofEasyCam camera;
 
 		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type,
