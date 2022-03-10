@@ -41,7 +41,7 @@ namespace ift3100 {
         {}
 
         Hierarchy(const Hierarchy<T> &cpy) : _ref(std::make_shared<T>(*(cpy._ref))), _index(cpy._index), _parent(nullptr) {
-            int children_size = cpy._children.size();
+            std::size_t children_size = cpy._children.size();
             _children.reserve(children_size);
 
             for (std::size_t i = 0; i < children_size; i++) {
@@ -90,31 +90,31 @@ namespace ift3100 {
         }
 
         /**
-         * @brief take node and children and put in dest vector by a depth-search in 
+         * @brief take node and children and put in dest vector by a depth-search in
          * prefix order. It's up to the user to give an empty vector or not.
-         * 
-         * @param dest 
+         *
+         * @param dest
          */
         void flatten(std::vector<Hierarchy<T>*>& dest) {
             dest.push_back(this);
             for(Hierarchy<T> * node : _children) {
                 node->flatten(dest);
             }
-        } 
+        }
 
         /**
-         * @brief take node ref and children refs and put in dest vector by a depth-search in 
+         * @brief take node ref and children refs and put in dest vector by a depth-search in
          * prefix order. It's up to the user to give an empty vector or not.
-         * 
-         * @param dest 
+         *
+         * @param dest
          */
         void flattenRef(std::vector<std::shared_ptr<T>>& dest) {
             dest.push_back(_ref);
             for(Hierarchy<T> * node : _children) {
                 node->flattenRef(dest);
             }
-        } 
-        
+        }
+
 
         /**
          * @brief Add a child to the current node
