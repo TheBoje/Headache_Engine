@@ -13,6 +13,10 @@ static const ofVec3f OFFSET_DATA[] = {
 CameraManager::CameraManager() : _axes_cameras_enabled(false) 
 {}
 
+/**
+ * @brief Compute the height and width of viewports
+ * 
+ */
 void CameraManager::computeViewports() {
     float width = ofGetWidth();
     float height = ofGetHeight();
@@ -50,6 +54,11 @@ void CameraManager::onWindowResize() {
     computeViewports();
 }
 
+/**
+ * @brief Focus the camera.s on the position.
+ * 
+ * @param position 
+ */
 void CameraManager::focus(const ofVec3f& position) {
     _main_camera.setPosition(position + OFFSET_DATA[0]);
     _main_camera.lookAt(position);
@@ -62,6 +71,13 @@ void CameraManager::focus(const ofVec3f& position) {
      }
 }
 
+/**
+ * @brief begin camera state.
+ * 0 to 2 -> axes x,y,z cameras
+ * 3 -> main camera
+ * 
+ * @param index 
+ */
 void CameraManager::beginCamera(std::size_t index) {
     if(index < 0 || index > NB_AXES_CAM + 1) return;
 
@@ -84,7 +100,6 @@ void CameraManager::endCamera(std::size_t index) {
     else 
         _main_camera.end();
 }
-
 
 void CameraManager::enableAxesCameras() {
     _axes_cameras_enabled = true;
