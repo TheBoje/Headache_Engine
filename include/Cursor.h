@@ -2,6 +2,7 @@
 #define IFT_3100_CURSEUR_H
 
 #include "InterfaceUtils.h"
+#include "Constant.h"
 
 namespace ift3100 {
     /**
@@ -10,10 +11,12 @@ namespace ift3100 {
     class Cursor {
     public:
         void setup();
-        void draw(int mouseX, int mouseY, MouseAction mouseAction) ;
+        void draw(int mouseX, int mouseY, MouseAction mouseAction, PrimitiveType type) ;
 
         ofImage cursorDraw;
         ofImage cursorDefault;
+        ofImage cursorCross;
+        ofImage cursorStar;
     };
 }
 
