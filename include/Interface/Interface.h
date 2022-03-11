@@ -12,6 +12,7 @@
 #include "ImageUtils.h"
 #include "Logger.h"
 #include "InspectorInterface.h"
+#include "CameraInterface.h"
 
 #include <string.h>
 
@@ -22,6 +23,7 @@ class Interface {
         Application& application; // Reference to main application for callbacks
 
         InspectorInterface inspector;
+        CameraInterface cameras;
 
         ofxImGui::Gui _gui;
         Theme theme;

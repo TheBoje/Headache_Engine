@@ -18,7 +18,6 @@ namespace ift3100 {
 		renderer3D.setup();
         cursor.setup();
 		IFT_LOG << "done";
-		cm.setup();
 	}
 
 	// fonction de mise à jour de la logique de l'application
@@ -44,27 +43,17 @@ namespace ift3100 {
 		cursor.draw(interface.mousePos.x, interface.mousePos.y, interface.mouseAction);
 
 		ofNoFill();
-		ofSetColor(255, 255, 255);
+		ofSetColor(255);
 
-		ofNode node;
-		for(int i = 0; i < 4; i++)
-			ofDrawRectangle(cm.viewports[i]);
+		for(int i = 0; i < NB_AXES_CAM + 1; i++) {
+			interface.cameras.cm.beginCamera(i);
+			node.draw();
+			interface.cameras.cm.endCamera(i);
+		}
+	}
 
-		cm.beginAxeXCamera();
+	void Application::drawScene() {
 		node.draw();
-		cm.endAxeXCamera();
-	
-		cm.beginAxeYCamera();
-		node.draw();
-		cm.endAxeYCamera();
-	
-		cm.beginAxeZCamera();
-		node.draw();
-		cm.endAxeZCamera();
-	
-		cm.beginMainCamera();
-		node.draw();
-		cm.endMainCamera();
 	}
 
 	// fonction appelée juste avant de quitter l'application

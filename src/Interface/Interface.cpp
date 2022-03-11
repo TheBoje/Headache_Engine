@@ -13,6 +13,7 @@ void Interface::setup() {
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     inspector.setup();
+    cameras.setup();
 
     primitiveStrokeWidth = DEFAULT_STROKE_WIDTH;
     primitiveStrokeColor = ofColor::white;
@@ -115,6 +116,10 @@ void Interface::draw() {
 
         if (ImGui::CollapsingHeader("Drawing")) {
             drawingUI();
+        }
+
+        if(ImGui::CollapsingHeader("Cameras")) {
+            cameras.drawUI();
         }
     }
 

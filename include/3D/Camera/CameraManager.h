@@ -2,9 +2,13 @@
 #define CAMERA_MANAGER_H
 
 #include "ofEasyCam.h"
+#include "Constant.h"
+
+#include <functional>
 
 namespace ift3100
-{
+{   
+    class Application;
     /**
      * @brief Manage build cameras
      * 1 main (perspective by default)
@@ -14,8 +18,6 @@ namespace ift3100
      * all 3 ortho by default
      */
     class CameraManager {
-        static const int    NB_AXES_CAM = 3;
-
         ofEasyCam   _main_camera;
         ofEasyCam   _axes_cameras[NB_AXES_CAM];
 
@@ -24,6 +26,7 @@ namespace ift3100
 
     public:
         static constexpr float  OFFSET = 10.0f;
+        static constexpr float  STROKE_WIDTH = 1.0f;
         static constexpr float  OFFSET_FOCUS = 30.0f;
         
         ofRectangle viewports[NB_AXES_CAM + 1];
@@ -32,18 +35,10 @@ namespace ift3100
 
         void setup();
         void update();
+        void beginCamera(std::size_t index);
+        void endCamera(std::size_t index);
         void onWindowResize(int width, int height);
         void focus(const ofVec3f& position);
-        
-        void beginMainCamera();
-        void endMainCamera();
-
-        void beginAxeXCamera();
-        void endAxeXCamera();
-        void beginAxeYCamera();
-        void endAxeYCamera();
-        void beginAxeZCamera();
-        void endAxeZCamera();
 
 
         void enableAxesCameras();

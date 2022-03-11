@@ -25,9 +25,12 @@ namespace ift3100 {
 	ofEasyCam cam1;
 
 	bool isMouseDown;
+	ofNode node;
 
 	Application();
 	~Application();
+
+	void drawScene();
 
 	void setup();
 	void update();
@@ -36,6 +39,7 @@ namespace ift3100 {
 	void dragEvent(ofDragInfo dragInfo);
 	void draw();
 	void exit();
+
 
 	void mouseMoved(int x, int y);
 	void mouseDragged(int x, int y, int button);
