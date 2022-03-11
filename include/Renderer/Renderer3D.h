@@ -2,6 +2,7 @@
 #define IFT3100_RENDERER_3D_H
 
 #include "HierarchyContainer.h"
+#include "CameraManager.h"
 
 namespace ift3100 {
     class Application;
@@ -9,12 +10,18 @@ namespace ift3100 {
         public:
             Application& application;
 
-            HierarchyContainer<ofNode> hierarchy; 
+            HierarchyContainer<ofNode> hierarchy;
+            ofNode debugNode;
+            CameraManager cameraManager;
 
             Renderer3D(Application& _application);
             void setup();
             void update();
             void draw();
+
+            void setMouseInput(bool enable);
+            void toggleAxesCameras(bool enabled);
+            void setMainCameraOrtho(bool ortho);
     };
 }
 

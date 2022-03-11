@@ -7,16 +7,15 @@ namespace ift3100 {
 	// fonction d'initialisation de l'application
 	void Application::setup() {
 		ofSetWindowTitle("IFT-3100 Main");
-		
-		ofBackground(70, 70, 70);
-		ofEnableSmoothing();
-		ofEnableDepthTest();
 
+		ofBackground(70, 70, 70);
 		isMouseDown = false;
+
         interface.setup();
 		renderer2D.setup();
 		renderer3D.setup();
         cursor.setup();
+
 		IFT_LOG << "done";
 	}
 
@@ -37,29 +36,10 @@ namespace ift3100 {
 
 	// fonction de mise à jour du rendu de la fenêtre d'affichage de l'application
 	void Application::draw() {
-        renderer2D.draw();
 		renderer3D.draw();
+        renderer2D.draw();
 		interface.draw();
 		cursor.draw(interface.mousePos.x, interface.mousePos.y, interface.mouseAction, interface.drawMode);
-
-		ofNoFill();
-		ofSetColor(255);
-
-		if(interface.cameras.axes_cam_enable) {
-			for(int i = 0; i < NB_AXES_CAM; i++) {
-				interface.cameras.cm.beginCamera(i);
-				node.draw();
-				interface.cameras.cm.endCamera(i);
-			}
-		}
-
-		interface.cameras.cm.beginCamera(3);
-		node.draw();
-		interface.cameras.cm.endCamera(3);
-	}
-
-	void Application::drawScene() {
-		node.draw();
 	}
 
 	// fonction appelée juste avant de quitter l'application
@@ -109,14 +89,19 @@ namespace ift3100 {
 		interface.mousePos.z = x;
 		interface.mousePos.w = y;
 		isMouseDown = true;
+		if (ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered()) {
+			renderer3D.setMouseInput(false); // Disable camera mouse input
+		}
 	}
 
 	void Application::mouseReleased(int x, int y, int button) {
 		interface.mousePos.x = x;
 		interface.mousePos.y = y;
 		isMouseDown = false;
+		renderer3D.setMouseInput(true); // Enable mouse input
+
 		// Don't draw anything if clicking on the UI - one of these flag will be triggered
-		if (ImGui::IsAnyWindowFocused() || ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered()) return;
+		if (ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered()) return;
 		// Call proper render method based on UI state / mouse action
 		switch (interface.mouseAction) {
 			case DrawPrimitive:
@@ -149,8 +134,8 @@ namespace ift3100 {
 	}
 
 	void Application::windowResized(int w, int h) {
+		renderer3D.cameraManager.windowResize(); // Update camera viewport
 		IFT_LOG << "(" << w << ", " << h << ")";
-		interface.cameras.cm.onWindowResize();
 	}
 
 	void Application::drawPrimitivePreview() {

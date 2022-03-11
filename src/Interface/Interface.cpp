@@ -13,7 +13,6 @@ void Interface::setup() {
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     inspector.setup();
-    cameras.setup();
 
     primitiveStrokeWidth = DEFAULT_STROKE_WIDTH;
     primitiveStrokeColor = ofColor::white;
@@ -23,6 +22,8 @@ void Interface::setup() {
     primitiveFill = true;
     mouseAction = None;
     drawMode = Line;
+    axesCameraEnable = false;
+    mainCameraOrtho = false;
 
     isHistComputed = false;
 
@@ -106,11 +107,11 @@ void Interface::draw() {
             ImGui::Text("This is empty... for now");
         }
 
-        if(ImGui::CollapsingHeader("Image")) {
+        if (ImGui::CollapsingHeader("Image")) {
             imageUI();
         }
 
-        if(ImGui::CollapsingHeader("Tree")) {
+        if (ImGui::CollapsingHeader("Tree")) {
             application.renderer2D.hierarchyPrimitives.drawUI();
         }
 
@@ -118,8 +119,14 @@ void Interface::draw() {
             drawingUI();
         }
 
-        if(ImGui::CollapsingHeader("Cameras")) {
-            cameras.drawUI();
+        if (ImGui::CollapsingHeader("Cameras")) {
+            if (ImGui::Checkbox("Activate axes cameras", &axesCameraEnable)) {
+                application.renderer3D.toggleAxesCameras(axesCameraEnable);
+            }
+
+            if (ImGui::Checkbox("Main camera ortho", &mainCameraOrtho)) {
+                application.renderer3D.setMainCameraOrtho(mainCameraOrtho);
+            }
         }
     }
 

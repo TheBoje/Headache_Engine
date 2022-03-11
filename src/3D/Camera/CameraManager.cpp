@@ -10,22 +10,21 @@ static const ofVec3f OFFSET_DATA[] = {
             ofVec3f(0, 0, CameraManager::OFFSET_FOCUS),
         };
 
-CameraManager::CameraManager() : _axes_cameras_enabled(false) 
-{}
+CameraManager::CameraManager() : _axes_cameras_enabled(false) {}
 
 /**
  * @brief Compute the height and width of viewports
- * 
+ *
  */
 void CameraManager::computeViewports() {
     float width = ofGetWidth();
     float height = ofGetHeight();
-    
+
     int i = 0;
     if(_axes_cameras_enabled) {
         for(; i < NB_AXES_CAM; i++) {
             _axes_cameras[i].enableOrtho();
-            
+
             viewports[i].x = (CameraManager::OFFSET / 2) + ((width)/2) * (i % 2);
             viewports[i].y = (CameraManager::OFFSET / 2) + ((height)/2) * (i / 2);
             viewports[i].width = (width / 2) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
@@ -41,7 +40,6 @@ void CameraManager::computeViewports() {
 }
 
 void CameraManager::setup() {
-
     computeViewports();
     focus(ofVec3f(0, 0, 0));
 }
@@ -50,33 +48,33 @@ void CameraManager::update() {
 
 }
 
-void CameraManager::onWindowResize() {
+void CameraManager::windowResize() {
     computeViewports();
 }
 
 /**
  * @brief Focus the camera.s on the position.
- * 
- * @param position 
+ *
+ * @param position
  */
 void CameraManager::focus(const ofVec3f& position) {
     _main_camera.setPosition(position + OFFSET_DATA[0]);
     _main_camera.lookAt(position);
 
-    for(int i = 0; i < NB_AXES_CAM; i++) 
+    for(int i = 0; i < NB_AXES_CAM; i++)
         _axes_cameras[i].setPosition(position + OFFSET_DATA[i]);
-    
-     for(int i = 0; i < NB_AXES_CAM; i++) {
-         _axes_cameras[i].lookAt(ofVec3f(0, 0, 0));
-     }
+
+    for(int i = 0; i < NB_AXES_CAM; i++) {
+        _axes_cameras[i].lookAt(ofVec3f(0, 0, 0));
+    }
 }
 
 /**
  * @brief begin camera state.
  * 0 to 2 -> axes x,y,z cameras
  * 3 -> main camera
- * 
- * @param index 
+ *
+ * @param index
  */
 void CameraManager::beginCamera(std::size_t index) {
     if(index < 0 || index > NB_AXES_CAM + 1) return;
@@ -85,7 +83,7 @@ void CameraManager::beginCamera(std::size_t index) {
         ofDrawRectangle(viewports[index]);
         _axes_cameras[index].begin(viewports[index]);
     }
-    
+
     if(index == 3) {
         ofDrawRectangle(viewports[3]);
         _main_camera.begin(viewports[index]);
@@ -95,25 +93,40 @@ void CameraManager::beginCamera(std::size_t index) {
 void CameraManager::endCamera(std::size_t index) {
     if(index < 0 || index > NB_AXES_CAM + 1) return;
 
-    if(_axes_cameras_enabled && index < 3) 
+    if(_axes_cameras_enabled && index < 3)
         _axes_cameras[index].end();
-    else 
+    else
         _main_camera.end();
 }
 
-void CameraManager::enableAxesCameras() {
-    _axes_cameras_enabled = true;
-    
-    computeViewports();
-    
-    IFT_LOG << "enable axes cameras";
+void CameraManager::setMouseInput(bool enable) {
+    if (enable) {
+        _main_camera.enableMouseInput();
+        for (int i = 0; i < NB_AXES_CAM; i++) {
+            _axes_cameras[i].enableMouseInput();
+        }
+    } else {
+        _main_camera.disableMouseInput();
+        for (int i = 0; i <NB_AXES_CAM; i++) {
+            _axes_cameras->disableMouseInput();
+        }
+    }
 }
 
-void CameraManager::disableAxesCameras() {
-    _axes_cameras_enabled = false;
-
-    computeViewports();
-    
-    IFT_LOG << "disable axes cameras";
+void CameraManager::setMainCameraOrtho(bool ortho) {
+    if (ortho) {
+        _main_camera.enableOrtho();
+    } else {
+        _main_camera.disableOrtho();
+    }
 }
 
+void CameraManager::toggleAxesCameras(bool enabled) {
+    _axes_cameras_enabled = enabled;
+    computeViewports();
+    IFT_LOG << "axes cameras is now " << (enabled ? "enabled" : "disabled");
+}
+
+bool const CameraManager::axesCamerasEnabled() const {
+    return _axes_cameras_enabled;
+}

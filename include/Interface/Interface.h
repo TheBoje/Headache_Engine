@@ -12,7 +12,6 @@
 #include "ImageUtils.h"
 #include "Logger.h"
 #include "InspectorInterface.h"
-#include "CameraInterface.h"
 
 #include <string.h>
 
@@ -23,7 +22,6 @@ class Interface {
         Application& application; // Reference to main application for callbacks
 
         InspectorInterface inspector;
-        CameraInterface cameras;
 
         ofxImGui::Gui _gui;
         Theme theme;
@@ -36,7 +34,6 @@ class Interface {
         bool primitiveFill;
         ImVec4 primitiveFillColor; // Forget it.
 
-
         PrimitiveType drawMode;
         MouseAction mouseAction;
 
@@ -45,6 +42,9 @@ class Interface {
         ofImage image;
         bool isHistComputed;
         char imageRenderName[64];
+
+        bool axesCameraEnable;
+        bool mainCameraOrtho;
 
         Interface(Application& _application);
 

@@ -7,7 +7,7 @@
 #include <functional>
 
 namespace ift3100
-{   
+{
     class Application;
     /**
      * @brief Manage build cameras
@@ -29,22 +29,22 @@ namespace ift3100
         static constexpr float  OFFSET = 10.0f;
         static constexpr float  STROKE_WIDTH = 1.0f;
         static constexpr float  OFFSET_FOCUS = 30.0f;
-        
+
         ofRectangle viewports[NB_AXES_CAM + 1];
 
         CameraManager();
 
         void setup();
         void update();
+
         void beginCamera(std::size_t index);
         void endCamera(std::size_t index);
-        void onWindowResize();
+        void windowResize();
         void focus(const ofVec3f& position);
-
-
-        void enableAxesCameras();
-        void disableAxesCameras();
-
+        void setMouseInput(bool enable);
+        void toggleAxesCameras(bool enabled);
+        void setMainCameraOrtho(bool ortho);
+        bool const axesCamerasEnabled() const;
     };
 } // namespace ift3100
 
