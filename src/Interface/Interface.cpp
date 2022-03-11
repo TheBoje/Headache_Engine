@@ -98,16 +98,13 @@ void Interface::draw() {
     _gui.begin();
     ImGui::Begin("Main menu");
     {
-        if (ImGui::CollapsingHeader("Debug")) {
+        if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::Text("Mouse action: %s", InterfaceUtils::MouseActionToChar(mouseAction));
         }
 
-        if (ImGui::CollapsingHeader("Hierarchy")) {
-            ImGui::Text("This is empty... for now");
-        }
-
         if (ImGui::CollapsingHeader("Image")) {
+
             imageUI();
         }
 
