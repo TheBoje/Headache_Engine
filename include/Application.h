@@ -19,7 +19,6 @@ namespace ift3100 {
 	Renderer3D renderer3D;
 	Cursor cursor;
 
-	CameraManager cm;
 	ofBoxPrimitive box;
 
 	ofEasyCam cam1;

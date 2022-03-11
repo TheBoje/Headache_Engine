@@ -45,11 +45,17 @@ namespace ift3100 {
 		ofNoFill();
 		ofSetColor(255);
 
-		for(int i = 0; i < NB_AXES_CAM + 1; i++) {
-			interface.cameras.cm.beginCamera(i);
-			node.draw();
-			interface.cameras.cm.endCamera(i);
+		if(interface.cameras.axes_cam_enable) {
+			for(int i = 0; i < NB_AXES_CAM; i++) {
+				interface.cameras.cm.beginCamera(i);
+				node.draw();
+				interface.cameras.cm.endCamera(i);
+			}
 		}
+
+		interface.cameras.cm.beginCamera(3);
+		node.draw();
+		interface.cameras.cm.endCamera(3);
 	}
 
 	void Application::drawScene() {
@@ -144,7 +150,7 @@ namespace ift3100 {
 
 	void Application::windowResized(int w, int h) {
 		IFT_LOG << "(" << w << ", " << h << ")";
-		cm.onWindowResize(w, h);
+		interface.cameras.cm.onWindowResize();
 	}
 
 	void Application::drawPrimitivePreview() {

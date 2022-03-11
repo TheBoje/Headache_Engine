@@ -23,6 +23,7 @@ namespace ift3100
 
         bool        _axes_cameras_enabled;
 
+        void computeViewports();
 
     public:
         static constexpr float  OFFSET = 10.0f;
@@ -37,7 +38,7 @@ namespace ift3100
         void update();
         void beginCamera(std::size_t index);
         void endCamera(std::size_t index);
-        void onWindowResize(int width, int height);
+        void onWindowResize();
         void focus(const ofVec3f& position);
 
 

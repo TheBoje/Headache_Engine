@@ -7,8 +7,8 @@
 namespace ift3100
 {
     class CameraInterface {
-        bool _axes_cam_enable;
     public:
+        bool axes_cam_enable;
         CameraManager cm;
 
         void setup();
