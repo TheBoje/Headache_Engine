@@ -40,7 +40,7 @@ namespace ift3100 {
         renderer2D.draw();
 		renderer3D.draw();
 		interface.draw();
-		cursor.draw(interface.mousePos.x, interface.mousePos.y, interface.mouseAction);
+		cursor.draw(interface.mousePos.x, interface.mousePos.y, interface.mouseAction, interface.drawMode);
 
 		ofNoFill();
 		ofSetColor(255);
