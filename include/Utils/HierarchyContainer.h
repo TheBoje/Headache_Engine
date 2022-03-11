@@ -25,7 +25,13 @@ namespace ift3100
 
         HierarchyContainer() : _root(Hierarchy<T>()) {};
         HierarchyContainer(std::shared_ptr<T> root_ref) : _root(Hierarchy<T>(root_ref)) {}
-        ~HierarchyContainer() = default;
+        
+        HierarchyContainer(const HierarchyContainer<T>& cpy) : _root(Hierarchy<T>(cpy._root))
+        {}
+
+        ~HierarchyContainer() {
+            selected_nodes.clear();
+        }
 
         void setRoot(std::shared_ptr<T> ref) {
             _root.setRef(ref);
@@ -55,6 +61,37 @@ namespace ift3100
 
         void drawUI() {
             _root.drawUI(selected_nodes);
+        }
+
+        /**
+         * @brief Flatten the tree in a vector of hierarchy
+         * 
+         * @return std::vector<Hierarchy<T>*> 
+         */
+        std::vector<Hierarchy<T>*> flatten() {
+            std::vector<Hierarchy<T>*> flat{};
+            _root.flatten(flat);
+            return flat;
+        }
+
+        /**
+         * @brief Flatten the tree in a vector of T class in order
+         * to get the object stored in the hierarchy 
+         * 
+         * @return std::vector<std::shared_ptr<T>> 
+         */
+        std::vector<std::shared_ptr<T>> flattenRef() {
+            std::vector<std::shared_ptr<T>> flatRef{};
+            _root.flattenRef(flatRef);
+            return flatRef;
+            
+        }
+
+        HierarchyContainer<T>& operator=(const HierarchyContainer<T>& other) {
+            if(&other != this) {
+                _root = other._root;
+            }
+            return *this;
         }
     };
 } // namespace ift3100

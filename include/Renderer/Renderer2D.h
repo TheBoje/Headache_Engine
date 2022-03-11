@@ -21,8 +21,11 @@ namespace ift3100 {
 		Application& application;
 
 		HierarchyContainer<VectorPrimitive> hierarchyPrimitives;
+
 		std::vector<std::shared_ptr<VectorPrimitive>> primitives{};
-		std::stack<VectorPrimitive> redoPrimitives{};
+
+		std::stack<HierarchyContainer<VectorPrimitive>> undoPrimitives{};
+		std::stack<HierarchyContainer<VectorPrimitive>> redoPrimitives{};
 
 		ofColor backgroundColor;
 
@@ -30,6 +33,7 @@ namespace ift3100 {
 		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type,
 				float strokeWidth, ofColor strokeColor,
 				bool fill, ofColor fillColor, int ttl = -1);
+		void deleteSelected();
 		void undoPrimitive();
 		void redoPrimitive();
 		void setup();

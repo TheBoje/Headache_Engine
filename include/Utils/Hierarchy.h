@@ -40,12 +40,13 @@ namespace ift3100 {
             _parent(parent)
         {}
 
-        Hierarchy(const Hierarchy<T> &cpy) : _ref(cpy._ref), _index(cpy._index) {
-            int children_size = cpy._children.size();
+        Hierarchy(const Hierarchy<T> &cpy) : _ref(std::make_shared<T>(*(cpy._ref))), _index(cpy._index), _parent(nullptr) {
+            std::size_t children_size = cpy._children.size();
             _children.reserve(children_size);
 
-            for (Hierarchy<T> *child : cpy._children) {
-                _children.push_back(new Hierarchy<T>(*child));
+            for (std::size_t i = 0; i < children_size; i++) {
+                _children.push_back(new Hierarchy<T>(*cpy._children[i]));
+                _children[i]->_parent = this;
             }
         }
 
@@ -89,6 +90,33 @@ namespace ift3100 {
         }
 
         /**
+         * @brief take node and children and put in dest vector by a depth-search in
+         * prefix order. It's up to the user to give an empty vector or not.
+         *
+         * @param dest
+         */
+        void flatten(std::vector<Hierarchy<T>*>& dest) {
+            dest.push_back(this);
+            for(Hierarchy<T> * node : _children) {
+                node->flatten(dest);
+            }
+        }
+
+        /**
+         * @brief take node ref and children refs and put in dest vector by a depth-search in
+         * prefix order. It's up to the user to give an empty vector or not.
+         *
+         * @param dest
+         */
+        void flattenRef(std::vector<std::shared_ptr<T>>& dest) {
+            dest.push_back(_ref);
+            for(Hierarchy<T> * node : _children) {
+                node->flattenRef(dest);
+            }
+        }
+
+
+        /**
          * @brief Add a child to the current node
          * @param child
          */
@@ -97,18 +125,22 @@ namespace ift3100 {
         }
 
         Hierarchy<T> &operator=(const Hierarchy<T> &other) {
-            if(other != *this) {
-                for(Hierarchy<T> *child : _children) {
-                    delete child;
-                }
+            if(&other != this) {
+                clear();
+
+                _ref = std::make_shared<T>(*(other._ref));
+                _parent = nullptr;
 
                 int children_size = other._children.size();
                 _children.reserve(children_size);
 
-                for (Hierarchy<T> *child : other._children) {
-                    _children.push_back(new Hierarchy<T>(*child));
+                // copy all children from the other source, depth-search recursion here
+                for (std::size_t i = 0; i < children_size; i++) {
+                    _children.push_back(new Hierarchy<T>(*other._children[i]));
+                    _children[i]->_parent = this;
                 }
             }
+            return *this;
         }
 
         bool operator==(const Hierarchy<T>& h) const {
