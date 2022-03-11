@@ -9,6 +9,7 @@
 #include "ImageUtils.h"
 #include "Hierarchy.h"
 #include "Logger.h"
+#include "CameraManager.h"
 
 namespace ift3100 {
 	class Application : public ofBaseApp {
@@ -17,6 +18,11 @@ namespace ift3100 {
 	Renderer2D renderer2D;
 	Renderer3D renderer3D;
 	Cursor cursor;
+
+	CameraManager cm;
+	ofBoxPrimitive box;
+
+	ofEasyCam cam1;
 
 	bool isMouseDown;
 

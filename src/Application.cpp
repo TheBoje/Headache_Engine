@@ -7,6 +7,10 @@ namespace ift3100 {
 	// fonction d'initialisation de l'application
 	void Application::setup() {
 		ofSetWindowTitle("IFT-3100 Main");
+		
+		ofBackground(70, 70, 70);
+		ofEnableSmoothing();
+		ofEnableDepthTest();
 
 		isMouseDown = false;
         interface.setup();
@@ -14,6 +18,7 @@ namespace ift3100 {
 		renderer3D.setup();
         cursor.setup();
 		IFT_LOG << "done";
+		cm.setup();
 	}
 
 	// fonction de mise à jour de la logique de l'application
@@ -37,6 +42,29 @@ namespace ift3100 {
 		renderer3D.draw();
 		interface.draw();
 		cursor.draw(interface.mousePos.x, interface.mousePos.y, interface.mouseAction);
+
+		ofNoFill();
+		ofSetColor(255, 255, 255);
+
+		ofNode node;
+		for(int i = 0; i < 4; i++)
+			ofDrawRectangle(cm.viewports[i]);
+
+		cm.beginAxeXCamera();
+		node.draw();
+		cm.endAxeXCamera();
+	
+		cm.beginAxeYCamera();
+		node.draw();
+		cm.endAxeYCamera();
+	
+		cm.beginAxeZCamera();
+		node.draw();
+		cm.endAxeZCamera();
+	
+		cm.beginMainCamera();
+		node.draw();
+		cm.endMainCamera();
 	}
 
 	// fonction appelée juste avant de quitter l'application
@@ -127,6 +155,7 @@ namespace ift3100 {
 
 	void Application::windowResized(int w, int h) {
 		IFT_LOG << "(" << w << ", " << h << ")";
+		cm.onWindowResize(w, h);
 	}
 
 	void Application::drawPrimitivePreview() {
