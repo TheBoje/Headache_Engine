@@ -52,21 +52,7 @@ namespace ift3100 {
 
 	void Application::keyPressed(int key) {
 		if(key == OF_KEY_DEL) {
-			// Delete each selected VectorPrimitive in hierarchy
-			for(Hierarchy<VectorPrimitive> * selected : renderer2D.hierarchyPrimitives.selected_nodes) {
-				if(renderer2D.hierarchyPrimitives.isRoot(*selected))
-					renderer2D.hierarchyPrimitives.clear();
-				else
-					delete selected;
-			}
-
-			for (auto it = renderer2D.primitives.begin(); it != renderer2D.primitives.end(); it++) {
-				// remove shared_ptr that are only in the primitives vector (meaning that there are not in the hierarchy)
-				if (it->use_count() == 1) {
-					renderer2D.primitives.erase(it--);
-				}
-			}
-			renderer2D.hierarchyPrimitives.selected_nodes.clear();
+			renderer2D.deleteSelected();
 		}
 	}
 

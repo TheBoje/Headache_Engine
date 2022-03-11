@@ -33,6 +33,7 @@ namespace ift3100 {
 		void addPrimitive(const ofVec4f& pos, const PrimitiveType& type,
 				float strokeWidth, ofColor strokeColor,
 				bool fill, ofColor fillColor, int ttl = -1);
+		void deleteSelected();
 		void undoPrimitive();
 		void redoPrimitive();
 		void setup();

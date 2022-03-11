@@ -40,7 +40,7 @@ namespace ift3100 {
 		std::shared_ptr<VectorPrimitive> sharedPrimitive = std::make_shared<VectorPrimitive>(pos, type, strokeWidth, strokeColor, fill, fillColor, ttl, InterfaceUtils::primitiveTypeToString(type));
 		primitives.push_back(sharedPrimitive);
 
-		if(ttl == -1) {
+		if(ttl == -1) { // If the primitive has an unlimited lifetime
 			undoPrimitives.push(hierarchyPrimitives); // copy the hierarchyPrimitive when pushing it
 			hierarchyPrimitives.addChild(sharedPrimitive);
 			IFT_LOG << "added primitive";
@@ -48,11 +48,34 @@ namespace ift3100 {
 	}
 
 	/**
+	 * Delete selected primitives (in UI) from renderer primitives and UI.
+	 *
+	 * Note: Deleted primitive is added to undo stack.
+	*/
+	void Renderer2D::deleteSelected() {
+		undoPrimitives.push(hierarchyPrimitives);
+		// Delete each selected VectorPrimitive in hierarchy
+		for(Hierarchy<VectorPrimitive> * selected : hierarchyPrimitives.selected_nodes) {
+			if(hierarchyPrimitives.isRoot(*selected))
+				hierarchyPrimitives.clear();
+			else
+				delete selected;
+		}
+
+		for (auto it = primitives.begin(); it != primitives.end(); it++) {
+			// remove shared_ptr that are only in the primitives vector (meaning that there are not in the hierarchy)
+			if (it->use_count() == 1) {
+				primitives.erase(it--);
+			}
+		}
+		hierarchyPrimitives.selected_nodes.clear();
+	}
+
+	/**
 	 * Undo the last primitive added to the primitive stack (via Renderer2D::addPrimitive).
 	*/
 	void Renderer2D::undoPrimitive() {
 		if(!undoPrimitives.empty()) {
-
 			// pop the previous hierarchy and apply it to the current hierarchy
 			HierarchyContainer<VectorPrimitive> p = undoPrimitives.top();
 			undoPrimitives.pop();
