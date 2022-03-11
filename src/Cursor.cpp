@@ -4,10 +4,12 @@
 using namespace ift3100;
 
 void Cursor::setup(){
+    IFT_LOG << "loading cursors from disk";
     cursorDefault.load("../../data/default.png");
     cursorDraw.load("../../data/draw.png");
     cursorStar.load("../../data/star.png");
     cursorCross.load("../../data/cross.png");
+    IFT_LOG << "loading done";
 }
 
 // fonction qui dessine un curseur
@@ -59,7 +61,7 @@ void Cursor::draw(int mouseX, int mouseY, MouseAction mouseAction, PrimitiveType
             break;
 
         default:
-            ofLog() << "<renderer::draw> unknown type of cursor";
+            IFT_LOG << "unknown type of cursor";
             break;
     }
 }
