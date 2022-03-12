@@ -2,16 +2,16 @@
 #define IFT3100_RENDERER_3D_H
 
 namespace ift3100 {
-    class Application;
-    class Renderer3D {
-        public:
-            Application& application;
+class Application;
+class Renderer3D {
+public:
+	Application& application;
 
-        Renderer3D(Application& _application);
-        void setup();
-        void update();
-        void draw();
-    };
-}
+	Renderer3D(Application& _application);
+	void setup();
+	void update();
+	void draw();
+};
+} // namespace ift3100
 
 #endif //!IFT3100_RENDERER_3D_H
