@@ -1,15 +1,16 @@
 #ifndef HIERARCHY_H
 #define HIERARCHY_H
 
-#include <vector>
-#include <stdexcept>
-#include <memory>
 #include <algorithm>
 #include <functional>
+#include <memory>
+#include <stdexcept>
+#include <vector>
 
 #include "HierarchyItem.h"
 #include "ofxImGui.h"
 #include "Logger.h"
+#include "ofxImGui.h"
 
 namespace ift3100 {
 

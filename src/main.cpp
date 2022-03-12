@@ -1,8 +1,8 @@
-#include <iostream>
-#include "ofMain.h"
 #include "Application.h"
 #include "ImageUtils.h"
 #include "Logger.h"
+#include "ofMain.h"
+#include <iostream>
 
 int main(int argc, char** argv) {
 	ofSetLogLevel(OF_LOG_VERBOSE);

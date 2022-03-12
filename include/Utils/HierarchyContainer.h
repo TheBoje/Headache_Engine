@@ -1,8 +1,8 @@
 #ifndef HIERARCHY_CONTAINER_H
 #define HIERARCHY_CONTAINER_H
 
-#include "ofxImGui.h"
 #include "Hierarchy.h"
+#include "ofxImGui.h"
 
 namespace ift3100 {
 /**
@@ -54,6 +54,7 @@ public:
 	void mapChildren(std::function<void(std::shared_ptr<T>)> func) {
 		for (int i = 0; i < _root.getChildrenSize(); i++) { _root.at(i)->map(func); }
 	}
+
 
 	void drawUI() { _root.drawUI(selected_nodes); }
 

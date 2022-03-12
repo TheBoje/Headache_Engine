@@ -7,7 +7,6 @@
 #include "Object3D.h"
 
 namespace ift3100 {
-
 class Application;
 class Renderer3D {
 public:

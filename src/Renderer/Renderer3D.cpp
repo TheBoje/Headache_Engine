@@ -73,4 +73,5 @@ void Renderer3D::setMouseInput(bool enable) { cameraManager.setMouseInput(enable
 void Renderer3D::toggleAxesCameras(bool enabled) { cameraManager.toggleAxesCameras(enabled); }
 
 void Renderer3D::setMainCameraOrtho(bool ortho) { cameraManager.setMainCameraOrtho(ortho); }
+
 } // namespace ift3100

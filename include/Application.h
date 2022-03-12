@@ -1,15 +1,15 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "ofMain.h"
-#include "Interface.h"
-#include "Renderer2D.h"
-#include "Renderer3D.h"
 #include "Cursor.h"
-#include "ImageUtils.h"
 #include "Hierarchy.h"
+#include "ImageUtils.h"
+#include "Interface.h"
 #include "Logger.h"
 #include "CameraManager.h"
+#include "Renderer2D.h"
+#include "Renderer3D.h"
+#include "ofMain.h"
 
 namespace ift3100 {
 class Application : public ofBaseApp {

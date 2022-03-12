@@ -2,8 +2,8 @@
 #define VECTOR_PRIMITIVE_H
 
 #include "Constant.h"
-#include "InterfaceUtils.h"
 #include "HierarchyItem.h"
+#include "InterfaceUtils.h"
 
 namespace ift3100 {
 

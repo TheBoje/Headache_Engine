@@ -1,8 +1,8 @@
 #ifndef IFT_3100_CURSEUR_H
 #define IFT_3100_CURSEUR_H
 
-#include "InterfaceUtils.h"
 #include "Constant.h"
+#include "InterfaceUtils.h"
 
 namespace ift3100 {
 /**

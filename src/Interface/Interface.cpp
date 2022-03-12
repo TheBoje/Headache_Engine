@@ -1,7 +1,7 @@
 #include <string>
 
-#include "Interface.h"
 #include "Application.h"
+#include "Interface.h"
 
 namespace ift3100 {
 Interface::Interface(Application& _application)
@@ -24,6 +24,7 @@ void Interface::setup() {
 	drawMode			   = Line;
 	axesCameraEnable	   = false;
 	mainCameraOrtho		   = false;
+
 
 	isHistComputed = false;
 

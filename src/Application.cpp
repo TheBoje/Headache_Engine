@@ -14,6 +14,7 @@ void Application::setup() {
 	ofBackground(70, 70, 70);
 	isMouseDown = false;
 
+
 	interface.setup();
 	renderer2D.setup();
 	renderer3D.setup();

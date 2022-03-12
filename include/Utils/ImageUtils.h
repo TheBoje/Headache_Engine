@@ -1,10 +1,10 @@
 #ifndef IMAGEUTILS_H
 #define IMAGEUTILS_H
 
-#include <string>
+#include "Logger.h"
 #include "ofMain.h"
 #include "ofxCv.h"
-#include "Logger.h"
+#include <string>
 
 namespace ift3100 {
 class ImageUtils {

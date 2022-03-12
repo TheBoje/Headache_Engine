@@ -1,12 +1,15 @@
 #ifndef RENDERER_2D_H
 #define RENDERER_2D_H
 
-#include "ofMain.h"
-#include "Interface.h"
-#include "Cursor.h"
-#include "InterfaceUtils.h"
 #include "Constant.h"
+#include "Cursor.h"
+#include "HierarchyContainer.h"
+#include "HierarchyItem.h"
+#include "Interface.h"
+#include "InterfaceUtils.h"
+#include "Logger.h"
 #include "VectorPrimitive.h"
+#include "ofMain.h"
 #include "ofxAssimpModelLoader.h"
 #include "HierarchyItem.h"
 #include "HierarchyContainer.h"

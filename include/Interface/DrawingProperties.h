@@ -1,8 +1,8 @@
 #ifndef DRAWINGPROPERTIES_H
 #define DRAWINGPROPERTIES_H
 
-#include "ofColor.h"
 #include "Constant.h"
+#include "ofColor.h"
 
 namespace ift3100 {
 

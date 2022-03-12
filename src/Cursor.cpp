@@ -1,6 +1,5 @@
-
-#include "ofMain.h"
 #include "Cursor.h"
+#include "ofMain.h"
 
 namespace ift3100 {
 void Cursor::setup() {

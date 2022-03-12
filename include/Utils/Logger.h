@@ -1,6 +1,7 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include "ofMain.h"
 #include <string.h>
 
 namespace ift3100 {

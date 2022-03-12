@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "Hierarchy.h"
-#include "VectorPrimitive.h"
 #include "Logger.h"
+#include "VectorPrimitive.h"
 #include "Object3D.h"
 
 namespace ift3100 {
