@@ -26,9 +26,9 @@ namespace ift3100
         void computeViewports();
 
     public:
-        static constexpr float  OFFSET = 10.0f;
-        static constexpr float  STROKE_WIDTH = 1.0f;
-        static constexpr float  OFFSET_FOCUS = 30.0f;
+        static constexpr float OFFSET = 10.0f;
+        static constexpr float STROKE_WIDTH = 1.0f;
+        static constexpr float OFFSET_FOCUS = 300.0f;
 
         ofRectangle viewports[NB_AXES_CAM + 1];
 

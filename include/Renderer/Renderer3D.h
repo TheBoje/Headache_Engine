@@ -12,13 +12,13 @@ namespace ift3100 {
     class Renderer3D {
         public:
             Application& application;
-            Renderer3D(Application& _application);  
+            Renderer3D(Application& _application);
 
             CameraManager cameraManager;
 
             ofLight light;
 
-            HierarchyContainer<Object3D> hierarchy;             
+            HierarchyContainer<Object3D> hierarchy;
 
 
             void setup();
