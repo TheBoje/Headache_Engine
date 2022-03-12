@@ -10,6 +10,9 @@
 
 namespace ift3100 {
 class InspectorInterface {
+	static const ImGuiInputTextFlags INPUT_FLAGS		 = ImGuiInputTextFlags_EnterReturnsTrue;
+	static const ImGuiInputTextFlags INPUT_DECIMAL_FLAGS = INPUT_FLAGS | ImGuiInputTextFlags_EnterReturnsTrue;
+
 	ImVec2	primitivePosition;
 	ofVec3f position3d;
 
