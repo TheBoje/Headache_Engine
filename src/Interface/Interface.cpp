@@ -112,6 +112,10 @@ void Interface::draw() {
             application.renderer2D.hierarchyPrimitives.drawUI();
         }
 
+        if(ImGui::CollapsingHeader("3d tree")) {
+            application.renderer3D.hierarchy.drawUI();
+        }
+
         if (ImGui::CollapsingHeader("Drawing")) {
             drawingUI();
         }
@@ -131,6 +135,13 @@ void Interface::draw() {
         ImGui::Begin("Inspector");
         {
             inspector.drawInspectorVectorPrimitive(&application.renderer2D.hierarchyPrimitives.selected_nodes);
+        }
+    }
+
+    if(!application.renderer3D.hierarchy.selected_nodes.empty()) {
+        ImGui::Begin("Inspector 3D");
+        {
+            inspector.drawInspector3d(&application.renderer3D.hierarchy.selected_nodes);
         }
     }
     _gui.end();

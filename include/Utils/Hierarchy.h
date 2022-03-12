@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <functional>
 
+#include "HierarchyItem.h"
 #include "ofxImGui.h"
 #include "Logger.h"
 

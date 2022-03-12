@@ -80,12 +80,16 @@ void CameraManager::beginCamera(std::size_t index) {
     if(index < 0 || index > NB_AXES_CAM + 1) return;
 
     if(_axes_cameras_enabled && index < 3) {
+        ofNoFill();
         ofDrawRectangle(viewports[index]);
+        ofFill();
         _axes_cameras[index].begin(viewports[index]);
     }
 
     if(index == 3) {
+        ofNoFill();
         ofDrawRectangle(viewports[3]);
+        ofFill();
         _main_camera.begin(viewports[index]);
     }
 }

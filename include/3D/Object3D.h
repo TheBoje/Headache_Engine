@@ -1,17 +1,48 @@
-#ifndef OBJECT3D_H
-#define OBJECT3D_H
+#ifndef OBJECT_3D_H
+#define OBJECT_3D_H
 
 #include "HierarchyItem.h"
+
+#include "ofCamera.h"
+#include "of3dPrimitives.h"
+#include "ofMesh.h"
+
 #include <string>
 
-namespace ift3100 {
+namespace ift3100
+{
+    enum ObjectType {
+        Camera,
+        Primitive,
+        Mesh,
+        NoneObj
+    };
+
+
     class Object3D : public HierarchyItem {
         std::string _name;
-    
+        ObjectType  _type;
+        
+        union {
+            ofCamera *        _camera;
+            of3dPrimitive *   _primitive;
+            ofMesh *          _mesh;
+        };
+
     public:
-        Object3D(std::string name) : _name(name) {}
-        std::string toString() { return _name; }
+        Object3D(std::string name);
+        Object3D(std::string name, ofCamera camera);
+        Object3D(std::string name, of3dPrimitive primitive);
+        Object3D(std::string name, ofMesh mesh);
+
+        ofNode& getNode();
+
+        ObjectType getType() const { return _type; }
+        std::string toString() const { return _name; }
+        void setName(std::string name) { _name = name; }
     };
-}
+    
+} // namespace ift3100
+
 
 #endif

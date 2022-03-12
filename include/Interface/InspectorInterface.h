@@ -6,14 +6,17 @@
 #include "Hierarchy.h"
 #include "VectorPrimitive.h"
 #include "Logger.h"
+#include "Object3D.h"
 
 namespace ift3100 {
     class InspectorInterface {
         ImVec2 primitivePosition;
+        ofVec3f position3d;
     
     public:
         void setup();
         void drawInspectorVectorPrimitive(std::vector<Hierarchy<VectorPrimitive> *> * vvp);
+        void drawInspector3d(std::vector<Hierarchy<Object3D> *> * v3d);
     };
 }
 

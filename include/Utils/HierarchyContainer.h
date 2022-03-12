@@ -59,6 +59,12 @@ namespace ift3100
             CURRENT_INDEX++;
         }
 
+        void mapChildren(std::function<void(std::shared_ptr<T>)> func) {
+            for(int i = 0; i < _root.getChildrenSize(); i++) {
+                _root.at(i)->map(func);
+            }
+        }
+
         void drawUI() {
             _root.drawUI(selected_nodes);
         }

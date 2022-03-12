@@ -3,20 +3,27 @@
 
 #include "HierarchyContainer.h"
 #include "CameraManager.h"
+#include "ofLight.h"
+#include "Object3D.h"
 
 namespace ift3100 {
+
     class Application;
     class Renderer3D {
         public:
             Application& application;
+            Renderer3D(Application& _application);  
 
-            HierarchyContainer<ofNode> hierarchy;
-            ofNode debugNode;
             CameraManager cameraManager;
 
-            Renderer3D(Application& _application);
+            ofLight light;
+
+            HierarchyContainer<Object3D> hierarchy;             
+
+
             void setup();
             void update();
+
             void draw();
 
             void setMouseInput(bool enable);
