@@ -25,7 +25,6 @@ void Interface::setup() {
 	axesCameraEnable	   = false;
 	mainCameraOrtho		   = false;
 
-
 	isHistComputed = false;
 
 	IFT_LOG << "done";

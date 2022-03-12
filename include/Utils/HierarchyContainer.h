@@ -55,7 +55,6 @@ public:
 		for (int i = 0; i < _root.getChildrenSize(); i++) { _root.at(i)->map(func); }
 	}
 
-
 	void drawUI() { _root.drawUI(selected_nodes); }
 
 	/**
