@@ -11,6 +11,9 @@
 #include "VectorPrimitive.h"
 #include "ofMain.h"
 #include "ofxAssimpModelLoader.h"
+#include "HierarchyItem.h"
+#include "HierarchyContainer.h"
+#include "Logger.h"
 
 namespace ift3100 {
 class Application;

@@ -6,6 +6,7 @@
 #include "ImageUtils.h"
 #include "Interface.h"
 #include "Logger.h"
+#include "CameraManager.h"
 #include "Renderer2D.h"
 #include "Renderer3D.h"
 #include "ofMain.h"

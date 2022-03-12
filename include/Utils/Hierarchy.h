@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include "HierarchyItem.h"
+#include "ofxImGui.h"
 #include "Logger.h"
 #include "ofxImGui.h"
 

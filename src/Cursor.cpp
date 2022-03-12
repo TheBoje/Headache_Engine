@@ -1,9 +1,9 @@
-
 #include "Cursor.h"
 #include "ofMain.h"
-using namespace ift3100;
 
+namespace ift3100 {
 void Cursor::setup() {
+	ofHideCursor();
 	IFT_LOG << "loading cursors from disk";
 	cursorDefault.load("../../data/default.png");
 	cursorDraw.load("../../data/draw.png");
@@ -17,7 +17,6 @@ void Cursor::draw(int mouseX, int mouseY, MouseAction mouseAction, PrimitiveType
 	// paramètres de dessin
 	int size = 30;
 
-	ofHideCursor();
 	switch (mouseAction) {
 		case DrawPrimitive:
 			ofSetColor(ofColor::white);
@@ -66,3 +65,4 @@ void Cursor::draw(int mouseX, int mouseY, MouseAction mouseAction, PrimitiveType
 		default: IFT_LOG << "unknown type of cursor"; break;
 	}
 }
+} // namespace ift3100

@@ -12,6 +12,9 @@ const ofColor DEFAULT_FILL_COLOR   = ofColor::white;
 
 const float DEFAULT_STROKE_WIDTH	   = 1.0f;
 const float DEFAULT_RECTANGLE_ROUNDING = 5.0f;
+
+const int NB_AXES_CAM = 3;
+
 } // namespace ift3100
 
 #endif

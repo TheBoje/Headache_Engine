@@ -1,6 +1,8 @@
 #ifndef HIERARCHY_ITEM_H
 #define HIERARCHY_ITEM_H
 
+#include <string>
+
 namespace ift3100 {
 
 /**

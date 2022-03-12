@@ -43,6 +43,9 @@ public:
 	bool	  isHistComputed;
 	char	  imageRenderName[64];
 
+	bool axesCameraEnable;
+	bool mainCameraOrtho;
+
 	Interface(Application& _application);
 
 	void setup();
@@ -50,6 +53,8 @@ public:
 	void imageUI();
 	void drawingUI();
 	void drawInspector();
+	void draw3dRendererUI();
+
 	void draw();
 	void button_pressed();
 };

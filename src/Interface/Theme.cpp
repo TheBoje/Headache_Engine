@@ -1,7 +1,6 @@
 #include "Theme.h"
 
-using namespace ift3100;
-
+namespace ift3100 {
 void Theme::setup() {
 	ImGuiStyle* style = &ImGui::GetStyle();
 
@@ -25,3 +24,4 @@ void Theme::setup() {
 	style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(ofColor::gray, 60);
 	style->Colors[ImGuiCol_SliderGrab]		 = ImVec4(ofColor::lightGray, 60);
 }
+} // namespace ift3100
