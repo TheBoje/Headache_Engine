@@ -134,7 +134,8 @@ void InspectorInterface::drawInspector3d(std::vector<Hierarchy<Object3D>*>* v3d)
 
 	/* -- ROTATION -- */
 	ImGui::Text("Rotation");
-	HelpMarker("Can rotate only one selected object. The rotation is blocked if more than one is selected");
+	HelpMarker(
+		"Can rotate only one selected object. The rotation is blocked if more than one is selected. If the object has children, only the selected will rotate.");
 
 	if (v3d_size != 1)
 		return;
