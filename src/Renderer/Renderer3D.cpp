@@ -26,6 +26,25 @@ namespace ift3100 {
         cameraManager.update();
     }
 
+	/**
+	 * Delete selected Object (in UI) from renderer hierarchy and UI.
+	 *
+	 * Note: Deleted primitive is added to undo stack.
+	*/
+	void Renderer3D::deleteSelected() {
+		// undoPrimitives.push(hierarchyPrimitives);
+
+		// Delete each selected Object3D in hierarchy
+		for(Hierarchy<Object3D> * selected : hierarchy.selected_nodes) {
+			if(hierarchy.isRoot(*selected))
+				hierarchy.clear();
+			else
+				delete selected;
+		}
+
+		hierarchy.selected_nodes.clear();
+	}
+
     void Renderer3D::draw() {
         // Draw axis camera if enabled
         if (cameraManager.axesCamerasEnabled()) {

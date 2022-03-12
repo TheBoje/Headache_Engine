@@ -53,6 +53,7 @@ class Interface {
         void imageUI();
         void drawingUI();
         void drawInspector();
+        void draw3dRendererUI();
         void draw();
         void button_pressed();
     };

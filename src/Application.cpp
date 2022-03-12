@@ -56,6 +56,7 @@ namespace ift3100 {
 	void Application::keyPressed(int key) {
 		if(key == OF_KEY_DEL) {
 			renderer2D.deleteSelected();
+			renderer3D.deleteSelected();
 		}
 	}
 

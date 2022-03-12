@@ -26,6 +26,8 @@ namespace ift3100 {
 
             void draw();
 
+            void deleteSelected();
+
             void setMouseInput(bool enable);
             void toggleAxesCameras(bool enabled);
             void setMainCameraOrtho(bool ortho);

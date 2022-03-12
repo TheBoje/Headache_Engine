@@ -93,9 +93,34 @@ namespace ift3100 {
         }
     }
 
+    void Interface::draw3dRendererUI() {
+        if(ImGui::BeginMenu("Objects")) {
+            if(ImGui::MenuItem("Cube", NULL, false, true)) { 
+                application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cube", ofBoxPrimitive()));
+            }
+            if(ImGui::MenuItem("Cone", NULL, false, true)) { 
+                application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cone", ofConePrimitive()));
+            }
+            if(ImGui::MenuItem("Plane", NULL, false, true)) { 
+                application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Plane", ofPlanePrimitive()));
+            }
+            if(ImGui::MenuItem("Sphere", NULL, false, true)) { 
+                application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Sphere", ofSpherePrimitive()));
+            }
+            if(ImGui::MenuItem("IcoSphere", NULL, false, true)) { 
+                application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("IcoSphere", ofIcoSpherePrimitive()));
+            }
+            if(ImGui::MenuItem("Cylinder", NULL, false, true)) { 
+                application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cylinder", ofCylinderPrimitive()));
+            }
+            ImGui::EndMenu();
+        }
+    }
+
     void Interface::draw() {
         _gui.begin();
-        ImGui::Begin("Main menu");
+        bool * mainmenu;
+        ImGui::Begin("Main menu", mainmenu, ImGuiWindowFlags_MenuBar);
         {
             if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -119,6 +144,11 @@ namespace ift3100 {
                 drawingUI();
             }
 
+            if(ImGui::BeginMenuBar()) {
+                draw3dRendererUI();
+                ImGui::EndMenuBar();
+            }
+
             if (ImGui::CollapsingHeader("Cameras")) {
                 if (ImGui::Checkbox("Activate axes cameras", &axesCameraEnable)) {
                     application.renderer3D.toggleAxesCameras(axesCameraEnable);
@@ -128,7 +158,9 @@ namespace ift3100 {
                     application.renderer3D.setMainCameraOrtho(mainCameraOrtho);
                 }
             }
+
         }
+
 
         if(!application.renderer2D.hierarchyPrimitives.selected_nodes.empty()) {
             ImGui::Begin("Inspector");
@@ -143,6 +175,7 @@ namespace ift3100 {
                 inspector.drawInspector3d(&application.renderer3D.hierarchy.selected_nodes);
             }
         }
+
         _gui.end();
     }
 }
