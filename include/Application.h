@@ -12,12 +12,12 @@
 #include "CameraManager.h"
 
 namespace ift3100 {
-	class Application : public ofBaseApp {
-	public:
-    Interface interface;
+class Application : public ofBaseApp {
+public:
+	Interface  interface;
 	Renderer2D renderer2D;
 	Renderer3D renderer3D;
-	Cursor cursor;
+	Cursor	   cursor;
 
 	bool isMouseDown;
 
@@ -38,13 +38,13 @@ namespace ift3100 {
 	void mouseReleased(int x, int y, int button);
 	void mouseEntered(int x, int y);
 	void mouseExited(int x, int y);
-    void windowResized(int w, int h);
+	void windowResized(int w, int h);
 
 	void drawPrimitivePreview();
 	void rendererUndo();
 	void rendererRedo();
 	void exportRender(std::string filename);
-	};
-}
+};
+} // namespace ift3100
 
 #endif // !APPLICATION_H

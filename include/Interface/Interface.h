@@ -18,45 +18,45 @@
 namespace ift3100 {
 class Application;
 class Interface {
-    public:
-        Application& application; // Reference to main application for callbacks
+public:
+	Application& application; // Reference to main application for callbacks
 
-        InspectorInterface inspector;
+	InspectorInterface inspector;
 
-        ofxImGui::Gui _gui;
-        Theme theme;
-        ofVec4f mousePos;
+	ofxImGui::Gui _gui;
+	Theme		  theme;
+	ofVec4f		  mousePos;
 
-        unsigned int ** _rgb;
+	unsigned int** _rgb;
 
-        float primitiveStrokeWidth;
-        ImVec4 primitiveStrokeColor; // Dont question it.
-        bool primitiveFill;
-        ImVec4 primitiveFillColor; // Forget it.
+	float  primitiveStrokeWidth;
+	ImVec4 primitiveStrokeColor; // Dont question it.
+	bool   primitiveFill;
+	ImVec4 primitiveFillColor; // Forget it.
 
-        PrimitiveType drawMode;
-        MouseAction mouseAction;
+	PrimitiveType drawMode;
+	MouseAction	  mouseAction;
 
-        ofTexture textureSource;
-        GLuint textureSourceID;
-        ofImage image;
-        bool isHistComputed;
-        char imageRenderName[64];
+	ofTexture textureSource;
+	GLuint	  textureSourceID;
+	ofImage	  image;
+	bool	  isHistComputed;
+	char	  imageRenderName[64];
 
-        bool axesCameraEnable;
-        bool mainCameraOrtho;
+	bool axesCameraEnable;
+	bool mainCameraOrtho;
 
-        Interface(Application& _application);
+	Interface(Application& _application);
 
-        void setup();
-        void loadImage(std::string path);
-        void imageUI();
-        void drawingUI();
-        void drawInspector();
-        void draw3dRendererUI();
-        void draw();
-        void button_pressed();
-    };
-}
+	void setup();
+	void loadImage(std::string path);
+	void imageUI();
+	void drawingUI();
+	void drawInspector();
+	void draw3dRendererUI();
+	void draw();
+	void button_pressed();
+};
+} // namespace ift3100
 
 #endif //IFT_3100_INTERFACE_H
