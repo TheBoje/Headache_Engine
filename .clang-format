@@ -79,7 +79,7 @@
   SpaceBeforeInheritanceColon: true,
 
   SortUsingDeclarations: true,
-  SortIncludes: true,
+  SortIncludes: false,
 
   ReflowComments: false,
   IncludeBlocks: Preserve,
