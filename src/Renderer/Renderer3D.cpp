@@ -37,7 +37,7 @@ void Renderer3D::setup() {
 
 void Renderer3D::update() {
 	cameraManager.update();
-  anim.update();
+	anim.update();
 	computeBoundaryBox();
 }
 
