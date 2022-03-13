@@ -45,11 +45,21 @@ void Interface::imageUI() {
 	}
 
 	if (isHistComputed) {
-		ImGui::PlotHistogram("R", &getter, _rgb[0], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0, 80));
+		unsigned int maxr = 0;
+		unsigned int maxg = 0;
+		unsigned int maxb = 0;
+
+		for (int i = 0; i < 256; i++) {
+			maxr = std::max(_rgb[0][i], maxr);
+			maxg = std::max(_rgb[1][i], maxg);
+			maxb = std::max(_rgb[2][i], maxb);
+		}
+
+		ImGui::PlotHistogram("R", &getter, _rgb[0], 256, 0, NULL, 0.0f, (float)maxr, ImVec2(0, 80));
 		ImGui::NewLine();
-		ImGui::PlotHistogram("G", &getter, _rgb[1], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0, 80));
+		ImGui::PlotHistogram("G", &getter, _rgb[1], 256, 0, NULL, 0.0f, (float)maxg, ImVec2(0, 80));
 		ImGui::NewLine();
-		ImGui::PlotHistogram("B", &getter, _rgb[2], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0, 80));
+		ImGui::PlotHistogram("B", &getter, _rgb[2], 256, 0, NULL, 0.0f, (float)maxb, ImVec2(0, 80));
 		ImGui::NewLine();
 	}
 
