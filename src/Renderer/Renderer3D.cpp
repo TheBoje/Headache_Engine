@@ -11,19 +11,28 @@ void Renderer3D::setup() {
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
 	ofNode box;
-	box.setPosition(0, 15, 0);
-	hierarchy.addChild(std::make_shared<Object3D>("box", box));
+	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
 
-	model.loadModel("suzanne.obj");
-	model.setPosition(0, 0, 0);
+	hierarchy.addChild(box_shared);
+	light.setAmbientColor(ofColor(0, 60, 130));
+	light.setPosition(ofVec3f(150, 150, 150));
 	// ----
+
+	// Note: Uncomment me to enable animator testing, this is temporary until we implement a proper UI!
+	// anim.setup();
+	// anim.setTarget(box_shared->getNode());
+	// anim.addKeyframe(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), 0);
+	// anim.addKeyframe(ofVec3f(0, 100, 0), ofVec3f(90, 0, 0), 100);
+	// anim.addKeyframe(ofVec3f(0, 100, -100), ofVec3f(0, 0, 0), 200);
+	// anim.reset();
+	// anim.resume();
 
 	IFT_LOG << "done";
 }
 
 void Renderer3D::update() {
 	cameraManager.update();
-	model.update();
+	anim.update();
 }
 
 /**
@@ -32,8 +41,6 @@ void Renderer3D::update() {
 	 * Note: Deleted primitive is added to undo stack.
 	*/
 void Renderer3D::deleteSelected() {
-	// undoPrimitives.push(hierarchyPrimitives);
-
 	// Delete each selected Object3D in hierarchy
 	for (Hierarchy<Object3D>* selected : hierarchy.selected_nodes) {
 		if (hierarchy.isRoot(*selected))

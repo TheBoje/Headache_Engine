@@ -12,6 +12,7 @@ void Interface::setup() {
 	_gui.setTheme(new Theme());
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
+	animPaused = false;
 	inspector.setup();
 
 	primitiveStrokeWidth   = DEFAULT_STROKE_WIDTH;
@@ -128,6 +129,25 @@ void Interface::draw3dRendererUI() {
 	}
 }
 
+void Interface::drawAnimator() {
+	if (animPaused) {
+		if (ImGui::Button("Resume")) {
+			application.renderer3D.anim.resume();
+			animPaused = false;
+		}
+	} else {
+		if (ImGui::Button("Pause")) {
+			application.renderer3D.anim.pause();
+			animPaused = true;
+		}
+	}
+
+	if (ImGui::Button("Reset")) {
+		application.renderer3D.anim.reset();
+		animPaused = true;
+	}
+}
+
 void Interface::draw() {
 	_gui.begin();
 	bool* mainmenu;
@@ -152,6 +172,10 @@ void Interface::draw() {
 
 		if (ImGui::CollapsingHeader("Drawing")) {
 			drawingUI();
+		}
+
+		if (ImGui::CollapsingHeader("Animator")) {
+			drawAnimator();
 		}
 
 		if (ImGui::BeginMenuBar()) {

@@ -44,6 +44,12 @@ public:
 	char	  imageRenderName[64];
 	char	  import3DObj[64];
 
+	// WIP: add keyframes to animation
+	ofVec3f	 animPosition;
+	ofVec3f	 animRotation;
+	uint64_t animFrame;
+	bool	 animPaused;
+
 	bool axesCameraEnable;
 	bool mainCameraOrtho;
 
@@ -55,6 +61,7 @@ public:
 	void drawingUI();
 	void drawInspector();
 	void draw3dRendererUI();
+	void drawAnimator();
 
 	void draw();
 	void button_pressed();

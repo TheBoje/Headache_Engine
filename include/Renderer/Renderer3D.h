@@ -5,6 +5,8 @@
 #include "HierarchyContainer.h"
 #include "Object3D.h"
 #include "ofxAssimpModelLoader.h"
+#include "Animator.h"
+
 
 namespace ift3100 {
 class Application;
@@ -16,6 +18,8 @@ public:
 	CameraManager cameraManager;
 
 	ofxAssimpModelLoader model;
+
+	Animator anim;
 
 	HierarchyContainer<Object3D> hierarchy;
 
