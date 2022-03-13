@@ -78,7 +78,7 @@ void Application::mousePressed(int x, int y, int button) {
 	interface.mousePos.z = x;
 	interface.mousePos.w = y;
 	isMouseDown			 = true;
-	if (ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered()) {
+	if (ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered() || interface.mouseAction == DrawPrimitive) {
 		renderer3D.setMouseInput(false); // Disable camera mouse input
 	}
 }
