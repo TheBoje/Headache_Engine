@@ -6,8 +6,6 @@ Renderer3D::Renderer3D(Application& _application)
 	: application(_application) { }
 
 void Renderer3D::setup() {
-	ofEnableSmoothing();
-	ofEnableDepthTest();
 	cameraManager.setup();
 
 	// TODO: Temporaire
@@ -15,14 +13,18 @@ void Renderer3D::setup() {
 	ofNode box;
 	box.setPosition(0, 15, 0);
 	hierarchy.addChild(std::make_shared<Object3D>("box", box));
-	light.setAmbientColor(ofColor(0, 60, 130));
-	light.setPosition(ofVec3f(150, 150, 150));
+
+	model.loadModel("suzanne.obj");
+	model.setPosition(0, 0, 0);
 	// ----
 
 	IFT_LOG << "done";
 }
 
-void Renderer3D::update() { cameraManager.update(); }
+void Renderer3D::update() {
+	cameraManager.update();
+	model.update();
+}
 
 /**
 	 * Delete selected Object (in UI) from renderer hierarchy and UI.
@@ -44,13 +46,18 @@ void Renderer3D::deleteSelected() {
 }
 
 void Renderer3D::draw() {
+	ofEnableDepthTest();
+
 	// Draw axis camera if enabled
 	if (cameraManager.axesCamerasEnabled()) {
 		for (int i = 0; i < NB_AXES_CAM; i++) {
 			cameraManager.beginCamera(i);
 			hierarchy.mapChildren([](std::shared_ptr<Object3D> obj) {
-				if (obj->getNode() != nullptr) {
-					ofFill();
+				ofFill();
+				// TODO(Louis): cleanup this mess
+				if (obj->getType() == ObjectType::Mesh) {
+					obj->getMesh()->drawFaces();
+				} else {
 					obj->getNode()->draw();
 				}
 			});
@@ -60,12 +67,17 @@ void Renderer3D::draw() {
 	// Draw main camera
 	cameraManager.beginCamera(3);
 	hierarchy.mapChildren([](std::shared_ptr<Object3D> obj) {
-		if (obj->getNode() != nullptr) {
-			ofFill();
+		ofFill();
+		// TODO(Louis): cleanup this mess
+		if (obj->getType() == ObjectType::Mesh) {
+			obj->getMesh()->drawFaces();
+		} else {
 			obj->getNode()->draw();
 		}
 	});
 	cameraManager.endCamera(3);
+
+	ofDisableDepthTest();
 }
 
 void Renderer3D::setMouseInput(bool enable) { cameraManager.setMouseInput(enable); }

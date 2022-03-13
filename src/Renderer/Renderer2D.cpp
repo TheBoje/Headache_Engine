@@ -6,7 +6,6 @@ Renderer2D::Renderer2D(Application& _application)
 	: application(_application) { }
 
 void Renderer2D::setup() {
-	ofSetFrameRate(60);
 	ofSetCircleResolution(32);
 	backgroundColor = ofColor::darkGray;
 	primitives.reserve(1000);

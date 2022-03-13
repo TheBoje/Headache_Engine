@@ -57,13 +57,19 @@ void Interface::imageUI() {
 		application.exportRender(std::string(imageRenderName));
 	}
 
+	ImGui::InputText("Import 3D file", import3DObj, IM_ARRAYSIZE(import3DObj));
+	if (ImGui::Button("Import")) {
+		application.import3DObj(std::string(import3DObj));
+	}
+
 	if (image.isAllocated())
 		ImGui::Image((ImTextureID)(uintptr_t)textureSourceID, ImVec2(textureSource.getWidth() / 4, textureSource.getHeight() / 4));
 }
 
 void Interface::drawingUI() {
-	const char* items[]				 = {"Point", "Line", "Rectangle", "Ellipse", "Triangle", "Cross", "Star"};
-	int			drawModeCurrentIndex = drawMode;
+	const char* items[] = {"Point", "Line", "Rectangle", "Ellipse", "Triangle", "Cross", "Star"};
+
+	int drawModeCurrentIndex = drawMode;
 	if (ImGui::BeginCombo("Primitive type", items[drawModeCurrentIndex])) {
 		for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
 			bool is_selected = (drawModeCurrentIndex == n);
