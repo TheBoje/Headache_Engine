@@ -21,13 +21,14 @@ void Renderer3D::setup() {
 	light.setPosition(ofVec3f(150, 150, 150));
 	// ----
 
-	anim.setup();
-	anim.setTarget(box_shared->getNode());
-	anim.addKeyframe(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), 0);
-	anim.addKeyframe(ofVec3f(0, 100, 0), ofVec3f(90, 0, 0), 100);
-	anim.addKeyframe(ofVec3f(0, 100, -100), ofVec3f(0, 0, 0), 200);
-	anim.reset();
-	anim.resume();
+	// Note: Uncomment me to enable animator testing, this is temporary until we implement a proper UI!
+	// anim.setup();
+	// anim.setTarget(box_shared->getNode());
+	// anim.addKeyframe(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), 0);
+	// anim.addKeyframe(ofVec3f(0, 100, 0), ofVec3f(90, 0, 0), 100);
+	// anim.addKeyframe(ofVec3f(0, 100, -100), ofVec3f(0, 0, 0), 200);
+	// anim.reset();
+	// anim.resume();
 
 	IFT_LOG << "done";
 }
@@ -43,8 +44,6 @@ void Renderer3D::update() {
 	 * Note: Deleted primitive is added to undo stack.
 	*/
 void Renderer3D::deleteSelected() {
-	// undoPrimitives.push(hierarchyPrimitives);
-
 	// Delete each selected Object3D in hierarchy
 	for (Hierarchy<Object3D>* selected : hierarchy.selected_nodes) {
 		if (hierarchy.isRoot(*selected))
