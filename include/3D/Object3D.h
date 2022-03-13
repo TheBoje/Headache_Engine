@@ -3,14 +3,14 @@
 
 #include "HierarchyItem.h"
 
-#include "ofCamera.h"
 #include "of3dPrimitives.h"
+#include "ofCamera.h"
 #include "ofMesh.h"
 
 #include <string>
 
 namespace ift3100 {
-enum ObjectType { Camera, Primitive, Mesh, Node, NoneObj };
+enum ObjectType { Camera, Primitive, Mesh, Node, Light, NoneObj };
 
 class Object3D : public HierarchyItem {
 	std::string _name;
@@ -21,6 +21,7 @@ class Object3D : public HierarchyItem {
 		of3dPrimitive* _primitive;
 		ofMesh*		   _mesh;
 		ofNode*		   _node;
+		ofLight*	   _light;
 	};
 
 public:
@@ -29,9 +30,11 @@ public:
 	Object3D(std::string name, of3dPrimitive primitive);
 	Object3D(std::string name, ofMesh mesh);
 	Object3D(std::string name, ofNode node);
+	Object3D(std::string name, ofLight node);
 	~Object3D();
 
 	ofNode* getNode();
+	ofMesh* getMesh();
 
 	ObjectType	getType() const { return _type; }
 	std::string toString() const { return _name; }

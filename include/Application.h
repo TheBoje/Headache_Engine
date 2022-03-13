@@ -1,12 +1,12 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include "CameraManager.h"
 #include "Cursor.h"
 #include "Hierarchy.h"
 #include "ImageUtils.h"
 #include "Interface.h"
 #include "Logger.h"
-#include "CameraManager.h"
 #include "Renderer2D.h"
 #include "Renderer3D.h"
 #include "ofMain.h"
@@ -44,6 +44,7 @@ public:
 	void rendererUndo();
 	void rendererRedo();
 	void exportRender(std::string filename);
+	void import3DObj(std::string filename);
 };
 } // namespace ift3100
 

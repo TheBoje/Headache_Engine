@@ -11,6 +11,7 @@ Application::~Application() { }
 void Application::setup() {
 	ofSetWindowTitle("IFT-3100 Main");
 
+	ofSetVerticalSync(true);
 	ofBackground(70, 70, 70);
 	isMouseDown = false;
 
@@ -151,8 +152,22 @@ void Application::rendererUndo() { renderer2D.undoPrimitive(); }
 
 void Application::rendererRedo() { renderer2D.redoPrimitive(); }
 
-void Application::exportRender(std::string name) {
-	name += ".png";
-	ImageUtils::exportImage(name);
+void Application::exportRender(std::string filename) {
+	filename += ".png";
+	ImageUtils::exportImage(filename);
+}
+
+void Application::import3DObj(std::string filename) {
+	IFT_LOG << "Trying to import bin/data/" << filename;
+	ofxAssimpModelLoader model;
+	model.loadModel(filename);
+	if (model.getMeshCount() >= 1) {
+		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
+		for (int i = 0; i < model.getMeshCount(); i++) {
+			renderer3D.hierarchy.addChild(std::make_shared<Object3D>(filename + std::to_string(i), model.getMesh(i)));
+		}
+	} else {
+		IFT_LOG_ERROR << "import failed, object doesn't have a mesh";
+	}
 }
 } // namespace ift3100

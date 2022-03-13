@@ -26,6 +26,11 @@ Object3D::Object3D(std::string name, ofNode node)
 	, _type(ObjectType::Node)
 	, _node(new ofNode(node)) { }
 
+Object3D::Object3D(std::string name, ofLight node)
+	: _name(name)
+	, _type(ObjectType::Light)
+	, _light(new ofLight(node)) { }
+
 Object3D::~Object3D() { delete getNode(); }
 
 ofNode* Object3D::getNode() {
@@ -33,7 +38,17 @@ ofNode* Object3D::getNode() {
 		case ObjectType::Camera: return _camera;
 		case ObjectType::Primitive: return _primitive;
 		case ObjectType::Node: return _node;
-		default: IFT_LOG_ERROR << "try getting node of non ofNode object, returning nullptr instead"; return nullptr;
+		case ObjectType::Light: return _light;
+		default: IFT_LOG_ERROR << "try getting node of " << _type << ", returning nullptr instead"; return nullptr;
+	}
+}
+
+ofMesh* Object3D::getMesh() {
+	if (_type == ObjectType::Mesh) {
+		return _mesh;
+	} else {
+		IFT_LOG_ERROR << "try getting mesh of " << _type << ", returning nullptr instead";
+		return nullptr;
 	}
 }
 } // namespace ift3100
