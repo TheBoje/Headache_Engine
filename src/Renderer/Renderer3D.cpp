@@ -6,21 +6,16 @@ Renderer3D::Renderer3D(Application& _application)
 	: application(_application) { }
 
 void Renderer3D::setup() {
-	ofEnableSmoothing();
-	ofEnableDepthTest();
 	cameraManager.setup();
 
 	_showBoundary = false;
 
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
-	ofNode box;
-
+	ofNode					  box;
 	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
 
 	hierarchy.addChild(box_shared);
-	light.setAmbientColor(ofColor(0, 60, 130));
-	light.setPosition(ofVec3f(150, 150, 150));
 	// ----
 
 	// Note: Uncomment me to enable animator testing, this is temporary until we implement a proper UI!
@@ -118,6 +113,8 @@ void Renderer3D::deleteSelected() {
 }
 
 void Renderer3D::draw() {
+	ofEnableDepthTest();
+
 	// Draw axis camera if enabled
 	if (cameraManager.axesCamerasEnabled()) {
 		for (int i = 0; i < NB_AXES_CAM; i++) {
@@ -129,8 +126,11 @@ void Renderer3D::draw() {
 			}
 
 			hierarchy.mapChildren([](std::shared_ptr<Object3D> obj) {
-				if (obj->getNode() != nullptr) {
-					ofFill();
+				ofFill();
+				// TODO(Louis): cleanup this mess
+				if (obj->getType() == ObjectType::Mesh) {
+					obj->getMesh()->drawFaces();
+				} else {
 					obj->getNode()->draw();
 				}
 			});
@@ -145,12 +145,17 @@ void Renderer3D::draw() {
 		ofSetColor(255);
 	}
 	hierarchy.mapChildren([](std::shared_ptr<Object3D> obj) {
-		if (obj->getNode() != nullptr) {
-			ofFill();
+		ofFill();
+		// TODO(Louis): cleanup this mess
+		if (obj->getType() == ObjectType::Mesh) {
+			obj->getMesh()->drawFaces();
+		} else {
 			obj->getNode()->draw();
 		}
 	});
 	cameraManager.endCamera(3);
+
+	ofDisableDepthTest();
 }
 
 void Renderer3D::setMouseInput(bool enable) { cameraManager.setMouseInput(enable); }

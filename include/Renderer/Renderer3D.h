@@ -5,7 +5,8 @@
 #include "CameraManager.h"
 #include "HierarchyContainer.h"
 #include "Object3D.h"
-#include "ofLight.h"
+#include "ofxAssimpModelLoader.h"
+
 
 namespace ift3100 {
 class Application;
@@ -19,7 +20,7 @@ public:
 
 	CameraManager cameraManager;
 
-	ofLight light;
+	ofxAssimpModelLoader model;
 
 	Animator anim;
 
