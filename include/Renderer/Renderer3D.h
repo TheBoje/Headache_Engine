@@ -7,7 +7,6 @@
 #include "ofxAssimpModelLoader.h"
 #include "Animator.h"
 
-
 namespace ift3100 {
 class Application;
 class Renderer3D {

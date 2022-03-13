@@ -10,7 +10,7 @@ void Renderer3D::setup() {
 
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
-	ofNode box;
+	ofNode					  box;
 	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
 
 	hierarchy.addChild(box_shared);
