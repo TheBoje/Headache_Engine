@@ -67,7 +67,7 @@ void Renderer3D::computeBoundaryBox() {
 				std::size_t numVertices = mesh.getNumVertices();
 
 				for (std::size_t i = 0; i < numVertices; i++) {
-					ofVec3f vpos = mesh.getVertex(i) + o->getNode()->getPosition();
+					ofVec3f vpos = mesh.getVertex(i) + nodepos;
 					vpos.rotate(nodrot.x, nodepos, ofVec3f(1, 0, 0));
 					vpos.rotate(nodrot.y, nodepos, ofVec3f(0, 1, 0));
 					vpos.rotate(nodrot.z, nodepos, ofVec3f(0, 0, 1));
