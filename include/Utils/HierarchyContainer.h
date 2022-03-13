@@ -55,12 +55,17 @@ public:
 		for (int i = 0; i < _root.getChildrenSize(); i++) { _root.at(i)->map(func); }
 	}
 
-	void drawUI() { _root.drawUI(selected_nodes); }
+	void drawUI() {
+		if (ImGui::TreeNodeEx((void*)(intptr_t)0, ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth, "root", 0)) {
+			for (int i = 0; i < _root.getChildrenSize(); i++) { _root.at(i)->drawUI(selected_nodes); }
+			ImGui::TreePop();
+		}
+	}
 
 	/**
          * @brief Flatten the tree in a vector of hierarchy
-         * 
-         * @return std::vector<Hierarchy<T>*> 
+         *
+         * @return std::vector<Hierarchy<T>*>
          */
 	std::vector<Hierarchy<T>*> flatten() {
 		std::vector<Hierarchy<T>*> flat {};
@@ -70,9 +75,9 @@ public:
 
 	/**
          * @brief Flatten the tree in a vector of T class in order
-         * to get the object stored in the hierarchy 
-         * 
-         * @return std::vector<std::shared_ptr<T>> 
+         * to get the object stored in the hierarchy
+         *
+         * @return std::vector<std::shared_ptr<T>>
          */
 	std::vector<std::shared_ptr<T>> flattenRef() {
 		std::vector<std::shared_ptr<T>> flatRef {};
