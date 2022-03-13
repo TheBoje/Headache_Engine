@@ -54,6 +54,7 @@ void Interface::imageUI() {
 			maxg = std::max(_rgb[1][i], maxg);
 			maxb = std::max(_rgb[2][i], maxb);
 		}
+
 		ImGui::PlotHistogram("R", &getter, _rgb[0], 256, 0, NULL, 0.0f, (float)maxr, ImVec2(0, 80));
 		ImGui::NewLine();
 		ImGui::PlotHistogram("G", &getter, _rgb[1], 256, 0, NULL, 0.0f, (float)maxg, ImVec2(0, 80));
