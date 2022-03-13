@@ -9,6 +9,9 @@
 namespace ift3100 {
 class Application;
 class Renderer3D {
+	ofBoxPrimitive _boudaryBox;
+	bool		   _showBoundary;
+
 public:
 	Application& application;
 	Renderer3D(Application& _application);
@@ -25,6 +28,7 @@ public:
 	void draw();
 
 	void deleteSelected();
+	void computeBoundaryBox();
 
 	void setMouseInput(bool enable);
 	void toggleAxesCameras(bool enabled);
