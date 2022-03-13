@@ -93,8 +93,6 @@ void Renderer3D::computeBoundaryBox() {
 	_boudaryBox.setWidth(std::abs(maxPos.x - minPos.x));
 	_boudaryBox.setHeight(std::abs(maxPos.y - minPos.y));
 	_boudaryBox.setDepth(std::abs(maxPos.z - minPos.z));
-
-	IFT_LOG << "boudray box position " << _boudaryBox.getPosition();
 }
 
 /**
