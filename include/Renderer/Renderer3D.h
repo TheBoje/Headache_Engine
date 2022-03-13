@@ -5,6 +5,7 @@
 #include "CameraManager.h"
 #include "ofLight.h"
 #include "Object3D.h"
+#include "Animator.h"
 
 namespace ift3100 {
 class Application;
@@ -16,6 +17,8 @@ public:
 	CameraManager cameraManager;
 
 	ofLight light;
+
+	Animator anim;
 
 	HierarchyContainer<Object3D> hierarchy;
 
