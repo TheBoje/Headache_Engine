@@ -12,7 +12,7 @@ void Renderer3D::setup() {
 
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
-	box.setPosition(0, 15, 0);
+	ofNode box;
 
 	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
 
@@ -23,7 +23,7 @@ void Renderer3D::setup() {
 
 	anim.setup();
 	anim.setTarget(box_shared->getNode());
-	anim.addKeyframe(ofVec3f(0, 50, 0), ofVec3f(0, 0, 0), 0);
+	anim.addKeyframe(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), 0);
 	anim.addKeyframe(ofVec3f(0, 100, 0), ofVec3f(90, 0, 0), 100);
 	anim.addKeyframe(ofVec3f(0, 100, -100), ofVec3f(0, 0, 0), 200);
 	anim.reset();

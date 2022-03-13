@@ -77,6 +77,8 @@ void Animator::addKeyframe(const ofVec3f& position, const ofVec3f& rotation, uin
 
 	if (it == _keyframes.end())
 		_keyframes.push_back(kf);
+
+	IFT_LOG << "Add keyframe pos :" << position << " | rot : " << rotation << " | frame : " << frame;
 }
 
 void Animator::setup() { }
@@ -89,7 +91,8 @@ void Animator::update() {
 }
 
 /**
- * @brief Reset the animation and pause it
+ * @brief Reset the animation and pause it.
+ * Set the target to the first animation position and rotation.
  * 
  */
 void Animator::reset() {
@@ -99,6 +102,9 @@ void Animator::reset() {
 	if (_keyframes.size() >= 2) {
 		_indexLastKeyFrame = 0;
 		_indexNextKeyFrame = 1;
+
+		_target->setPosition(_keyframes[_indexLastKeyFrame].position);
+		_target->setGlobalOrientation(glm::quat(_keyframes[_indexLastKeyFrame].rotation * DEG_TO_RAD));
 	} else {
 		_indexLastKeyFrame = -1;
 		_indexNextKeyFrame = -1;
@@ -113,7 +119,7 @@ void Animator::computePiecewiseInterpolation() {
 	Keyframe* lastKeyFrame = &_keyframes[_indexLastKeyFrame];
 	Keyframe* nextKeyFrame = &_keyframes[_indexNextKeyFrame];
 
-	if (_currentFrame < ((lastKeyFrame->frame - nextKeyFrame->frame) / 2)) {
+	if ((_currentFrame - lastKeyFrame->frame) < ((nextKeyFrame->frame - lastKeyFrame->frame) / 2)) {
 		_target->setPosition(lastKeyFrame->position);
 		_target->setGlobalOrientation(glm::quat(lastKeyFrame->rotation * DEG_TO_RAD));
 	} else {

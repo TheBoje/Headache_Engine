@@ -19,7 +19,6 @@ public:
 	ofLight light;
 
 	Animator anim;
-	ofNode	 box;
 
 	HierarchyContainer<Object3D> hierarchy;
 

@@ -7,7 +7,7 @@
 
 namespace ift3100 {
 
-enum InterpolationType { Piecewise, Linear, Polynomial, Spline };
+enum InterpolationType { Piecewise, Linear };
 
 struct Keyframe {
 	ofVec3f	 position;
@@ -15,6 +15,12 @@ struct Keyframe {
 	uint64_t frame;
 };
 
+/**
+ * @brief Animate a target using a vector of @see Keyframe.
+ * For now the target can only is an ofNode derivated object.
+ * You can change position and rotation for now.
+ * As keyframe depends of frame, animation speed depends of the framerate.
+ */
 class Animator {
 	InterpolationType _interpolationType;
 
