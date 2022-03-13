@@ -12,17 +12,30 @@ void Renderer3D::setup() {
 
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
-	ofNode box;
 	box.setPosition(0, 15, 0);
-	hierarchy.addChild(std::make_shared<Object3D>("box", box));
+
+	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
+
+	hierarchy.addChild(box_shared);
 	light.setAmbientColor(ofColor(0, 60, 130));
 	light.setPosition(ofVec3f(150, 150, 150));
 	// ----
 
+	anim.setup();
+	anim.setTarget(box_shared->getNode());
+	anim.addKeyframe(ofVec3f(0, 50, 0), ofVec3f(0, 0, 0), 0);
+	anim.addKeyframe(ofVec3f(0, 100, 0), ofVec3f(90, 0, 0), 100);
+	anim.addKeyframe(ofVec3f(0, 100, -100), ofVec3f(0, 0, 0), 200);
+	anim.reset();
+	anim.resume();
+
 	IFT_LOG << "done";
 }
 
-void Renderer3D::update() { cameraManager.update(); }
+void Renderer3D::update() {
+	cameraManager.update();
+	anim.update();
+}
 
 /**
 	 * Delete selected Object (in UI) from renderer hierarchy and UI.
