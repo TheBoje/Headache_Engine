@@ -10,12 +10,10 @@ void Renderer3D::setup() {
 
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
-	ofNode box;
+	ofNode					  box;
 	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
 
 	hierarchy.addChild(box_shared);
-	light.setAmbientColor(ofColor(0, 60, 130));
-	light.setPosition(ofVec3f(150, 150, 150));
 	// ----
 
 	// Note: Uncomment me to enable animator testing, this is temporary until we implement a proper UI!

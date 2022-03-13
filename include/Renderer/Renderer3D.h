@@ -1,12 +1,11 @@
 #ifndef IFT3100_RENDERER_3D_H
 #define IFT3100_RENDERER_3D_H
 
+#include "Animator.h"
 #include "CameraManager.h"
 #include "HierarchyContainer.h"
 #include "Object3D.h"
 #include "ofxAssimpModelLoader.h"
-#include "Animator.h"
-
 
 namespace ift3100 {
 class Application;
