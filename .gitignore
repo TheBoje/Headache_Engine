@@ -4,3 +4,7 @@
 .idea
 bin
 obj
+**/imgui.ini
+GTAGS
+GPATH
+GRTAGS

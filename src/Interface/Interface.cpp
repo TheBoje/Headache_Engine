@@ -1,123 +1,219 @@
-#include "Interface.h"
-#include "ofImage.h"
-#include "ImageUtils.h"
+#include <string>
+
 #include "Application.h"
+#include "Interface.h"
 
-using namespace ift3100;
-
-Interface::Interface(Application & _application) : application(_application) {}
+namespace ift3100 {
+Interface::Interface(Application& _application)
+	: application(_application) { }
 
 void Interface::setup() {
-    _gui.setup();
-    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	_gui.setup();
+	_gui.setTheme(new Theme());
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    primitiveStrokeWidth = DEFAULT_STROKE_WIDTH;
-    primitiveStrokeColor = ofColor::white;
-    primitiveStrokeColor.w = 1;
-    primitiveFillColor = ofColor::gray;
-    primitiveFillColor.w = 1;
-    primitiveFill = true;
-    mouseAction = None;
+	animPaused = false;
+	inspector.setup();
 
-    isHistComputed = false;
+	primitiveStrokeWidth   = DEFAULT_STROKE_WIDTH;
+	primitiveStrokeColor   = ofColor::white;
+	primitiveStrokeColor.w = 1;
+	primitiveFillColor	   = ofColor::gray;
+	primitiveFillColor.w   = 1;
+	primitiveFill		   = true;
+	mouseAction			   = None;
+	drawMode			   = Line;
+	axesCameraEnable	   = false;
+	mainCameraOrtho		   = false;
 
-    ofLog() << "<interface::setup> done";
+	isHistComputed = false;
+
+	IFT_LOG << "done";
 }
 
-float getter(void * data, int index) {
-    return (float)((int*)data)[index];
-}
+float getter(void* data, int index) { return (float)((int*)data)[index]; }
 
 void Interface::loadImage(std::string path) {
-    image.load(path);
-    textureSourceID = _gui.loadTexture(textureSource, path);
+	image.load(path);
+	textureSourceID = _gui.loadTexture(textureSource, path);
 }
 
 void Interface::imageUI() {
-    if(ImGui::Button("compute histogram") && image.isAllocated()){
-        _rgb = ImageUtils::computeHistRGB(image);
-        isHistComputed = true;
-    }
+	if (ImGui::Button("compute histogram") && image.isAllocated()) {
+		_rgb		   = ImageUtils::computeHistRGB(image);
+		isHistComputed = true;
+	}
 
-    if(isHistComputed) {
-        ImGui::PlotHistogram("R", &getter, _rgb[0], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
-        ImGui::PlotHistogram("G", &getter, _rgb[1], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
-        ImGui::PlotHistogram("B", &getter, _rgb[2], 256, 0, NULL, 0.0f, 70000.0f, ImVec2(0,80)); ImGui::NewLine();
-    }
-    
+	if (isHistComputed) {
+		unsigned int maxr = 0;
+		unsigned int maxg = 0;
+		unsigned int maxb = 0;
 
-    ImGui::InputText("Output file name", imageRenderName, IM_ARRAYSIZE(imageRenderName));
-    if (ImGui::Button("Export")) {
-        application.exportRender(std::string(imageRenderName));
-    }
+		for (int i = 0; i < 256; i++) {
+			maxr = std::max(_rgb[0][i], maxr);
+			maxg = std::max(_rgb[1][i], maxg);
+			maxb = std::max(_rgb[2][i], maxb);
+		}
 
-    if(image.isAllocated()) 
-        ImGui::Image((ImTextureID)(uintptr_t)textureSourceID, ImVec2(textureSource.getWidth()/ 4, textureSource.getHeight()/4));
+		ImGui::PlotHistogram("R", &getter, _rgb[0], 256, 0, NULL, 0.0f, (float)maxr, ImVec2(0, 80));
+		ImGui::NewLine();
+		ImGui::PlotHistogram("G", &getter, _rgb[1], 256, 0, NULL, 0.0f, (float)maxg, ImVec2(0, 80));
+		ImGui::NewLine();
+		ImGui::PlotHistogram("B", &getter, _rgb[2], 256, 0, NULL, 0.0f, (float)maxb, ImVec2(0, 80));
+		ImGui::NewLine();
+	}
+
+	ImGui::InputText("Output file name", imageRenderName, IM_ARRAYSIZE(imageRenderName));
+	if (ImGui::Button("Export")) {
+		application.exportRender(std::string(imageRenderName));
+	}
+
+	ImGui::InputText("Import 3D file", import3DObj, IM_ARRAYSIZE(import3DObj));
+	if (ImGui::Button("Import")) {
+		application.import3DObj(std::string(import3DObj));
+	}
+
+	if (image.isAllocated())
+		ImGui::Image((ImTextureID)(uintptr_t)textureSourceID, ImVec2(textureSource.getWidth() / 4, textureSource.getHeight() / 4));
 }
 
 void Interface::drawingUI() {
-    const char* items[] = {"Point", "Line", "Rectangle", "Ellipse", "Triangle", "Cross", "Star"};
-    int drawModeCurrentIndex = drawMode;
-    if (ImGui::BeginCombo("Primitive type", items[drawModeCurrentIndex])) {
-        for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
-            bool is_selected = (drawModeCurrentIndex == n);
-            if (ImGui::Selectable(items[n], is_selected))
-                drawModeCurrentIndex = n;
-            if (is_selected)
-                ImGui::SetItemDefaultFocus();  
-        }
-        ImGui::EndCombo();
-    }
-    drawMode = InterfaceUtils::intToPrimitiveType(drawModeCurrentIndex);
+	const char* items[] = {"Point", "Line", "Rectangle", "Ellipse", "Triangle", "Cross", "Star"};
 
-    ImGui::SliderFloat("Stroke Width", &primitiveStrokeWidth, 0.0f, 20.0f);
-    ImGui::ColorEdit4("Stroke Color", (float*)&primitiveStrokeColor);
-    ImGui::ColorEdit4("Fill Color", (float*)&primitiveFillColor);
-    ImGui::Checkbox("Enable fill", &primitiveFill);
+	int drawModeCurrentIndex = drawMode;
+	if (ImGui::BeginCombo("Primitive type", items[drawModeCurrentIndex])) {
+		for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
+			bool is_selected = (drawModeCurrentIndex == n);
+			if (ImGui::Selectable(items[n], is_selected))
+				drawModeCurrentIndex = n;
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
+	drawMode = InterfaceUtils::intToPrimitiveType(drawModeCurrentIndex);
 
-    bool isDrawPrimitive = mouseAction == DrawPrimitive;
-    if (ImGui::Checkbox("Draw", &isDrawPrimitive)) {
-        if (isDrawPrimitive) mouseAction = DrawPrimitive;
-        else mouseAction = None;
-    }
+	ImGui::SliderFloat("Stroke Width", &primitiveStrokeWidth, 0.0f, 20.0f);
+	ImGui::ColorEdit4("Stroke Color", (float*)&primitiveStrokeColor);
+	ImGui::ColorEdit4("Fill Color", (float*)&primitiveFillColor);
+	ImGui::Checkbox("Enable fill", &primitiveFill);
 
-    if (ImGui::Button("Undo")) {
-        application.rendererUndo();
-    } ImGui::SameLine();
-    if (ImGui::Button("Redo")) {
-        application.rendererRedo();
-            }
+	bool isDrawPrimitive = mouseAction == DrawPrimitive;
+	if (ImGui::Checkbox("Draw", &isDrawPrimitive)) {
+		if (isDrawPrimitive)
+			mouseAction = DrawPrimitive;
+		else
+			mouseAction = None;
+	}
+
+	if (ImGui::Button("Undo")) {
+		application.rendererUndo();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Redo")) {
+		application.rendererRedo();
+	}
 }
 
+void Interface::draw3dRendererUI() {
+	if (ImGui::BeginMenu("Objects")) {
+		if (ImGui::MenuItem("Cube", NULL, false, true)) {
+			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cube", ofBoxPrimitive()));
+		}
+		if (ImGui::MenuItem("Cone", NULL, false, true)) {
+			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cone", ofConePrimitive()));
+		}
+		if (ImGui::MenuItem("Plane", NULL, false, true)) {
+			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Plane", ofPlanePrimitive()));
+		}
+		if (ImGui::MenuItem("Sphere", NULL, false, true)) {
+			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Sphere", ofSpherePrimitive()));
+		}
+		if (ImGui::MenuItem("IcoSphere", NULL, false, true)) {
+			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("IcoSphere", ofIcoSpherePrimitive()));
+		}
+		if (ImGui::MenuItem("Cylinder", NULL, false, true)) {
+			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cylinder", ofCylinderPrimitive()));
+		}
+		ImGui::EndMenu();
+	}
+}
+
+void Interface::drawAnimator() {
+	if (animPaused) {
+		if (ImGui::Button("Resume")) {
+			application.renderer3D.anim.resume();
+			animPaused = false;
+		}
+	} else {
+		if (ImGui::Button("Pause")) {
+			application.renderer3D.anim.pause();
+			animPaused = true;
+		}
+	}
+
+	if (ImGui::Button("Reset")) {
+		application.renderer3D.anim.reset();
+		animPaused = true;
+	}
+}
 
 void Interface::draw() {
-    _gui.begin();
-    ImGui::Begin("Main menu");
-    {
-        if (ImGui::CollapsingHeader("Debug")) {
-            ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        }
+	_gui.begin();
+	bool* mainmenu;
+	ImGui::Begin("Main menu", mainmenu, ImGuiWindowFlags_MenuBar);
+	{
+		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen)) {
+			ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::Text("Mouse action: %s", InterfaceUtils::MouseActionToChar(mouseAction));
+		}
 
-        if (ImGui::CollapsingHeader("Hierarchy")) {
-            ImGui::Text("This is empty... for now");
-        }
+		if (ImGui::CollapsingHeader("Image")) {
+			imageUI();
+		}
 
-        if(ImGui::CollapsingHeader("Image")) {
-            imageUI();
-        }
+		if (ImGui::CollapsingHeader("Tree")) {
+			application.renderer2D.hierarchyPrimitives.drawUI();
+		}
 
-        if(ImGui::CollapsingHeader("Tree")) {
-            tree->drawGUIHierarchy();
-        }
+		if (ImGui::CollapsingHeader("3d tree")) {
+			application.renderer3D.hierarchy.drawUI();
+		}
 
-        if (ImGui::CollapsingHeader("Drawing")) {
-            drawingUI();
-        }
-    }
-    _gui.end();
+		if (ImGui::CollapsingHeader("Drawing")) {
+			drawingUI();
+		}
+
+		if (ImGui::CollapsingHeader("Animator")) {
+			drawAnimator();
+		}
+
+		if (ImGui::BeginMenuBar()) {
+			draw3dRendererUI();
+			ImGui::EndMenuBar();
+		}
+
+		if (ImGui::CollapsingHeader("Cameras")) {
+			if (ImGui::Checkbox("Activate axes cameras", &axesCameraEnable)) {
+				application.renderer3D.toggleAxesCameras(axesCameraEnable);
+			}
+
+			if (ImGui::Checkbox("Main camera ortho", &mainCameraOrtho)) {
+				application.renderer3D.setMainCameraOrtho(mainCameraOrtho);
+			}
+		}
+	}
+
+	if (!application.renderer2D.hierarchyPrimitives.selected_nodes.empty()) {
+		ImGui::Begin("Inspector");
+		{ inspector.drawInspectorVectorPrimitive(&application.renderer2D.hierarchyPrimitives.selected_nodes); }
+	}
+
+	if (!application.renderer3D.hierarchy.selected_nodes.empty()) {
+		ImGui::Begin("Inspector 3D");
+		{ inspector.drawInspector3d(&application.renderer3D.hierarchy.selected_nodes); }
+	}
+
+	_gui.end();
 }
-
-void Interface::button_pressed()
-{
-    ofLog() << "<interface::button_pressed>";
-}
+} // namespace ift3100
