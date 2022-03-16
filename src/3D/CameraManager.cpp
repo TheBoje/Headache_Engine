@@ -46,7 +46,9 @@ void CameraManager::setup() {
 
 void CameraManager::update() { }
 
-void CameraManager::windowResize() { computeViewports(); }
+void CameraManager::windowResize() {
+	computeViewports();
+}
 
 /**
      * @brief Focus the camera.s on the position.
@@ -57,9 +59,12 @@ void CameraManager::focus(const ofVec3f& position) {
 	_main_camera.setPosition(position + OFFSET_DATA[0]);
 	_main_camera.lookAt(position);
 
-	for (int i = 0; i < NB_AXES_CAM; i++) _axes_cameras[i].setPosition(position + OFFSET_DATA[i]);
+	for (int i = 0; i < NB_AXES_CAM; i++)
+		_axes_cameras[i].setPosition(position + OFFSET_DATA[i]);
 
-	for (int i = 0; i < NB_AXES_CAM; i++) { _axes_cameras[i].lookAt(ofVec3f(0, 0, 0)); }
+	for (int i = 0; i < NB_AXES_CAM; i++) {
+		_axes_cameras[i].lookAt(ofVec3f(0, 0, 0));
+	}
 }
 
 /**
@@ -99,10 +104,14 @@ void CameraManager::endCamera(std::size_t index) {
 void CameraManager::setMouseInput(bool enable) {
 	if (enable) {
 		_main_camera.enableMouseInput();
-		for (int i = 0; i < NB_AXES_CAM; i++) { _axes_cameras[i].enableMouseInput(); }
+		for (int i = 0; i < NB_AXES_CAM; i++) {
+			_axes_cameras[i].enableMouseInput();
+		}
 	} else {
 		_main_camera.disableMouseInput();
-		for (int i = 0; i < NB_AXES_CAM; i++) { _axes_cameras[i].disableMouseInput(); }
+		for (int i = 0; i < NB_AXES_CAM; i++) {
+			_axes_cameras[i].disableMouseInput();
+		}
 	}
 }
 
@@ -120,5 +129,7 @@ void CameraManager::toggleAxesCameras(bool enabled) {
 	IFT_LOG << "axes cameras is now " << (enabled ? "enabled" : "disabled");
 }
 
-bool const CameraManager::axesCamerasEnabled() const { return _axes_cameras_enabled; }
+bool const CameraManager::axesCamerasEnabled() const {
+	return _axes_cameras_enabled;
+}
 } // namespace ift3100

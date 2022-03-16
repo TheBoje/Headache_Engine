@@ -49,7 +49,9 @@ ofImage ift3100::Sprite::next() {
 	return _image_parts.at(_index);
 }
 
-ofImage ift3100::Sprite::getPart(size_t index) { return _image_parts.at(index); }
+ofImage ift3100::Sprite::getPart(size_t index) {
+	return _image_parts.at(index);
+}
 
 /**
  * Concatenate two sprites together, each patch in the sprite passed as arg is placed after the sprite object

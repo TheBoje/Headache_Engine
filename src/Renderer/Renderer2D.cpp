@@ -25,7 +25,9 @@ void Renderer2D::setup() {
 	IFT_LOG << "done";
 }
 
-void Renderer2D::update() { hierarchyPrimitives.update(); }
+void Renderer2D::update() {
+	hierarchyPrimitives.update();
+}
 
 /**
  * Add a preview primitive for 1 frame

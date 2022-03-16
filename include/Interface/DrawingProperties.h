@@ -27,7 +27,9 @@ public:
 		STROKE_COLOR.a = a;
 	}
 
-	void setStrokeColor(ofColor color) { STROKE_COLOR = color; }
+	void setStrokeColor(ofColor color) {
+		STROKE_COLOR = color;
+	}
 
 	void setFilledColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255) {
 		FILLED_COLOR.r = r;
@@ -36,7 +38,9 @@ public:
 		FILLED_COLOR.a = a;
 	}
 
-	void setFilledColor(ofColor color) { FILLED_COLOR = color; }
+	void setFilledColor(ofColor color) {
+		FILLED_COLOR = color;
+	}
 };
 
 } // namespace ift3100

@@ -41,7 +41,9 @@ void Interface::setup() {
 	IFT_LOG << "done";
 }
 
-float getter(void* data, int index) { return (float)((int*)data)[index]; }
+float getter(void* data, int index) {
+	return (float)((int*)data)[index];
+}
 
 void Interface::loadImage(std::string path) {
 	image.load(path);

@@ -183,17 +183,23 @@ void Renderer3D::draw() {
  *
  * @param enable new state of the mouse input (true:enable mouse input).
 */
-void Renderer3D::setMouseInput(bool enable) { cameraManager.setMouseInput(enable); }
+void Renderer3D::setMouseInput(bool enable) {
+	cameraManager.setMouseInput(enable);
+}
 
 /**
  * @param enable new state of the multiple-axis cameras (true:enable multiple-axis cameras).
 */
-void Renderer3D::toggleAxesCameras(bool enable) { cameraManager.toggleAxesCameras(enable); }
+void Renderer3D::toggleAxesCameras(bool enable) {
+	cameraManager.toggleAxesCameras(enable);
+}
 
 /**
  * @param enable new state of the camera (true: ortho, false: perspective).
 */
-void Renderer3D::setMainCameraOrtho(bool enable) { cameraManager.setMainCameraOrtho(enable); }
+void Renderer3D::setMainCameraOrtho(bool enable) {
+	cameraManager.setMainCameraOrtho(enable);
+}
 
 /**
  * Load 3D asset into the renderer from a file.

@@ -69,7 +69,9 @@ void Application::draw() {
 }
 
 // fonction appelée juste avant de quitter l'application
-void Application::exit() { IFT_LOG; }
+void Application::exit() {
+	IFT_LOG;
+}
 
 void Application::keyReleased(int key) {
 	if (key == ' ') {

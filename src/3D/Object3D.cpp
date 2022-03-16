@@ -31,7 +31,9 @@ Object3D::Object3D(std::string name, ofLight node)
 	, _type(ObjectType::Light)
 	, _light(new ofLight(node)) { }
 
-Object3D::~Object3D() { delete getNode(); }
+Object3D::~Object3D() {
+	delete getNode();
+}
 
 ofNode* Object3D::getNode() {
 	switch (_type) {
