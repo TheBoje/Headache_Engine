@@ -2,8 +2,18 @@
 #include "Application.h"
 
 namespace ift3100 {
-Renderer2D::Renderer2D(Application& _application)
-	: application(_application) { }
+Renderer2D* Renderer2D::_renderer2D = nullptr;
+
+Renderer2D::Renderer2D() { }
+
+Renderer2D::~Renderer2D() { }
+
+Renderer2D* Renderer2D::Get() {
+	if (_renderer2D == nullptr) {
+		_renderer2D = new Renderer2D();
+	}
+	return _renderer2D;
+}
 
 void Renderer2D::setup() {
 	ofSetCircleResolution(32);
@@ -17,10 +27,10 @@ void Renderer2D::update() {
 	if (!hierarchyPrimitives.selected_nodes.empty()) {
 		for (Hierarchy<VectorPrimitive>* selected : hierarchyPrimitives.selected_nodes) {
 			selected->map([=](std::shared_ptr<VectorPrimitive> p) {
-				p->FILL			= application.interface.primitiveFill;
-				p->FILL_COLOR	= application.interface.primitiveFillColor;
-				p->STROKE_WIDTH = application.interface.primitiveStrokeWidth;
-				p->STROKE_COLOR = application.interface.primitiveStrokeColor;
+				p->FILL			= Interface::Get()->primitiveFill;
+				p->FILL_COLOR	= Interface::Get()->primitiveFillColor;
+				p->STROKE_WIDTH = Interface::Get()->primitiveStrokeWidth;
+				p->STROKE_COLOR = Interface::Get()->primitiveStrokeColor;
 			});
 		}
 	}

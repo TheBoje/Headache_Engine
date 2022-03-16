@@ -13,16 +13,21 @@ class Renderer3D {
 	ofBoxPrimitive _boudaryBox;
 	bool		   _showBoundary;
 
+	static Renderer3D* _renderer3D;
+
+protected:
+	Renderer3D();
+
 public:
-	Application& application;
-	Renderer3D(Application& _application);
+	Renderer3D(const Renderer3D& renderer3D) = delete;
+	~Renderer3D();
 
-	CameraManager cameraManager;
+	Renderer3D& operator=(const Renderer3D&) = delete;
 
-	ofxAssimpModelLoader model;
+	static Renderer3D* Get();
 
-	Animator anim;
-
+	CameraManager				 cameraManager;
+	Animator					 anim;
 	HierarchyContainer<Object3D> hierarchy;
 
 	void setup();

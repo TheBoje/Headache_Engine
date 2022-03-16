@@ -10,16 +10,23 @@
 #include "Logger.h"
 #include "VectorPrimitive.h"
 #include "ofMain.h"
-#include "ofxAssimpModelLoader.h"
-#include "HierarchyItem.h"
-#include "HierarchyContainer.h"
-#include "Logger.h"
 
 namespace ift3100 {
 class Application;
 class Renderer2D {
+private:
+	static Renderer2D* _renderer2D;
+
+protected:
+	Renderer2D();
+
 public:
-	Application& application;
+	Renderer2D(const Renderer2D&) = delete;
+	~Renderer2D();
+
+	static Renderer2D* Get();
+
+	Renderer2D& operator=(const Renderer2D&) = delete;
 
 	HierarchyContainer<VectorPrimitive> hierarchyPrimitives;
 

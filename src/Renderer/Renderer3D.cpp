@@ -2,8 +2,19 @@
 #include "Application.h"
 
 namespace ift3100 {
-Renderer3D::Renderer3D(Application& _application)
-	: application(_application) { }
+
+Renderer3D* Renderer3D::_renderer3D = nullptr;
+
+Renderer3D::Renderer3D() { }
+
+Renderer3D::~Renderer3D() { }
+
+Renderer3D* Renderer3D::Get() {
+	if (_renderer3D == nullptr) {
+		_renderer3D = new Renderer3D();
+	}
+	return _renderer3D;
+}
 
 void Renderer3D::setup() {
 	cameraManager.setup();

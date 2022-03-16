@@ -9,21 +9,33 @@
 #include "Logger.h"
 #include "Renderer2D.h"
 #include "Renderer3D.h"
+
 #include "ofMain.h"
 
 namespace ift3100 {
 class Application : public ofBaseApp {
-public:
-	Interface  interface;
-	Renderer2D renderer2D;
-	Renderer3D renderer3D;
-	Cursor	   cursor;
+private:
+	static Application* application;
 
-	bool isMouseDown;
-
+protected:
 	Application();
-	~Application();
 
+public:
+	Application(const Application&) = delete;
+	~Application();
+	static Application* Get();
+
+	Application& operator=(const Application&) = delete;
+
+	Interface*	interface;
+	Renderer2D* renderer2D;
+	Renderer3D* renderer3D;
+	Cursor		cursor;
+
+	bool	isMouseDown;
+	ofVec4f mousePos;
+
+public:
 	void setup();
 	void update();
 	void keyReleased(int key);

@@ -1,13 +1,11 @@
 #ifndef IFT_3100_INTERFACE_H
 #define IFT_3100_INTERFACE_H
 
-#include "DrawingProperties.h"
 #include "Hierarchy.h"
 #include "ImageUtils.h"
 #include "InspectorInterface.h"
-#include "InterfaceUtils.h"
-#include "Logger.h"
 #include "Renderer2D.h"
+#include "Renderer3D.h"
 #include "Theme.h"
 #include "ofImage.h"
 #include "ofMain.h"
@@ -18,14 +16,25 @@
 namespace ift3100 {
 class Application;
 class Interface {
-public:
-	Application& application; // Reference to main application for callbacks
+private:
+	static Interface* _interface;
 
+protected:
+	Interface();
+
+public:
+	Interface(const Interface&) = delete;
+	~Interface();
+
+	static Interface* Get();
+
+	Interface& operator=(const Interface&) = delete;
+
+public:
 	InspectorInterface inspector;
 
 	ofxImGui::Gui _gui;
 	Theme		  theme;
-	ofVec4f		  mousePos;
 
 	unsigned int** _rgb;
 
@@ -52,8 +61,6 @@ public:
 
 	bool axesCameraEnable;
 	bool mainCameraOrtho;
-
-	Interface(Application& _application);
 
 	void setup();
 	void loadImage(std::string path);
