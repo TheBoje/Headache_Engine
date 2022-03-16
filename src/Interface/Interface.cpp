@@ -75,12 +75,12 @@ void Interface::imageUI() {
 
 	ImGui::InputText("Output file name", imageRenderName, IM_ARRAYSIZE(imageRenderName));
 	if (ImGui::Button("Export")) {
-		Application::Get()->exportRender(std::string(imageRenderName));
+		ImageUtils::exportImage(imageRenderName);
 	}
 
 	ImGui::InputText("Import 3D file", import3DObj, IM_ARRAYSIZE(import3DObj));
 	if (ImGui::Button("Import")) {
-		Application::Get()->import3DObj(std::string(import3DObj));
+		Renderer3D::Get()->importFromPath(import3DObj);
 	}
 
 	if (image.isAllocated())
@@ -110,10 +110,7 @@ void Interface::drawingUI() {
 
 	bool isDrawPrimitive = mouseAction == DrawPrimitive;
 	if (ImGui::Checkbox("Draw", &isDrawPrimitive)) {
-		if (isDrawPrimitive)
-			mouseAction = DrawPrimitive;
-		else
-			mouseAction = None;
+		mouseAction = DrawPrimitive;
 	}
 
 	if (ImGui::Button("Undo")) {
@@ -152,18 +149,18 @@ void Interface::draw3dRendererUI() {
 void Interface::drawAnimator() {
 	if (animPaused) {
 		if (ImGui::Button("Resume")) {
-			Renderer3D::Get()->anim.resume();
+			Renderer3D::Get()->animator.resume();
 			animPaused = false;
 		}
 	} else {
 		if (ImGui::Button("Pause")) {
-			Renderer3D::Get()->anim.pause();
+			Renderer3D::Get()->animator.pause();
 			animPaused = true;
 		}
 	}
 
 	if (ImGui::Button("Reset")) {
-		Renderer3D::Get()->anim.reset();
+		Renderer3D::Get()->animator.reset();
 		animPaused = true;
 	}
 }

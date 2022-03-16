@@ -17,7 +17,7 @@
   AlignOperands: Align,
   AlignTrailingComments: true,
   AllowAllParametersOfDeclarationOnNextLine: true,
-  AllowShortBlocksOnASingleLine: Always,
+  AllowShortBlocksOnASingleLine: Empty,
   AllowShortCaseLabelsOnASingleLine: true,
   AllowShortFunctionsOnASingleLine: All,
   AllowShortLoopsOnASingleLine: true,

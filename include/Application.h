@@ -51,12 +51,6 @@ public:
 	void mouseEntered(int x, int y);
 	void mouseExited(int x, int y);
 	void windowResized(int w, int h);
-
-	void drawPrimitivePreview();
-	void rendererUndo();
-	void rendererRedo();
-	void exportRender(std::string filename);
-	void import3DObj(std::string filename);
 };
 } // namespace ift3100
 

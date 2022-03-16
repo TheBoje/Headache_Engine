@@ -28,24 +28,24 @@ public:
 
 	Renderer2D& operator=(const Renderer2D&) = delete;
 
-	HierarchyContainer<VectorPrimitive> hierarchyPrimitives;
-
-	std::vector<std::shared_ptr<VectorPrimitive>> primitives {};
-
+	HierarchyContainer<VectorPrimitive>				hierarchyPrimitives;
+	std::vector<std::shared_ptr<VectorPrimitive>>	primitives {};
 	std::stack<HierarchyContainer<VectorPrimitive>> undoPrimitives {};
 	std::stack<HierarchyContainer<VectorPrimitive>> redoPrimitives {};
 
 	ofColor backgroundColor;
 
-	Renderer2D(Application& _application);
+	void setup();
+	void update();
+	void draw();
+
+	void addPreviewPrimitive(
+		const ofVec4f& mousePos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor);
 	void addPrimitive(
 		const ofVec4f& pos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor, int ttl = -1);
 	void deleteSelected();
 	void undoPrimitive();
 	void redoPrimitive();
-	void setup();
-	void update();
-	void draw();
 };
 } // namespace ift3100
 

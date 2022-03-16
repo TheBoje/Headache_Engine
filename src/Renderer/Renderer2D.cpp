@@ -16,36 +16,50 @@ Renderer2D* Renderer2D::Get() {
 }
 
 void Renderer2D::setup() {
-	ofSetCircleResolution(32);
 	backgroundColor = ofColor::darkGray;
-	primitives.reserve(1000);
+	ofSetBackgroundColor(backgroundColor);
+
+	primitives.reserve(100);
 	hierarchyPrimitives.setRoot(std::make_shared<VectorPrimitive>(ofVec4f(0, 0, 0, 0), PrimitiveType::Point, 0, ofColor(0), true, ofColor(0)));
+
 	IFT_LOG << "done";
 }
 
-void Renderer2D::update() {
-	if (!hierarchyPrimitives.selected_nodes.empty()) {
-		for (Hierarchy<VectorPrimitive>* selected : hierarchyPrimitives.selected_nodes) {
-			selected->map([=](std::shared_ptr<VectorPrimitive> p) {
-				p->FILL			= Interface::Get()->primitiveFill;
-				p->FILL_COLOR	= Interface::Get()->primitiveFillColor;
-				p->STROKE_WIDTH = Interface::Get()->primitiveStrokeWidth;
-				p->STROKE_COLOR = Interface::Get()->primitiveStrokeColor;
-			});
-		}
-	}
+void Renderer2D::update() { hierarchyPrimitives.update(); }
+
+/**
+ * Add a preview primitive for 1 frame
+ *
+ * @param mousePos
+ * @param type
+ * @param strokeWidth
+ * @param strokeColor
+ * @param fill whether the drawn primitive is filled
+ * @param fillColor ignored if `fill` is `false`
+*/
+void Renderer2D::addPreviewPrimitive(
+	const ofVec4f& mousePos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor) {
+	// Call proper render method based on UI state / mouse action
+	// Set colors slightly transparent
+	strokeColor.a = 80;
+	fillColor.a	  = 80;
+
+	// Draw transparent preview primitive for 1 frame
+	addPrimitive(mousePos, type, strokeWidth, strokeColor, fill, fillColor, 1);
+	// Draw bounding box of drawing
+	addPrimitive(mousePos, Rectangle, 1, ofColor(0, 80), false, ofColor::white, 1);
 }
 
 /**
-	 * Add a primitive in the render stack
-	 *
-	 * @param mousePos position top-left & bottom-right corners of primitive (from mouse position)
-	 * @param type type of primitive to draw. eg Line
-	 * @param strokeWidth
-	 * @param strokeColor
-	 * @param fill enable primitive filling
-	 * @param fillColor
-	*/
+ * Add a primitive in the render stack
+ *
+ * @param mousePos position top-left & bottom-right corners of primitive (from mouse position)
+ * @param type type of primitive to draw. eg Line
+ * @param strokeWidth
+ * @param strokeColor
+ * @param fill enable primitive filling
+ * @param fillColor
+*/
 void Renderer2D::addPrimitive(
 	const ofVec4f& pos, const PrimitiveType& type, float strokeWidth, ofColor strokeColor, bool fill, ofColor fillColor, int ttl) {
 	std::shared_ptr<VectorPrimitive> sharedPrimitive =
@@ -60,10 +74,10 @@ void Renderer2D::addPrimitive(
 }
 
 /**
-	 * Delete selected primitives (in UI) from renderer primitives and UI.
-	 *
-	 * Note: Deleted primitive is added to undo stack.
-	*/
+ * Delete selected primitives (in UI) from renderer primitives and UI.
+ *
+ * Note: Deleted primitive is added to undo stack.
+*/
 void Renderer2D::deleteSelected() {
 	undoPrimitives.push(hierarchyPrimitives);
 	// Delete each selected VectorPrimitive in hierarchy
@@ -84,8 +98,8 @@ void Renderer2D::deleteSelected() {
 }
 
 /**
-	 * Undo the last primitive added to the primitive stack (via Renderer2D::addPrimitive).
-	*/
+ * Undo the last primitive added to the primitive stack (via Renderer2D::addPrimitive).
+*/
 void Renderer2D::undoPrimitive() {
 	if (!undoPrimitives.empty()) {
 		// pop the previous hierarchy and apply it to the current hierarchy
@@ -101,8 +115,8 @@ void Renderer2D::undoPrimitive() {
 }
 
 /**
-	 * Redo the last undo primitive (via Renderer2D::undoPrimitive).
-	*/
+ * Redo the last undo primitive (via Renderer2D::undoPrimitive).
+*/
 void Renderer2D::redoPrimitive() {
 	// Push the newest primitive in stack history and remove it from stack
 	if (!redoPrimitives.empty()) {

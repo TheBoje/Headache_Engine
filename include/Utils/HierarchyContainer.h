@@ -2,6 +2,8 @@
 #define HIERARCHY_CONTAINER_H
 
 #include "Hierarchy.h"
+#include "Interface.h"
+#include "VectorPrimitive.h"
 #include "ofxImGui.h"
 
 namespace ift3100 {
@@ -36,6 +38,8 @@ public:
 	bool isRoot(const Hierarchy<T>& h) { return h == _root; }
 
 	void clear() { _root.clear(); }
+
+	void update() { }
 
 	/**
          * @brief Add child to the root and attributing him
@@ -92,6 +96,20 @@ public:
 		return *this;
 	}
 };
+
+template <>
+void HierarchyContainer<VectorPrimitive>::update() {
+	if (!selected_nodes.empty()) {
+		for (Hierarchy<VectorPrimitive>* selected_node : selected_nodes) {
+			selected_node->map([=](std::shared_ptr<VectorPrimitive> vectorPrimitive) {
+				vectorPrimitive->FILL		  = Interface::Get()->primitiveFill;
+				vectorPrimitive->FILL_COLOR	  = Interface::Get()->primitiveFillColor;
+				vectorPrimitive->STROKE_WIDTH = Interface::Get()->primitiveStrokeWidth;
+				vectorPrimitive->STROKE_COLOR = Interface::Get()->primitiveStrokeColor;
+			});
+		}
+	}
+}
 } // namespace ift3100
 
 #endif

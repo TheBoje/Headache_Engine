@@ -7,7 +7,7 @@ ofImage* ImageUtils::importImage(const std::string& path) {
 }
 
 void ImageUtils::exportImage(const std::string& name) {
-	IFT_LOG << name << " (" << ofGetWindowWidth() << ", " << ofGetWindowHeight() << ")";
+	IFT_LOG << "exporting [" << name << "] - (" << ofGetWindowWidth() << ", " << ofGetWindowHeight() << ")";
 	ofImage res;
 	res.grabScreen(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 	res.save(name);

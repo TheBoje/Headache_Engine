@@ -21,12 +21,13 @@ void Application::setup() {
 	ofSetWindowTitle("IFT-3100 Main");
 
 	ofSetVerticalSync(true);
-	ofBackground(70, 70, 70);
+	ofSetCircleResolution(32);
 	isMouseDown = false;
 
 	interface  = Interface::Get();
 	renderer2D = Renderer2D::Get();
 	renderer3D = Renderer3D::Get();
+
 	interface->setup();
 	renderer2D->setup();
 	renderer3D->setup();
@@ -38,8 +39,16 @@ void Application::setup() {
 
 // fonction de mise à jour de la logique de l'application
 void Application::update() {
-	if (isMouseDown && interface->mouseAction == DrawPrimitive) {
-		drawPrimitivePreview();
+	// Draw 2D primitive preview if UI not used && drawing mode on
+	if (isMouseDown && interface->mouseAction == DrawPrimitive &&
+		(!ImGui::IsAnyWindowFocused() || !ImGui::IsAnyWindowHovered() || !ImGui::IsAnyItemHovered())) {
+		// NOTE(Refactor): Maybe this bit belongs in `Interface`?
+		Renderer2D::Get()->addPreviewPrimitive(mousePos,
+			interface->drawMode,
+			interface->primitiveStrokeWidth,
+			interface->primitiveStrokeColor,
+			interface->primitiveFill,
+			interface->primitiveFillColor);
 	}
 
 	// Low framerate warning
@@ -116,7 +125,7 @@ void Application::mouseReleased(int x, int y, int button) {
 				interface->primitiveFillColor);
 			break;
 		case None: break;
-		default: IFT_LOG << "Mouse Action:" << interface->mouseAction << " unknown"; break;
+		default: IFT_LOG_WARNING << "Mouse Action:" << interface->mouseAction << " unknown"; break;
 	};
 }
 
@@ -138,45 +147,5 @@ void Application::dragEvent(ofDragInfo dragInfo) {
 void Application::windowResized(int w, int h) {
 	renderer3D->cameraManager.windowResize(); // Update camera viewport
 	IFT_LOG << "(" << w << ", " << h << ")";
-}
-
-void Application::drawPrimitivePreview() {
-	// Don't draw anything if clicking on the UI - one of these flag will be triggered
-	if (ImGui::IsAnyWindowFocused() || ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered())
-		return;
-	// Call proper render method based on UI state / mouse action
-	ofColor primitiveStrokeColorPreview = interface->primitiveStrokeColor;
-	primitiveStrokeColorPreview.a		= 80;
-	ofColor primitiveFillColorPreview	= interface->primitiveFillColor;
-	primitiveFillColorPreview.a			= 80;
-	// Draw transparent preview primitive for 1 frame
-	renderer2D->addPrimitive(mousePos,
-		interface->drawMode,
-		interface->primitiveStrokeWidth,
-		primitiveStrokeColorPreview,
-		interface->primitiveFill,
-		primitiveFillColorPreview,
-		1);
-	// Draw bounding box of drawing
-	renderer2D->addPrimitive(mousePos, Rectangle, 1, ofColor(0, 80), false, ofColor::white, 1);
-}
-
-void Application::exportRender(std::string filename) {
-	filename += ".png";
-	ImageUtils::exportImage(filename);
-}
-
-void Application::import3DObj(std::string filename) {
-	IFT_LOG << "Trying to import bin/data/" << filename;
-	ofxAssimpModelLoader model;
-	model.loadModel(filename);
-	if (model.getMeshCount() >= 1) {
-		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
-		for (int i = 0; i < model.getMeshCount(); i++) {
-			renderer3D->hierarchy.addChild(std::make_shared<Object3D>(filename + std::to_string(i), model.getMesh(i)));
-		}
-	} else {
-		IFT_LOG_ERROR << "import failed, object doesn't have a mesh";
-	}
 }
 } // namespace ift3100
