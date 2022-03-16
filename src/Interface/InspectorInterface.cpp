@@ -15,7 +15,9 @@ static void HelpMarker(const char* desc) {
 	}
 }
 
-void InspectorInterface::setup() { primitivePosition = ImVec2(0, 0); }
+void InspectorInterface::setup() {
+	primitivePosition = ImVec2(0, 0);
+}
 
 /**
      * @brief Draw the inspector for the vector primitive including
@@ -32,7 +34,9 @@ void InspectorInterface::drawInspectorVectorPrimitive(std::vector<Hierarchy<Vect
 	ImVec2		sum(0, 0);
 
 	// get the mean of all selected primitive position
-	for (auto node : *vectorPrimitives) { sum = sum + (node->getRef()->POSITION_1 + node->getRef()->POSITION_2) / 2; }
+	for (auto node : *vectorPrimitives) {
+		sum = sum + (node->getRef()->POSITION_1 + node->getRef()->POSITION_2) / 2;
+	}
 	primitivePosition.x = sum.x / vectorPrimitivesSize;
 	primitivePosition.y = sum.y / vectorPrimitivesSize;
 
@@ -41,7 +45,9 @@ void InspectorInterface::drawInspectorVectorPrimitive(std::vector<Hierarchy<Vect
 	char name[64] = "";
 	std::strcpy(name, vectorPrimitives->at(0)->getRef()->NAME.c_str());
 	if (ImGui::InputText("Name", name, 64, InspectorInterface::INPUT_FLAGS)) {
-		for (auto node : *vectorPrimitives) { node->getRef()->NAME = name; }
+		for (auto node : *vectorPrimitives) {
+			node->getRef()->NAME = name;
+		}
 	}
 
 	/* X position input decimal */
@@ -94,7 +100,9 @@ void InspectorInterface::drawInspector3d(std::vector<Hierarchy<Object3D>*>* obje
 	char name[64] = "";
 	std::strcpy(name, object3Ds->at(0)->getRef()->toString().c_str());
 	if (ImGui::InputText("Name", name, 64, InspectorInterface::INPUT_FLAGS)) {
-		for (auto node : *object3Ds) { node->getRef()->setName(name); }
+		for (auto node : *object3Ds) {
+			node->getRef()->setName(name);
+		}
 	}
 
 	/* -- POSITION -- */
