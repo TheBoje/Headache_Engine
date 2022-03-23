@@ -100,7 +100,9 @@ public:
          */
 	void flatten(std::vector<Hierarchy<T>*>& dest) {
 		dest.push_back(this);
-		for (Hierarchy<T>* node : _children) { node->flatten(dest); }
+		for (Hierarchy<T>* node : _children) {
+			node->flatten(dest);
+		}
 	}
 
 	/**
@@ -111,14 +113,18 @@ public:
          */
 	void flattenRef(std::vector<std::shared_ptr<T>>& dest) {
 		dest.push_back(_ref);
-		for (Hierarchy<T>* node : _children) { node->flattenRef(dest); }
+		for (Hierarchy<T>* node : _children) {
+			node->flattenRef(dest);
+		}
 	}
 
 	/**
          * @brief Add a child to the current node
          * @param child
          */
-	void addChild(std::shared_ptr<T> child, int index) { _children.push_back(new Hierarchy<T>(child, index, this)); }
+	void addChild(std::shared_ptr<T> child, int index) {
+		_children.push_back(new Hierarchy<T>(child, index, this));
+	}
 
 	Hierarchy<T>& operator=(const Hierarchy<T>& other) {
 		if (&other != this) {
@@ -139,7 +145,9 @@ public:
 		return *this;
 	}
 
-	bool operator==(const Hierarchy<T>& h) const { return h._index == this->_index; }
+	bool operator==(const Hierarchy<T>& h) const {
+		return h._index == this->_index;
+	}
 
 	/**
          * @param index
@@ -157,7 +165,9 @@ public:
          *
          * @return std::size_t
          */
-	std::size_t getChildrenSize() { return this->_children.size(); }
+	std::size_t getChildrenSize() {
+		return this->_children.size();
+	}
 
 	/**
          * @brief Draw the hierarchy in the interface (need to be wrapped)
@@ -196,7 +206,9 @@ public:
 		}
 		if (node_open) {
 			// Recursion here, depth-first-search in prefix order
-			for (auto child : _children) { child->drawUI(selected); }
+			for (auto child : _children) {
+				child->drawUI(selected);
+			}
 
 			ImGui::TreePop();
 		}
@@ -209,12 +221,18 @@ public:
          */
 	void map(std::function<void(std::shared_ptr<T>)> func) {
 		func(_ref);
-		for (auto child : _children) { child->map(func); }
+		for (auto child : _children) {
+			child->map(func);
+		}
 	}
 
-	void setRef(std::shared_ptr<T> ref) { _ref = ref; }
+	void setRef(std::shared_ptr<T> ref) {
+		_ref = ref;
+	}
 
-	std::shared_ptr<T> getRef() { return _ref; }
+	std::shared_ptr<T> getRef() {
+		return _ref;
+	}
 
 	/**
          * @brief Move the index-th element of the node to the dest node.

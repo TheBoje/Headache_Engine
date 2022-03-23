@@ -5,8 +5,8 @@
 
 #include "Hierarchy.h"
 #include "Logger.h"
-#include "VectorPrimitive.h"
 #include "Object3D.h"
+#include "VectorPrimitive.h"
 
 namespace ift3100 {
 class InspectorInterface {
@@ -18,8 +18,8 @@ class InspectorInterface {
 
 public:
 	void setup();
-	void drawInspectorVectorPrimitive(std::vector<Hierarchy<VectorPrimitive>*>* vvp);
-	void drawInspector3d(std::vector<Hierarchy<Object3D>*>* v3d);
+	void drawInspectorVectorPrimitive(std::vector<Hierarchy<VectorPrimitive>*>* vectorPrimitives);
+	void drawInspector3d(std::vector<Hierarchy<Object3D>*>* object3Ds);
 };
 } // namespace ift3100
 

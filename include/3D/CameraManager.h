@@ -1,8 +1,8 @@
 #ifndef CAMERA_MANAGER_H
 #define CAMERA_MANAGER_H
 
-#include "ofEasyCam.h"
 #include "Constant.h"
+#include "ofEasyCam.h"
 
 #include <functional>
 

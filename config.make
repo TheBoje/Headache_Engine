@@ -104,7 +104,7 @@
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-PROJECT_CFLAGS+=-I$(PROJECT_ROOT)/include -I$(PROJECT_ROOT)/include/Interface -I$(PROJECT_ROOT)/include/Renderer -I$(PROJECT_ROOT)/include/Utils -I$(PROJECT_ROOT)/include/3D/Camera -I$(PROJECT_ROOT)/include/3D -I$(PROJECT_ROOT)/include/Animation
+PROJECT_CFLAGS+=-I$(PROJECT_ROOT)/include -I$(PROJECT_ROOT)/include/Interface -I$(PROJECT_ROOT)/include/Renderer -I$(PROJECT_ROOT)/include/Utils -I$(PROJECT_ROOT)/include/3D -I$(PROJECT_ROOT)/include/Animation
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS

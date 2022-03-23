@@ -44,9 +44,13 @@ public:
 		POSITION_2.y = pos.w;
 	}
 
-	PrimitiveType getPrimitiveType() { return _type; }
+	PrimitiveType getPrimitiveType() {
+		return _type;
+	}
 
-	std::string toString() const { return NAME; }
+	std::string toString() const {
+		return NAME;
+	}
 };
 } // namespace ift3100
 

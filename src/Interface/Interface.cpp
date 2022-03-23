@@ -1,11 +1,21 @@
+#include "Interface.h"
+#include "Application.h"
+
 #include <string>
 
-#include "Application.h"
-#include "Interface.h"
-
 namespace ift3100 {
-Interface::Interface(Application& _application)
-	: application(_application) { }
+Interface* Interface::_interface = nullptr;
+
+Interface::Interface() { }
+
+Interface::~Interface() { }
+
+Interface* Interface::Get() {
+	if (_interface == nullptr) {
+		_interface = new Interface();
+	}
+	return _interface;
+}
 
 void Interface::setup() {
 	_gui.setup();
@@ -31,7 +41,9 @@ void Interface::setup() {
 	IFT_LOG << "done";
 }
 
-float getter(void* data, int index) { return (float)((int*)data)[index]; }
+float getter(void* data, int index) {
+	return (float)((int*)data)[index];
+}
 
 void Interface::loadImage(std::string path) {
 	image.load(path);
@@ -65,12 +77,12 @@ void Interface::imageUI() {
 
 	ImGui::InputText("Output file name", imageRenderName, IM_ARRAYSIZE(imageRenderName));
 	if (ImGui::Button("Export")) {
-		application.exportRender(std::string(imageRenderName));
+		ImageUtils::exportImage(imageRenderName);
 	}
 
 	ImGui::InputText("Import 3D file", import3DObj, IM_ARRAYSIZE(import3DObj));
 	if (ImGui::Button("Import")) {
-		application.import3DObj(std::string(import3DObj));
+		Renderer3D::Get()->importFromPath(import3DObj);
 	}
 
 	if (image.isAllocated())
@@ -100,40 +112,37 @@ void Interface::drawingUI() {
 
 	bool isDrawPrimitive = mouseAction == DrawPrimitive;
 	if (ImGui::Checkbox("Draw", &isDrawPrimitive)) {
-		if (isDrawPrimitive)
-			mouseAction = DrawPrimitive;
-		else
-			mouseAction = None;
+		mouseAction = DrawPrimitive;
 	}
 
 	if (ImGui::Button("Undo")) {
-		application.rendererUndo();
+		Renderer2D::Get()->undoPrimitive();
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Redo")) {
-		application.rendererRedo();
+		Renderer2D::Get()->redoPrimitive();
 	}
 }
 
 void Interface::draw3dRendererUI() {
 	if (ImGui::BeginMenu("Objects")) {
 		if (ImGui::MenuItem("Cube", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cube", ofBoxPrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Cube", ofBoxPrimitive()));
 		}
 		if (ImGui::MenuItem("Cone", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cone", ofConePrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Cone", ofConePrimitive()));
 		}
 		if (ImGui::MenuItem("Plane", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Plane", ofPlanePrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Plane", ofPlanePrimitive()));
 		}
 		if (ImGui::MenuItem("Sphere", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Sphere", ofSpherePrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Sphere", ofSpherePrimitive()));
 		}
 		if (ImGui::MenuItem("IcoSphere", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("IcoSphere", ofIcoSpherePrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("IcoSphere", ofIcoSpherePrimitive()));
 		}
 		if (ImGui::MenuItem("Cylinder", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cylinder", ofCylinderPrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Cylinder", ofCylinderPrimitive()));
 		}
 		ImGui::EndMenu();
 	}
@@ -142,18 +151,18 @@ void Interface::draw3dRendererUI() {
 void Interface::drawAnimator() {
 	if (animPaused) {
 		if (ImGui::Button("Resume")) {
-			application.renderer3D.anim.resume();
+			Renderer3D::Get()->animator.resume();
 			animPaused = false;
 		}
 	} else {
 		if (ImGui::Button("Pause")) {
-			application.renderer3D.anim.pause();
+			Renderer3D::Get()->animator.pause();
 			animPaused = true;
 		}
 	}
 
 	if (ImGui::Button("Reset")) {
-		application.renderer3D.anim.reset();
+		Renderer3D::Get()->animator.reset();
 		animPaused = true;
 	}
 }
@@ -173,11 +182,11 @@ void Interface::draw() {
 		}
 
 		if (ImGui::CollapsingHeader("Tree")) {
-			application.renderer2D.hierarchyPrimitives.drawUI();
+			Renderer2D::Get()->hierarchyPrimitives.drawUI();
 		}
 
 		if (ImGui::CollapsingHeader("3d tree")) {
-			application.renderer3D.hierarchy.drawUI();
+			Renderer3D::Get()->hierarchy.drawUI();
 		}
 
 		if (ImGui::CollapsingHeader("Drawing")) {
@@ -195,23 +204,23 @@ void Interface::draw() {
 
 		if (ImGui::CollapsingHeader("Cameras")) {
 			if (ImGui::Checkbox("Activate axes cameras", &axesCameraEnable)) {
-				application.renderer3D.toggleAxesCameras(axesCameraEnable);
+				Renderer3D::Get()->toggleAxesCameras(axesCameraEnable);
 			}
 
 			if (ImGui::Checkbox("Main camera ortho", &mainCameraOrtho)) {
-				application.renderer3D.setMainCameraOrtho(mainCameraOrtho);
+				Renderer3D::Get()->setMainCameraOrtho(mainCameraOrtho);
 			}
 		}
 	}
 
-	if (!application.renderer2D.hierarchyPrimitives.selected_nodes.empty()) {
+	if (!Renderer2D::Get()->hierarchyPrimitives.selected_nodes.empty()) {
 		ImGui::Begin("Inspector");
-		{ inspector.drawInspectorVectorPrimitive(&application.renderer2D.hierarchyPrimitives.selected_nodes); }
+		{ inspector.drawInspectorVectorPrimitive(&Renderer2D::Get()->hierarchyPrimitives.selected_nodes); }
 	}
 
-	if (!application.renderer3D.hierarchy.selected_nodes.empty()) {
+	if (!Renderer3D::Get()->hierarchy.selected_nodes.empty()) {
 		ImGui::Begin("Inspector 3D");
-		{ inspector.drawInspector3d(&application.renderer3D.hierarchy.selected_nodes); }
+		{ inspector.drawInspector3d(&Renderer3D::Get()->hierarchy.selected_nodes); }
 	}
 
 	_gui.end();

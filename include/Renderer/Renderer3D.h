@@ -9,20 +9,34 @@
 
 namespace ift3100 {
 class Application;
+/**
+ * Singleton class managing rendering of 3D objects.
+ *
+ * Features:
+ * - Animations (w/ Animator).
+ * - Multiple Camera Rendering (w/ Camera Manager).
+ * - Hierarchy Manipulation (w/ HierarchyContainer).
+ * - RealTime bounding box computing & display (w/ computeBoundaryBox()).
+*/
 class Renderer3D {
 	ofBoxPrimitive _boudaryBox;
 	bool		   _showBoundary;
 
+	static Renderer3D* _renderer3D;
+
+protected:
+	Renderer3D();
+
 public:
-	Application& application;
-	Renderer3D(Application& _application);
+	Renderer3D(const Renderer3D& renderer3D) = delete;
+	~Renderer3D();
 
-	CameraManager cameraManager;
+	Renderer3D& operator=(const Renderer3D&) = delete;
 
-	ofxAssimpModelLoader model;
+	static Renderer3D* Get();
 
-	Animator anim;
-
+	CameraManager				 cameraManager;
+	Animator					 animator;
 	HierarchyContainer<Object3D> hierarchy;
 
 	void setup();
@@ -34,8 +48,9 @@ public:
 	void computeBoundaryBox();
 
 	void setMouseInput(bool enable);
-	void toggleAxesCameras(bool enabled);
-	void setMainCameraOrtho(bool ortho);
+	void toggleAxesCameras(bool enable);
+	void setMainCameraOrtho(bool enable);
+	void importFromPath(const std::string& filepath);
 };
 } // namespace ift3100
 

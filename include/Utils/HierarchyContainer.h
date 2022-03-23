@@ -2,7 +2,10 @@
 #define HIERARCHY_CONTAINER_H
 
 #include "Hierarchy.h"
+#include "VectorPrimitive.h"
 #include "ofxImGui.h"
+
+#include <memory>
 
 namespace ift3100 {
 /**
@@ -29,13 +32,23 @@ public:
 	HierarchyContainer(const HierarchyContainer<T>& cpy)
 		: _root(Hierarchy<T>(cpy._root)) { }
 
-	~HierarchyContainer() { selected_nodes.clear(); }
+	~HierarchyContainer() {
+		selected_nodes.clear();
+	}
 
-	void setRoot(std::shared_ptr<T> ref) { _root.setRef(ref); }
+	void setRoot(std::shared_ptr<T> ref) {
+		_root.setRef(ref);
+	}
 
-	bool isRoot(const Hierarchy<T>& h) { return h == _root; }
+	bool isRoot(const Hierarchy<T>& h) {
+		return h == _root;
+	}
 
-	void clear() { _root.clear(); }
+	void clear() {
+		_root.clear();
+	}
+
+	void update() { }
 
 	/**
          * @brief Add child to the root and attributing him
@@ -52,12 +65,16 @@ public:
 	}
 
 	void mapChildren(std::function<void(std::shared_ptr<T>)> func) {
-		for (int i = 0; i < _root.getChildrenSize(); i++) { _root.at(i)->map(func); }
+		for (int i = 0; i < _root.getChildrenSize(); i++) {
+			_root.at(i)->map(func);
+		}
 	}
 
 	void drawUI() {
 		if (ImGui::TreeNodeEx((void*)(intptr_t)0, ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth, "root", 0)) {
-			for (int i = 0; i < _root.getChildrenSize(); i++) { _root.at(i)->drawUI(selected_nodes); }
+			for (int i = 0; i < _root.getChildrenSize(); i++) {
+				_root.at(i)->drawUI(selected_nodes);
+			}
 			ImGui::TreePop();
 		}
 	}
@@ -92,6 +109,8 @@ public:
 		return *this;
 	}
 };
+template <>
+void HierarchyContainer<VectorPrimitive>::update();
 } // namespace ift3100
 
 #endif

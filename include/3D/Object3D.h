@@ -36,9 +36,15 @@ public:
 	ofNode* getNode();
 	ofMesh* getMesh();
 
-	ObjectType	getType() const { return _type; }
-	std::string toString() const { return _name; }
-	void		setName(std::string name) { _name = name; }
+	ObjectType getType() const {
+		return _type;
+	}
+	std::string toString() const {
+		return _name;
+	}
+	void setName(std::string name) {
+		_name = name;
+	}
 };
 
 } // namespace ift3100

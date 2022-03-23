@@ -33,9 +33,13 @@ Animator::Animator(ofNode* target, const std::vector<Keyframe> keyframes, Interp
 	}
 }
 
-void Animator::setInterpolationType(InterpolationType type) { _interpolationType = type; }
+void Animator::setInterpolationType(InterpolationType type) {
+	_interpolationType = type;
+}
 
-void Animator::setTarget(ofNode* target) { _target = target; }
+void Animator::setTarget(ofNode* target) {
+	_target = target;
+}
 
 /**
  * @brief Add a keyframe to the animation. 
@@ -111,9 +115,13 @@ void Animator::reset() {
 	}
 }
 
-void Animator::pause() { _paused = true; }
+void Animator::pause() {
+	_paused = true;
+}
 
-void Animator::resume() { _paused = false; }
+void Animator::resume() {
+	_paused = false;
+}
 
 void Animator::computePiecewiseInterpolation() {
 	Keyframe* lastKeyFrame = &_keyframes[_indexLastKeyFrame];
