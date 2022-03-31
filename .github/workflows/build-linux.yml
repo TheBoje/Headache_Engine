@@ -1,0 +1,51 @@
+name: Run build linux
+
+on: [ pull-request ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v3
+        with:
+          path: IFT-3100
+
+      - name: Checkout openFrameworks
+        uses: actions/checkout@v3
+        with:
+          repository: openframeworks/openFrameworks
+          path: openFrameworks
+          ref: stable
+          token: ${{ secrets.token }}
+          submodules: 'recursive'
+
+      - name: Checkout TheBoje/ofxImGui
+        uses: actions/checkout@v3
+        with:
+          repository: TheBoje/ofxImGui
+          path: openFrameworks/addons/ofxImGui
+          ref: develop
+          token: ${{ secrets.token }}
+
+      - name: Checkout kylemcdonald/ofxCv
+        uses: actions/checkout@v3
+        with:
+          repository: kylemcdonald/ofxCv
+          path: openFrameworks/addons/ofxCv
+          token: ${{ secrets.token }}
+
+      - name: Install rsync
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -y rsync
+
+      - name: Install openFrameworks dependencies
+        run: openFrameworks/scripts/linux/ubuntu/install_dependencies.sh -y
+
+      - name: Build IFT-3100
+        run: |
+          ls
+          cd IFT-3100
+          make OF_ROOT=${{ github.workspace }}/openFrameworks
