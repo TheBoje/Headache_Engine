@@ -4,9 +4,10 @@ on: [ pull_request ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     env:
       TRAVIS_BUILD_DIR: ${{ github.workspace }}
+      TARGET: linux64
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v3
@@ -38,7 +39,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download openFrameworks libs
-        run: sudo openFrameworks/scripts/linux/download_libs.sh -a 64;
+        run: sudo openFrameworks/scripts/linux/download_libs.sh -a 64gcc6;
 
       - name: Install openFrameworks dependencies
         run: |
