@@ -42,6 +42,12 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: 'recursive'
 
+      - name: Install GLFW3
+        run: |
+          deb http://ppa.launchpad.net/keithw/glfw3/ubuntu trusty main
+          sudo apt-get update -y
+          sudo apt-get install libglfw3 -y
+          sudo apt-get install libglfw3-dev -y
 
       - name: Download openFrameworks libs
         run: sudo openFrameworks/scripts/linux/download_libs.sh -a 64gcc6;
@@ -49,7 +55,6 @@ jobs:
       - name: Install openFrameworks dependencies
         run: |
           export OF_ROOT=${{ github.workspace }}/openFrameworks
-          sudo apt-get install glfw3
           sudo openFrameworks/scripts/ci/linux64/install.sh;
 
       - name: Build IFT-3100
