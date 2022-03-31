@@ -49,6 +49,7 @@ jobs:
       - name: Install openFrameworks dependencies
         run: |
           export OF_ROOT=${{ github.workspace }}/openFrameworks
+          sudo apt-get install glfw3
           sudo openFrameworks/scripts/ci/linux64/install.sh;
 
       - name: Build IFT-3100
