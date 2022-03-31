@@ -35,8 +35,11 @@ jobs:
           path: openFrameworks/addons/ofxCv
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Download openFrameworks libs
+        run: openFrameworks/scripts/linux/download_libs.sh -a 64gcc6;
+
       - name: Install openFrameworks dependencies
-        run: sudo openFrameworks/scripts/linux/ubuntu/install_dependencies.sh -y
+        run: openFrameworks/scripts/ci/linux64/install.sh;
 
       - name: Build IFT-3100
         run: |
