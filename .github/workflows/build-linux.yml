@@ -13,6 +13,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: IFT-3100
+          submodules: 'recursive'
 
       - name: Checkout openFrameworks
         uses: actions/checkout@v3
@@ -30,6 +31,8 @@ jobs:
           path: openFrameworks/addons/ofxImGui
           ref: develop
           token: ${{ secrets.GITHUB_TOKEN }}
+            submodules: 'recursive'
+
 
       - name: Checkout kylemcdonald/ofxCv
         uses: actions/checkout@v3
@@ -37,6 +40,8 @@ jobs:
           repository: kylemcdonald/ofxCv
           path: openFrameworks/addons/ofxCv
           token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: 'recursive'
+
 
       - name: Download openFrameworks libs
         run: sudo openFrameworks/scripts/linux/download_libs.sh -a 64gcc6;
@@ -50,4 +55,4 @@ jobs:
         run: |
           ls
           cd IFT-3100
-          make OF_ROOT=${{ github.workspace }}/openFrameworks
+          make -j OF_ROOT=${{ github.workspace }}/openFrameworks
