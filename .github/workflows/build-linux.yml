@@ -44,7 +44,6 @@ jobs:
 
       - name: Install GLFW3
         run: |
-          echo 'deb http://ppa.launchpad.net/keithw/glfw3/ubuntu trusty main' | sudo tee -a /etc/apt/sources.list
           sudo apt-get update -y
           sudo apt-get install libglfw3 -y
           sudo apt-get install libglfw3-dev -y
