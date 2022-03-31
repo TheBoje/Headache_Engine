@@ -44,9 +44,8 @@ jobs:
 
       - name: Install GLFW3
         run: |
-          sudo apt-get update -y
-          sudo apt-get install libglfw3 -y
-          sudo apt-get install libglfw3-dev -y
+          sudo apt-get update
+          sudo apt-get install -y libglfw3-dev libsdl2-dev gcc-multilib g++-multilib libfreetype6-dev libvulkan-dev
 
       - name: Add gcc-6 repository
         run: |
@@ -68,6 +67,6 @@ jobs:
           cd IFT-3100
           make -j4 OF_ROOT=${{ github.workspace }}/openFrameworks
 
-      # - name: Setup tmate session
-      #   if: ${{ failure() }}
-      #   uses: mxschmitt/action-tmate@v3
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
