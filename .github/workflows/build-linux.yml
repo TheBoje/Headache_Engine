@@ -35,14 +35,8 @@ jobs:
           path: openFrameworks/addons/ofxCv
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install rsync
-        run: |
-          sudo apt-get update
-          sudo apt-get upgrade -y
-          sudo apt-get install -y rsync
-
       - name: Install openFrameworks dependencies
-        run: openFrameworks/scripts/linux/ubuntu/install_dependencies.sh -y
+        run: sudo openFrameworks/scripts/linux/ubuntu/install_dependencies.sh -y
 
       - name: Build IFT-3100
         run: |
