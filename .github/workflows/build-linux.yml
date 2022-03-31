@@ -5,6 +5,8 @@ on: [ pull_request ]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      TRAVIS_BUILD_DIR: ${{ github.workspace }}
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v3
