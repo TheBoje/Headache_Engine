@@ -18,7 +18,7 @@ jobs:
         with:
           repository: openframeworks/openFrameworks
           path: openFrameworks
-          ref: stable
+          ref: master
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: 'recursive'
 
