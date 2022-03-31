@@ -42,7 +42,7 @@ void Application::setup() {
 void Application::update() {
 	// Draw 2D primitive preview if UI not used && drawing mode on
 	if (isMouseDown && interface->mouseAction == DrawPrimitive &&
-		(!ImGui::IsAnyWindowFocused() || !ImGui::IsAnyWindowHovered() || !ImGui::IsAnyItemHovered())) {
+		(!ImGui::IsWindowFocused() || !ImGui::IsWindowHovered() || !ImGui::IsAnyItemHovered())) {
 		// NOTE(Refactor): Maybe this bit belongs in `Interface`?
 		Renderer2D::Get()->addPreviewPrimitive(mousePos,
 			interface->drawMode,
@@ -103,7 +103,7 @@ void Application::mousePressed(int x, int y, int button) {
 	mousePos.z	= x;
 	mousePos.w	= y;
 	isMouseDown = true;
-	if (ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered() || interface->mouseAction == DrawPrimitive) {
+	if (ImGui::IsWindowHovered() || ImGui::IsAnyItemHovered() || interface->mouseAction == DrawPrimitive) {
 		renderer3D->setMouseInput(false); // Disable camera mouse input
 	}
 }
@@ -115,7 +115,7 @@ void Application::mouseReleased(int x, int y, int button) {
 	renderer3D->setMouseInput(true); // Enable mouse input
 
 	// Don't draw anything if clicking on the UI - one of these flag will be triggered
-	if (ImGui::IsAnyWindowHovered() || ImGui::IsAnyItemHovered())
+	if (ImGui::IsWindowHovered() || ImGui::IsAnyItemHovered())
 		return;
 	// Call proper render method based on UI state / mouse action
 	switch (interface->mouseAction) {

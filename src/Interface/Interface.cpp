@@ -18,9 +18,7 @@ Interface* Interface::Get() {
 }
 
 void Interface::setup() {
-	_gui.setup();
-	_gui.setTheme(new Theme());
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	_gui.setup(new Theme(), true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true);
 
 	animPaused = false;
 	inspector.setup();
@@ -174,7 +172,7 @@ void Interface::drawAnimator() {
 void Interface::draw() {
 	_gui.begin();
 	bool* mainmenu;
-	ImGui::Begin("Main menu", mainmenu, ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("IFT-3100 - Main menu", mainmenu, ImGuiWindowFlags_MenuBar);
 	{
 		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen)) {
 			ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -218,12 +216,12 @@ void Interface::draw() {
 	}
 
 	if (!Renderer2D::Get()->hierarchyPrimitives.selected_nodes.empty()) {
-		ImGui::Begin("Inspector");
+		ImGui::Begin("IFT-3100 - Inspector");
 		{ inspector.drawInspectorVectorPrimitive(&Renderer2D::Get()->hierarchyPrimitives.selected_nodes); }
 	}
 
 	if (!Renderer3D::Get()->hierarchy.selected_nodes.empty()) {
-		ImGui::Begin("Inspector 3D");
+		ImGui::Begin("IFT-3100 - Inspector 3D");
 		{ inspector.drawInspector3d(&Renderer3D::Get()->hierarchy.selected_nodes); }
 	}
 
