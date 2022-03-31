@@ -17,7 +17,7 @@ jobs:
           repository: openframeworks/openFrameworks
           path: openFrameworks
           ref: stable
-          token: ${{ secrets.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           submodules: 'recursive'
 
       - name: Checkout TheBoje/ofxImGui
@@ -26,14 +26,14 @@ jobs:
           repository: TheBoje/ofxImGui
           path: openFrameworks/addons/ofxImGui
           ref: develop
-          token: ${{ secrets.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout kylemcdonald/ofxCv
         uses: actions/checkout@v3
         with:
           repository: kylemcdonald/ofxCv
           path: openFrameworks/addons/ofxCv
-          token: ${{ secrets.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install rsync
         run: |
