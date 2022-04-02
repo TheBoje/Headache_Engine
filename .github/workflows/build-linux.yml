@@ -33,7 +33,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: 'recursive'
 
-
       - name: Checkout kylemcdonald/ofxCv
         uses: actions/checkout@v3
         with:
@@ -41,7 +40,6 @@ jobs:
           path: openFrameworks/addons/ofxCv
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: 'recursive'
-
 
       - name: Add gcc-6 repository
         run: |
@@ -68,7 +66,3 @@ jobs:
           ls
           cd IFT-3100
           make -j4 OF_ROOT=${{ github.workspace }}/openFrameworks
-
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
