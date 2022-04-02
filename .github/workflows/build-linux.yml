@@ -4,7 +4,7 @@ on: [ pull_request ]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     env:
       TRAVIS_BUILD_DIR: ${{ github.workspace }}
       TARGET: linux64
@@ -42,14 +42,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: 'recursive'
 
-      - name: Install GLFW3
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libglfw3-dev libsdl2-dev gcc-multilib g++-multilib libfreetype6-dev libvulkan-dev
 
       - name: Add gcc-6 repository
         run: |
-          echo deb http://dk.archive.ubuntu.com/ubuntu/ bionic main universe | sudo tee /etc/apt/sources.list
           sudo apt update -y
           sudo apt-get install libasound2
 
@@ -59,7 +54,14 @@ jobs:
       - name: Install openFrameworks dependencies
         run: |
           export OF_ROOT=${{ github.workspace }}/openFrameworks
-          sudo openFrameworks/scripts/ci/linux64/install.sh;
+          sudo openFrameworks/scripts/ci/linux64/install.sh
+
+      - name: Install GLFW3
+        run: |
+          echo deb http://dk.archive.ubuntu.com/ubuntu/ focal main universe | sudo tee /etc/apt/sources.list
+          sudo apt-get update -u
+          sudo apt-get install -y -u libglfw3-dev
+
 
       - name: Build IFT-3100
         run: |
