@@ -48,6 +48,9 @@ public:
 
 	ofTexture textureSource;
 	GLuint	  textureSourceID;
+	ofTexture cameraTexture;
+	GLuint	  cameraTextureID;
+
 	ofImage	  image;
 	bool	  isHistComputed;
 	char	  imageRenderName[64];

@@ -19,13 +19,14 @@ Renderer3D* Renderer3D::Get() {
 void Renderer3D::setup() {
 	cameraManager.setup();
 
+	selectedCameraFBO.allocate(1024, 720);
 	_showBoundary = false;
 
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
 	ofNode					  box;
 	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
-
+	
 	hierarchy.addChild(box_shared);
 	// ----
 
@@ -131,8 +132,37 @@ void Renderer3D::deleteSelected() {
 	hierarchy.selected_nodes.clear();
 }
 
+void Renderer3D::drawScene() {
+	hierarchy.mapChildren([](std::shared_ptr<Object3D> obj) {
+		ofFill();
+		obj->getNode()->draw();
+	});
+}
+
 void Renderer3D::draw() {
 	ofEnableDepthTest();
+
+	ofCamera * selectedCamera = nullptr;
+	isCameraSelected = false;
+	for(auto selected : hierarchy.selected_nodes) {
+		if(selected->getRef()->getType() == ObjectType::Camera) {
+			selectedCamera = ((ofCamera *)selected->getRef()->getNode());
+			isCameraSelected = true;
+			break;
+		}
+	}
+
+	selectedCameraFBO.begin();
+	ofClear(255, 255, 255, 0);
+	selectedCameraFBO.end();
+
+	if(isCameraSelected){
+		selectedCameraFBO.begin();
+		selectedCamera->begin();
+		drawScene();
+		selectedCamera->end();
+		selectedCameraFBO.end();
+	}
 
 	// Draw axis camera if enabled
 	if (cameraManager.axesCamerasEnabled()) {
@@ -144,18 +174,17 @@ void Renderer3D::draw() {
 				ofSetColor(255);
 			}
 
-			hierarchy.mapChildren([](std::shared_ptr<Object3D> obj) {
-				ofFill();
-				// TODO(Louis): cleanup this mess
-				if (obj->getType() == ObjectType::Mesh) {
-					obj->getMesh()->drawFaces();
-				} else {
-					obj->getNode()->draw();
-				}
-			});
+			if(isCameraSelected)
+				selectedCamera->drawFrustum();
+
+			
+			drawScene();
 			cameraManager.endCamera(i);
 		}
 	}
+
+
+
 	// Draw main camera
 	cameraManager.beginCamera(3);
 	if (_showBoundary) {
@@ -163,15 +192,12 @@ void Renderer3D::draw() {
 		_boudaryBox.drawWireframe();
 		ofSetColor(255);
 	}
-	hierarchy.mapChildren([](std::shared_ptr<Object3D> obj) {
-		ofFill();
-		// TODO(Louis): cleanup this mess
-		if (obj->getType() == ObjectType::Mesh) {
-			obj->getMesh()->drawFaces();
-		} else {
-			obj->getNode()->draw();
-		}
-	});
+
+	if(isCameraSelected)
+		selectedCamera->drawFrustum();
+
+	drawScene();
+
 	cameraManager.endCamera(3);
 
 	ofDisableDepthTest();
