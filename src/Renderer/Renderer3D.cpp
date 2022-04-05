@@ -19,7 +19,6 @@ Renderer3D* Renderer3D::Get() {
 void Renderer3D::setup() {
 	cameraManager.setup();
 
-	selectedCameraFBO.allocate(1024, 720);
 	_showBoundary = false;
 
 	// TODO: Temporaire
@@ -152,15 +151,22 @@ void Renderer3D::draw() {
 		}
 	}
 
-	selectedCameraFBO.begin();
-	ofClear(255, 255, 255, 0);
-	selectedCameraFBO.end();
+	if(isCameraSelected && !selectedCameraFBO.isAllocated()) {
+		selectedCameraFBO.allocate(1024, (1024 / selectedCamera->getAspectRatio()));
+	} else if(!isCameraSelected && selectedCameraFBO.isAllocated()) {
+		selectedCameraFBO.destroy();
+	}
+
 
 	if(isCameraSelected){
+	
 		selectedCameraFBO.begin();
+		ofClear(120, 120, 120, 255);
+	
 		selectedCamera->begin();
 		drawScene();
 		selectedCamera->end();
+	
 		selectedCameraFBO.end();
 	}
 
