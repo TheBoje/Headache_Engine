@@ -10,7 +10,7 @@
 #include <string>
 
 namespace ift3100 {
-enum ObjectType { Camera, Primitive, Mesh, Node, Light, NoneObj };
+enum ObjectType { Camera, Primitive, Node, Light, NoneObj };
 
 class Object3D : public HierarchyItem {
 	std::string _name;
@@ -19,7 +19,6 @@ class Object3D : public HierarchyItem {
 	union {
 		ofCamera*	   _camera;
 		of3dPrimitive* _primitive;
-		ofMesh*		   _mesh;
 		ofNode*		   _node;
 		ofLight*	   _light;
 	};
@@ -34,7 +33,6 @@ public:
 	~Object3D();
 
 	ofNode* getNode();
-	ofMesh* getMesh();
 
 	ObjectType getType() const {
 		return _type;
