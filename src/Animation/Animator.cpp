@@ -42,12 +42,12 @@ void Animator::setTarget(ofNode* target) {
 }
 
 /**
- * @brief Add a keyframe to the animation. 
+ * @brief Add a keyframe to the animation.
  * The keyframes are sort by frame.
- * 
- * @param position 
- * @param rotation 
- * @param frame 
+ *
+ * @param position
+ * @param rotation
+ * @param frame
  */
 void Animator::addKeyframe(const ofVec3f& position, const ofVec3f& rotation, uint64_t frame) {
 	Keyframe kf;
@@ -97,7 +97,7 @@ void Animator::update() {
 /**
  * @brief Reset the animation and pause it.
  * Set the target to the first animation position and rotation.
- * 
+ *
  */
 void Animator::reset() {
 	_currentFrame = 0;
@@ -154,7 +154,7 @@ void Animator::computeLinearInterpolation() {
 }
 
 void Animator::computeInterpolation() {
-	if (_indexNextKeyFrame == _keyframes.size() || _indexLastKeyFrame == -1 || _indexNextKeyFrame == -1) {
+	if ((size_t)_indexNextKeyFrame == _keyframes.size() || _indexLastKeyFrame == -1 || _indexNextKeyFrame == -1) {
 		IFT_LOG << "reset";
 		reset();
 		resume(); // infinitely looping if resume here an unpausing

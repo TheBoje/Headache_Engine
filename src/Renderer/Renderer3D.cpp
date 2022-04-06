@@ -237,12 +237,12 @@ void Renderer3D::setMainCameraOrtho(bool enable) {
 void Renderer3D::importFromPath(const std::string& filepath) {
 	IFT_LOG << "Trying to import bin/data/" << filepath;
 	ofxAssimpModelLoader model;
-	model.loadModel(filepath);
+	model.load(filepath);
 	// FIXME: Merge the meshes in 1, and keep the ofNode as the offset point.
 	// Update in Object3D is required for this fix.
 	if (model.getMeshCount() >= 1) {
 		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
-		for (int i = 0; i < model.getMeshCount(); i++) {
+		for (size_t i = 0; i < model.getMeshCount(); i++) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>(filepath + std::to_string(i), model.getMesh(i)));
 		}
 	} else {

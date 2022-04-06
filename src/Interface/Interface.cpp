@@ -8,7 +8,10 @@ Interface* Interface::_interface = nullptr;
 
 Interface::Interface() { }
 
-Interface::~Interface() { }
+Interface::~Interface() {
+	delete theme;
+	delete mainMenu;
+}
 
 Interface* Interface::Get() {
 	if (_interface == nullptr) {
@@ -18,7 +21,10 @@ Interface* Interface::Get() {
 }
 
 void Interface::setup() {
-	_gui.setup(new Theme(), true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true);
+	theme	  = new Theme();
+	mainMenu  = new bool;
+	*mainMenu = true;
+	_gui.setup(theme, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true);
 
 	animPaused = false;
 	inspector.setup();
@@ -171,8 +177,7 @@ void Interface::drawAnimator() {
 
 void Interface::draw() {
 	_gui.begin();
-	bool* mainmenu;
-	ImGui::Begin("IFT-3100 - Main menu", mainmenu, ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("IFT-3100 - Main menu", mainMenu, ImGuiWindowFlags_MenuBar);
 	{
 		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen)) {
 			ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

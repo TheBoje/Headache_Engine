@@ -34,7 +34,8 @@ public:
 	InspectorInterface inspector;
 
 	ofxImGui::Gui _gui;
-	Theme		  theme;
+	Theme*		  theme;
+	bool*		  mainMenu;
 
 	unsigned int** _rgb;
 

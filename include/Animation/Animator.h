@@ -22,17 +22,15 @@ struct Keyframe {
  * As keyframe depends of frame, animation speed depends of the framerate.
  */
 class Animator {
+	ofNode* _target;
+	int		_indexLastKeyFrame;
+	int		_indexNextKeyFrame;
+
 	InterpolationType _interpolationType;
+	uint64_t		  _currentFrame;
 
+	bool				  _paused;
 	std::vector<Keyframe> _keyframes;
-	ofNode*				  _target;
-
-	uint64_t _currentFrame;
-
-	bool _paused;
-
-	int _indexLastKeyFrame;
-	int _indexNextKeyFrame;
 
 	void computePiecewiseInterpolation();
 	void computeLinearInterpolation();
