@@ -26,6 +26,7 @@ void Interface::setup() {
 	*mainMenu = true;
 	_gui.setup(theme, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true);
 
+
 	animPaused = false;
 	inspector.setup();
 
@@ -178,6 +179,7 @@ void Interface::drawAnimator() {
 void Interface::draw() {
 	_gui.begin();
 	ImGui::Begin("IFT-3100 - Main menu", mainMenu, ImGuiWindowFlags_MenuBar);
+
 	{
 		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen)) {
 			ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
