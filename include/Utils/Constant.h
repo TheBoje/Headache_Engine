@@ -15,6 +15,8 @@ const float DEFAULT_RECTANGLE_ROUNDING = 5.0f;
 
 const int NB_AXES_CAM = 3;
 
+const int CAMERA_WIDTH = 1024;
+
 } // namespace ift3100
 
 #endif

@@ -38,7 +38,7 @@ public:
 	static Renderer3D* Get();
 
 	ofFbo selectedCameraFBO;
-	bool  isCameraSelected;
+	ofCamera *selectedCamera;
 
 	CameraManager				 cameraManager;
 	Animator					 animator;

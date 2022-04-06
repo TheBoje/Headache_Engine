@@ -231,10 +231,10 @@ void Interface::draw() {
 		{ inspector.drawInspector3d(&Renderer3D::Get()->hierarchy.selected_nodes); }
 	}
 
-	if (Renderer3D::Get()->isCameraSelected) {
+	auto fbo = Renderer3D::Get()->selectedCameraFBO;
+	if (fbo.isAllocated()) {
 		ImGui::Begin("Camera preview");
 		{
-			auto fbo = Renderer3D::Get()->selectedCameraFBO;
 			ofxImGui::AddImage(fbo, ofVec2f(ImGui::GetWindowHeight() * (fbo.getWidth() / fbo.getHeight()), ImGui::GetWindowHeight()));
 		}
 	}

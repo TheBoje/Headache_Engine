@@ -38,6 +38,8 @@ void Renderer3D::setup() {
 	// animator.reset();
 	// animator.resume();
 
+	selectedCamera = nullptr;
+
 	IFT_LOG << "done";
 }
 
@@ -45,6 +47,23 @@ void Renderer3D::update() {
 	cameraManager.update();
 	computeBoundaryBox();
 	animator.update();
+
+	selectedCamera = nullptr;
+	// Search in selected nodes if there is a camera
+	for (auto selected : hierarchy.selected_nodes) {
+		if (selected->getRef()->getType() == ObjectType::Camera) {
+			selectedCamera	 = ((ofCamera*)selected->getRef()->getNode());
+			break;
+		}
+	}
+
+	// Allocate the FBO if there is a camera with the FBO not allocated, clear it instead
+	// The allocation is set to CAMERA_WIDTH and the height is find with the aspect ratio.
+	if (selectedCamera != nullptr && !selectedCameraFBO.isAllocated()) {
+		selectedCameraFBO.allocate(CAMERA_WIDTH, (CAMERA_WIDTH / selectedCamera->getAspectRatio()));
+	} else if (selectedCamera == nullptr && selectedCameraFBO.isAllocated()) {
+		selectedCameraFBO.clear();
+	}
 }
 
 /**
@@ -52,6 +71,7 @@ void Renderer3D::update() {
  *
 */
 void Renderer3D::computeBoundaryBox() {
+	// Check if there is at least one node selected
 	if (hierarchy.selected_nodes.size() == 0) {
 		_showBoundary = false;
 		return;
@@ -62,18 +82,18 @@ void Renderer3D::computeBoundaryBox() {
 	ofVec3f minPos;
 	ofVec3f scale;
 
-	for (auto node : hierarchy.selected_nodes) {
-		if (node->getRef()->getNode() == nullptr)
-			continue;
-		maxPos = node->getRef()->getNode()->getPosition();
-		minPos = node->getRef()->getNode()->getPosition();
-	}
+	// Init the maximum and minimum position to the first node position
+	maxPos = hierarchy.selected_nodes.at(0)->getRef()->getNode()->getPosition();
+	minPos = hierarchy.selected_nodes.at(0)->getRef()->getNode()->getPosition();
 
+	// For each selected nodes and there children, go through all meshes vertices
+	// in order to get the maximum and minimum position.
 	for (auto node : hierarchy.selected_nodes) {
 		node->map([&](std::shared_ptr<Object3D> object) {
 			if (object->getNode() == nullptr)
 				return;
 
+			// Get the center and the rotation (needed for rotated meshes to compute global vertex position)
 			ofVec3f nodePos		= object->getNode()->getPosition();
 			ofVec3f nodRotation = object->getNode()->getOrientationEulerDeg();
 
@@ -81,6 +101,7 @@ void Renderer3D::computeBoundaryBox() {
 				ofMesh		mesh		= ((of3dPrimitive*)object->getNode())->getMesh();
 				std::size_t numVertices = mesh.getNumVertices();
 
+				// Go through all vertices of the mesh if it exist
 				for (std::size_t i = 0; i < numVertices; i++) {
 					ofVec3f vpos = mesh.getVertex(i) + nodePos;
 					vpos.rotate(nodRotation.x, nodePos, ofVec3f(1, 0, 0));
@@ -96,6 +117,8 @@ void Renderer3D::computeBoundaryBox() {
 					minPos.x = std::min(vpos.x, minPos.x);
 				}
 			} else {
+				// If the Object3D is not a Primitive type, then just get the node position
+				// because it don't get an ofMesh attribute
 				maxPos.x = std::max(nodePos.x, maxPos.x);
 				maxPos.y = std::max(nodePos.y, maxPos.y);
 				maxPos.z = std::max(nodePos.z, maxPos.z);
@@ -136,29 +159,18 @@ void Renderer3D::drawScene() {
 		ofFill();
 		obj->getNode()->draw();
 	});
+
+	if (selectedCamera != nullptr)
+		selectedCamera->drawFrustum();
 }
 
 void Renderer3D::draw() {
 	ofEnableDepthTest();
 
-	ofCamera* selectedCamera = nullptr;
-	isCameraSelected		 = false;
-	for (auto selected : hierarchy.selected_nodes) {
-		if (selected->getRef()->getType() == ObjectType::Camera) {
-			selectedCamera	 = ((ofCamera*)selected->getRef()->getNode());
-			isCameraSelected = true;
-			break;
-		}
-	}
-
-	if (isCameraSelected && !selectedCameraFBO.isAllocated()) {
-		selectedCameraFBO.allocate(1024, (1024 / selectedCamera->getAspectRatio()));
-	} else if (!isCameraSelected && selectedCameraFBO.isAllocated()) {
-		selectedCameraFBO.destroy();
-	}
-
-	if (isCameraSelected) {
+	// Store result of selected camera in the FBO
+	if (selectedCamera != nullptr) {
 		selectedCameraFBO.begin();
+		// Avoid residues in the FBO
 		ofClear(120, 120, 120, 255);
 
 		selectedCamera->begin();
@@ -178,9 +190,6 @@ void Renderer3D::draw() {
 				ofSetColor(255);
 			}
 
-			if (isCameraSelected)
-				selectedCamera->drawFrustum();
-
 			drawScene();
 			cameraManager.endCamera(i);
 		}
@@ -193,9 +202,6 @@ void Renderer3D::draw() {
 		_boudaryBox.drawWireframe();
 		ofSetColor(255);
 	}
-
-	if (isCameraSelected)
-		selectedCamera->drawFrustum();
 
 	drawScene();
 
