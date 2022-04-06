@@ -142,7 +142,7 @@ void Interface::draw3dRendererUI() {
 		if (ImGui::MenuItem("Cylinder", NULL, false, true)) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Cylinder", ofCylinderPrimitive()));
 		}
-		if(ImGui::MenuItem("Camera", NULL, false, true)) {
+		if (ImGui::MenuItem("Camera", NULL, false, true)) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Camera", ofCamera()));
 		}
 
@@ -225,12 +225,11 @@ void Interface::draw() {
 		{ inspector.drawInspector3d(&Renderer3D::Get()->hierarchy.selected_nodes); }
 	}
 
-
-	if(Renderer3D::Get()->isCameraSelected) {
+	if (Renderer3D::Get()->isCameraSelected) {
 		ImGui::Begin("Camera preview");
-		{ 
+		{
 			auto fbo = Renderer3D::Get()->selectedCameraFBO;
-			ofxImGui::AddImage(fbo, ofVec2f(ImGui::GetWindowHeight() * (fbo.getWidth() / fbo.getHeight()) , ImGui::GetWindowHeight())); 
+			ofxImGui::AddImage(fbo, ofVec2f(ImGui::GetWindowHeight() * (fbo.getWidth() / fbo.getHeight()), ImGui::GetWindowHeight()));
 		}
 	}
 

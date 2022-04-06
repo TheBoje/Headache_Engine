@@ -28,7 +28,7 @@ protected:
 	Renderer3D();
 
 	void drawScene();
-	
+
 public:
 	Renderer3D(const Renderer3D& renderer3D) = delete;
 	~Renderer3D();
@@ -37,9 +37,9 @@ public:
 
 	static Renderer3D* Get();
 
-	ofFbo		   selectedCameraFBO;
-	bool 			isCameraSelected;
-	
+	ofFbo selectedCameraFBO;
+	bool  isCameraSelected;
+
 	CameraManager				 cameraManager;
 	Animator					 animator;
 	HierarchyContainer<Object3D> hierarchy;

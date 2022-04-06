@@ -20,8 +20,8 @@ Object3D::Object3D(std::string name, ofMesh mesh)
 	: _name(name)
 	, _type(ObjectType::Primitive)
 	, _primitive(new of3dPrimitive()) {
-		_primitive->getMesh() = mesh;
-	}
+	_primitive->getMesh() = mesh;
+}
 
 Object3D::Object3D(std::string name, ofNode node)
 	: _name(name)

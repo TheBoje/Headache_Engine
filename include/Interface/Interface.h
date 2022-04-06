@@ -51,10 +51,10 @@ public:
 	ofTexture cameraTexture;
 	GLuint	  cameraTextureID;
 
-	ofImage	  image;
-	bool	  isHistComputed;
-	char	  imageRenderName[64];
-	char	  import3DObj[64];
+	ofImage image;
+	bool	isHistComputed;
+	char	imageRenderName[64];
+	char	import3DObj[64];
 
 	// WIP: add keyframes to animation
 	ofVec3f	 animPosition;

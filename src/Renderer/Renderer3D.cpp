@@ -25,7 +25,7 @@ void Renderer3D::setup() {
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
 	ofNode					  box;
 	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
-	
+
 	hierarchy.addChild(box_shared);
 	// ----
 
@@ -141,32 +141,30 @@ void Renderer3D::drawScene() {
 void Renderer3D::draw() {
 	ofEnableDepthTest();
 
-	ofCamera * selectedCamera = nullptr;
-	isCameraSelected = false;
-	for(auto selected : hierarchy.selected_nodes) {
-		if(selected->getRef()->getType() == ObjectType::Camera) {
-			selectedCamera = ((ofCamera *)selected->getRef()->getNode());
+	ofCamera* selectedCamera = nullptr;
+	isCameraSelected		 = false;
+	for (auto selected : hierarchy.selected_nodes) {
+		if (selected->getRef()->getType() == ObjectType::Camera) {
+			selectedCamera	 = ((ofCamera*)selected->getRef()->getNode());
 			isCameraSelected = true;
 			break;
 		}
 	}
 
-	if(isCameraSelected && !selectedCameraFBO.isAllocated()) {
+	if (isCameraSelected && !selectedCameraFBO.isAllocated()) {
 		selectedCameraFBO.allocate(1024, (1024 / selectedCamera->getAspectRatio()));
-	} else if(!isCameraSelected && selectedCameraFBO.isAllocated()) {
+	} else if (!isCameraSelected && selectedCameraFBO.isAllocated()) {
 		selectedCameraFBO.destroy();
 	}
 
-
-	if(isCameraSelected){
-	
+	if (isCameraSelected) {
 		selectedCameraFBO.begin();
 		ofClear(120, 120, 120, 255);
-	
+
 		selectedCamera->begin();
 		drawScene();
 		selectedCamera->end();
-	
+
 		selectedCameraFBO.end();
 	}
 
@@ -180,16 +178,13 @@ void Renderer3D::draw() {
 				ofSetColor(255);
 			}
 
-			if(isCameraSelected)
+			if (isCameraSelected)
 				selectedCamera->drawFrustum();
 
-			
 			drawScene();
 			cameraManager.endCamera(i);
 		}
 	}
-
-
 
 	// Draw main camera
 	cameraManager.beginCamera(3);
@@ -199,7 +194,7 @@ void Renderer3D::draw() {
 		ofSetColor(255);
 	}
 
-	if(isCameraSelected)
+	if (isCameraSelected)
 		selectedCamera->drawFrustum();
 
 	drawScene();
