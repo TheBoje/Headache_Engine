@@ -26,7 +26,6 @@ void Interface::setup() {
 	*mainMenu = true;
 	_gui.setup(theme, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true);
 
-
 	animPaused = false;
 	inspector.setup();
 
