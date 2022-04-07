@@ -72,6 +72,7 @@ public:
 	void drawingUI();
 	void drawInspector();
 	void draw3dRendererUI();
+	void drawOptionsMenu();
 	void drawAnimator();
 
 	void draw();
