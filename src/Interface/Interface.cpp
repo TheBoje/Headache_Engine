@@ -8,7 +8,10 @@ Interface* Interface::_interface = nullptr;
 
 Interface::Interface() { }
 
-Interface::~Interface() { }
+Interface::~Interface() {
+	delete theme;
+	delete mainMenu;
+}
 
 Interface* Interface::Get() {
 	if (_interface == nullptr) {
@@ -18,7 +21,10 @@ Interface* Interface::Get() {
 }
 
 void Interface::setup() {
-	_gui.setup(new Theme(), true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true);
+	theme	  = new Theme();
+	mainMenu  = new bool;
+	*mainMenu = true;
+	_gui.setup(theme, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true);
 
 	animPaused = false;
 	inspector.setup();
@@ -142,6 +148,10 @@ void Interface::draw3dRendererUI() {
 		if (ImGui::MenuItem("Cylinder", NULL, false, true)) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Cylinder", ofCylinderPrimitive()));
 		}
+		if (ImGui::MenuItem("Camera", NULL, false, true)) {
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Camera", ofCamera()));
+		}
+
 		ImGui::EndMenu();
 	}
 }
@@ -167,8 +177,8 @@ void Interface::drawAnimator() {
 
 void Interface::draw() {
 	_gui.begin();
-	bool* mainmenu;
-	ImGui::Begin("IFT-3100 - Main menu", mainmenu, ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("IFT-3100 - Main menu", mainMenu, ImGuiWindowFlags_MenuBar);
+
 	{
 		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen)) {
 			ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -219,6 +229,12 @@ void Interface::draw() {
 	if (!Renderer3D::Get()->hierarchy.selected_nodes.empty()) {
 		ImGui::Begin("IFT-3100 - Inspector 3D");
 		{ inspector.drawInspector3d(&Renderer3D::Get()->hierarchy.selected_nodes); }
+	}
+
+	auto fbo = Renderer3D::Get()->selectedCameraFBO;
+	if (fbo.isAllocated()) {
+		ImGui::Begin("Camera preview");
+		{ ofxImGui::AddImage(fbo, ofVec2f(ImGui::GetWindowHeight() * (fbo.getWidth() / fbo.getHeight()), ImGui::GetWindowHeight())); }
 	}
 
 	_gui.end();

@@ -34,7 +34,8 @@ public:
 	InspectorInterface inspector;
 
 	ofxImGui::Gui _gui;
-	Theme		  theme;
+	Theme*		  theme;
+	bool*		  mainMenu;
 
 	unsigned int** _rgb;
 
@@ -48,10 +49,13 @@ public:
 
 	ofTexture textureSource;
 	GLuint	  textureSourceID;
-	ofImage	  image;
-	bool	  isHistComputed;
-	char	  imageRenderName[64];
-	char	  import3DObj[64];
+	ofTexture cameraTexture;
+	GLuint	  cameraTextureID;
+
+	ofImage image;
+	bool	isHistComputed;
+	char	imageRenderName[64];
+	char	import3DObj[64];
 
 	// WIP: add keyframes to animation
 	ofVec3f	 animPosition;

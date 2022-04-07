@@ -38,6 +38,8 @@ void Renderer3D::setup() {
 	// animator.reset();
 	// animator.resume();
 
+	selectedCamera = nullptr;
+
 	IFT_LOG << "done";
 }
 
@@ -45,6 +47,23 @@ void Renderer3D::update() {
 	cameraManager.update();
 	computeBoundaryBox();
 	animator.update();
+
+	selectedCamera = nullptr;
+	// Search in selected nodes if there is a camera
+	for (auto selected : hierarchy.selected_nodes) {
+		if (selected->getRef()->getType() == ObjectType::Camera) {
+			selectedCamera = ((ofCamera*)selected->getRef()->getNode());
+			break;
+		}
+	}
+
+	// Allocate the FBO if there is a camera with the FBO not allocated, clear it instead
+	// The allocation is set to CAMERA_WIDTH and the height is find with the aspect ratio.
+	if (selectedCamera != nullptr && !selectedCameraFBO.isAllocated()) {
+		selectedCameraFBO.allocate(CAMERA_WIDTH, (CAMERA_WIDTH / selectedCamera->getAspectRatio()));
+	} else if (selectedCamera == nullptr && selectedCameraFBO.isAllocated()) {
+		selectedCameraFBO.clear();
+	}
 }
 
 /**
@@ -52,6 +71,7 @@ void Renderer3D::update() {
  *
 */
 void Renderer3D::computeBoundaryBox() {
+	// Check if there is at least one node selected
 	if (hierarchy.selected_nodes.size() == 0) {
 		_showBoundary = false;
 		return;
@@ -62,18 +82,18 @@ void Renderer3D::computeBoundaryBox() {
 	ofVec3f minPos;
 	ofVec3f scale;
 
-	for (auto node : hierarchy.selected_nodes) {
-		if (node->getRef()->getNode() == nullptr)
-			continue;
-		maxPos = node->getRef()->getNode()->getPosition();
-		minPos = node->getRef()->getNode()->getPosition();
-	}
+	// Init the maximum and minimum position to the first node position
+	maxPos = hierarchy.selected_nodes.at(0)->getRef()->getNode()->getPosition();
+	minPos = hierarchy.selected_nodes.at(0)->getRef()->getNode()->getPosition();
 
+	// For each selected nodes and there children, go through all meshes vertices
+	// in order to get the maximum and minimum position.
 	for (auto node : hierarchy.selected_nodes) {
 		node->map([&](std::shared_ptr<Object3D> object) {
 			if (object->getNode() == nullptr)
 				return;
 
+			// Get the center and the rotation (needed for rotated meshes to compute global vertex position)
 			ofVec3f nodePos		= object->getNode()->getPosition();
 			ofVec3f nodRotation = object->getNode()->getOrientationEulerDeg();
 
@@ -81,6 +101,7 @@ void Renderer3D::computeBoundaryBox() {
 				ofMesh		mesh		= ((of3dPrimitive*)object->getNode())->getMesh();
 				std::size_t numVertices = mesh.getNumVertices();
 
+				// Go through all vertices of the mesh if it exist
 				for (std::size_t i = 0; i < numVertices; i++) {
 					ofVec3f vpos = mesh.getVertex(i) + nodePos;
 					vpos.rotate(nodRotation.x, nodePos, ofVec3f(1, 0, 0));
@@ -96,6 +117,8 @@ void Renderer3D::computeBoundaryBox() {
 					minPos.x = std::min(vpos.x, minPos.x);
 				}
 			} else {
+				// If the Object3D is not a Primitive type, then just get the node position
+				// because it don't get an ofMesh attribute
 				maxPos.x = std::max(nodePos.x, maxPos.x);
 				maxPos.y = std::max(nodePos.y, maxPos.y);
 				maxPos.z = std::max(nodePos.z, maxPos.z);
@@ -131,8 +154,31 @@ void Renderer3D::deleteSelected() {
 	hierarchy.selected_nodes.clear();
 }
 
+void Renderer3D::drawScene() {
+	hierarchy.mapChildren([](std::shared_ptr<Object3D> obj) {
+		ofFill();
+		obj->getNode()->draw();
+	});
+
+	if (selectedCamera != nullptr)
+		selectedCamera->drawFrustum();
+}
+
 void Renderer3D::draw() {
 	ofEnableDepthTest();
+
+	// Store result of selected camera in the FBO
+	if (selectedCamera != nullptr) {
+		selectedCameraFBO.begin();
+		// Avoid residues in the FBO
+		ofClear(120, 120, 120, 255);
+
+		selectedCamera->begin();
+		drawScene();
+		selectedCamera->end();
+
+		selectedCameraFBO.end();
+	}
 
 	// Draw axis camera if enabled
 	if (cameraManager.axesCamerasEnabled()) {
@@ -144,18 +190,11 @@ void Renderer3D::draw() {
 				ofSetColor(255);
 			}
 
-			hierarchy.mapChildren([](std::shared_ptr<Object3D> obj) {
-				ofFill();
-				// TODO(Louis): cleanup this mess
-				if (obj->getType() == ObjectType::Mesh) {
-					obj->getMesh()->drawFaces();
-				} else {
-					obj->getNode()->draw();
-				}
-			});
+			drawScene();
 			cameraManager.endCamera(i);
 		}
 	}
+
 	// Draw main camera
 	cameraManager.beginCamera(3);
 	if (_showBoundary) {
@@ -163,15 +202,9 @@ void Renderer3D::draw() {
 		_boudaryBox.drawWireframe();
 		ofSetColor(255);
 	}
-	hierarchy.mapChildren([](std::shared_ptr<Object3D> obj) {
-		ofFill();
-		// TODO(Louis): cleanup this mess
-		if (obj->getType() == ObjectType::Mesh) {
-			obj->getMesh()->drawFaces();
-		} else {
-			obj->getNode()->draw();
-		}
-	});
+
+	drawScene();
+
 	cameraManager.endCamera(3);
 
 	ofDisableDepthTest();
@@ -210,12 +243,12 @@ void Renderer3D::setMainCameraOrtho(bool enable) {
 void Renderer3D::importFromPath(const std::string& filepath) {
 	IFT_LOG << "Trying to import bin/data/" << filepath;
 	ofxAssimpModelLoader model;
-	model.loadModel(filepath);
+	model.load(filepath);
 	// FIXME: Merge the meshes in 1, and keep the ofNode as the offset point.
 	// Update in Object3D is required for this fix.
 	if (model.getMeshCount() >= 1) {
 		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
-		for (int i = 0; i < model.getMeshCount(); i++) {
+		for (size_t i = 0; i < model.getMeshCount(); i++) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>(filepath + std::to_string(i), model.getMesh(i)));
 		}
 	} else {

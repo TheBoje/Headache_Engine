@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "HierarchyItem.h"
-#include "ofxImGui.h"
 #include "Logger.h"
 #include "ofxImGui.h"
 
@@ -137,7 +136,7 @@ public:
 			_children.reserve(children_size);
 
 			// copy all children from the other source, depth-search recursion here
-			for (std::size_t i = 0; i < children_size; i++) {
+			for (int i = 0; i < children_size; i++) {
 				_children.push_back(new Hierarchy<T>(*other._children[i]));
 				_children[i]->_parent = this;
 			}

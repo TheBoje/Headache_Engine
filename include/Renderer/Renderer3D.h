@@ -27,6 +27,8 @@ class Renderer3D {
 protected:
 	Renderer3D();
 
+	void drawScene();
+
 public:
 	Renderer3D(const Renderer3D& renderer3D) = delete;
 	~Renderer3D();
@@ -34,6 +36,9 @@ public:
 	Renderer3D& operator=(const Renderer3D&) = delete;
 
 	static Renderer3D* Get();
+
+	ofFbo	  selectedCameraFBO;
+	ofCamera* selectedCamera;
 
 	CameraManager				 cameraManager;
 	Animator					 animator;

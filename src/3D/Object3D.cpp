@@ -18,8 +18,10 @@ Object3D::Object3D(std::string name, of3dPrimitive primitive)
 
 Object3D::Object3D(std::string name, ofMesh mesh)
 	: _name(name)
-	, _type(ObjectType::Mesh)
-	, _mesh(new ofMesh(mesh)) { }
+	, _type(ObjectType::Primitive)
+	, _primitive(new of3dPrimitive()) {
+	_primitive->getMesh() = mesh;
+}
 
 Object3D::Object3D(std::string name, ofNode node)
 	: _name(name)
@@ -45,12 +47,4 @@ ofNode* Object3D::getNode() {
 	}
 }
 
-ofMesh* Object3D::getMesh() {
-	if (_type == ObjectType::Mesh) {
-		return _mesh;
-	} else {
-		IFT_LOG_ERROR << "try getting mesh of " << _type << ", returning nullptr instead";
-		return nullptr;
-	}
-}
 } // namespace ift3100

@@ -19,6 +19,7 @@ Application* Application::Get() {
 // fonction d'initialisation de l'application
 void Application::setup() {
 	ofSetWindowTitle("IFT-3100 Main");
+	ofDisableArbTex();
 
 	ofSetVerticalSync(true);
 	ofSetCircleResolution(32);

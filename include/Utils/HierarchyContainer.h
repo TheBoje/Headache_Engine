@@ -65,14 +65,14 @@ public:
 	}
 
 	void mapChildren(std::function<void(std::shared_ptr<T>)> func) {
-		for (int i = 0; i < _root.getChildrenSize(); i++) {
+		for (size_t i = 0; i < _root.getChildrenSize(); i++) {
 			_root.at(i)->map(func);
 		}
 	}
 
 	void drawUI() {
 		if (ImGui::TreeNodeEx((void*)(intptr_t)0, ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth, "root", 0)) {
-			for (int i = 0; i < _root.getChildrenSize(); i++) {
+			for (size_t i = 0; i < _root.getChildrenSize(); i++) {
 				_root.at(i)->drawUI(selected_nodes);
 			}
 			ImGui::TreePop();
