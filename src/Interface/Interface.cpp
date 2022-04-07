@@ -234,9 +234,7 @@ void Interface::draw() {
 	auto fbo = Renderer3D::Get()->selectedCameraFBO;
 	if (fbo.isAllocated()) {
 		ImGui::Begin("Camera preview");
-		{
-			ofxImGui::AddImage(fbo, ofVec2f(ImGui::GetWindowHeight() * (fbo.getWidth() / fbo.getHeight()), ImGui::GetWindowHeight()));
-		}
+		{ ofxImGui::AddImage(fbo, ofVec2f(ImGui::GetWindowHeight() * (fbo.getWidth() / fbo.getHeight()), ImGui::GetWindowHeight())); }
 	}
 
 	_gui.end();

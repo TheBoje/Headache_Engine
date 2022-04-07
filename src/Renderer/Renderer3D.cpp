@@ -52,7 +52,7 @@ void Renderer3D::update() {
 	// Search in selected nodes if there is a camera
 	for (auto selected : hierarchy.selected_nodes) {
 		if (selected->getRef()->getType() == ObjectType::Camera) {
-			selectedCamera	 = ((ofCamera*)selected->getRef()->getNode());
+			selectedCamera = ((ofCamera*)selected->getRef()->getNode());
 			break;
 		}
 	}
