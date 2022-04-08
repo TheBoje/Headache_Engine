@@ -101,7 +101,7 @@ void Renderer3D::computeBoundaryBox() {
 			ofVec3f nodePos		= object->getNode()->getPosition();
 			ofVec3f nodRotation = object->getNode()->getOrientationEulerDeg();
 
-			if (object->getType() == ObjectType::Primitive) {
+			if (object->getType() == ObjectType::Model3D) {
 				ofMesh		mesh		= ((of3dPrimitive*)object->getNode())->getMesh();
 				std::size_t numVertices = mesh.getNumVertices();
 
@@ -175,10 +175,10 @@ void Renderer3D::drawScene() {
 
 		if (isSelected) {
 			explodingShader.begin();
-			obj->getNode()->draw();
+			obj->draw();
 			explodingShader.end();
 		} else {
-			obj->getNode()->draw();
+			obj->draw();
 		}
 	});
 
@@ -271,11 +271,13 @@ void Renderer3D::importFromPath(const std::string& filepath) {
 	if (model.getMeshCount() >= 1) {
 		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
 		for (size_t i = 0; i < model.getMeshCount(); i++) {
-			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>(filepath + std::to_string(i), model.getMesh(i)));
+			Renderer3D::Get()->hierarchy.addChild(
+				std::make_shared<Object3D>(filepath + std::to_string(i), model.getMesh(i), model.getTextureForMesh(i)));
 		}
 	} else {
 		IFT_LOG_ERROR << "import failed, object doesn't have a mesh";
 	}
+	// Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>(filepath, filepath));
 }
 
 } // namespace ift3100
