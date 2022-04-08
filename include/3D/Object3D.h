@@ -35,6 +35,7 @@ public:
 	~Object3D();
 
 	ofNode* getNode();
+	Model*	getModel();
 
 	void draw(bool isSelected = false);
 

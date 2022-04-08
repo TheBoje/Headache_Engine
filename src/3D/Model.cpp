@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "ofImage.h"
 
 namespace ift3100 {
 
@@ -21,4 +22,9 @@ void Model::draw() {
 	}
 }
 
+void Model::loadTexture(std::string path) {
+	ofImage image;
+	image.load(path);
+	_texture = image.getTexture();
+}
 } // namespace ift3100

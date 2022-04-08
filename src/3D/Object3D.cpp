@@ -35,6 +35,11 @@ Object3D::~Object3D() {
 	delete getNode();
 }
 
+Model* Object3D::getModel() {
+	assert(_type == ObjectType::Model3D);
+	return _model;
+}
+
 void Object3D::draw(bool isSelected) {
 	if (_type == ObjectType::Model3D)
 		_model->draw();

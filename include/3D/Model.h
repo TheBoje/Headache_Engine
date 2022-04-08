@@ -20,6 +20,7 @@ public:
 	Model(ofMesh mesh, ofTexture texture = ofTexture());
 
 	void draw();
+	void loadTexture(std::string path);
 
 	inline ofMesh* getMesh() {
 		return _primitive.getMeshPtr();
