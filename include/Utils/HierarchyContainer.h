@@ -64,6 +64,22 @@ public:
 		CURRENT_INDEX++;
 	}
 
+	void addChildren(std::vector<std::shared_ptr<T>>& children, std::shared_ptr<T> parent) {
+		if (selected_nodes.empty()) {
+			_root.addChild(parent, CURRENT_INDEX++);
+			int p_index = _root.getChildrenSize() - 1;
+			for (std::shared_ptr<T>& child : children) {
+				_root.at(p_index)->addChild(child, CURRENT_INDEX++);
+			}
+		} else {
+			selected_nodes[0]->addChild(parent, CURRENT_INDEX++);
+			int p_index = _root.getChildrenSize() - 1;
+			for (std::shared_ptr<T>& child : children) {
+				selected_nodes[0]->at(p_index)->addChild(child, CURRENT_INDEX++);
+			}
+		}
+	}
+
 	void mapChildren(std::function<void(std::shared_ptr<T>)> func) {
 		for (size_t i = 0; i < _root.getChildrenSize(); i++) {
 			_root.at(i)->map(func);

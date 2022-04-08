@@ -21,11 +21,16 @@ public:
 
 	void draw();
 
-	ofMesh* getMesh() {
+	inline ofMesh* getMesh() {
 		return _primitive.getMeshPtr();
 	}
-	ofNode* getNode() {
+
+	inline ofNode* getNode() {
 		return &_primitive;
+	}
+
+	inline void setTexture(ofTexture texture) {
+		_texture = texture;
 	}
 };
 } // namespace ift3100

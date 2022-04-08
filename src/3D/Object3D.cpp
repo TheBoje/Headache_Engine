@@ -35,10 +35,13 @@ Object3D::~Object3D() {
 	delete getNode();
 }
 
-void Object3D::draw() {
+void Object3D::draw(bool isSelected) {
 	if (_type == ObjectType::Model3D)
 		_model->draw();
-	else
+	else if (ObjectType::Node) {
+		if (isSelected)
+			getNode()->draw();
+	} else
 		getNode()->draw();
 }
 

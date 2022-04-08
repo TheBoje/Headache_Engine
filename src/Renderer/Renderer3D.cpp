@@ -164,21 +164,19 @@ void Renderer3D::drawScene() {
 
 		// Check if the obj is selected and apply the exploding shader if so
 		bool isSelected = false;
-		if (isExploding) {
-			for (Hierarchy<Object3D>* selected : hierarchy.selected_nodes) {
-				if (selected->getRef() == obj) {
-					isSelected = true;
-					break;
-				}
+		for (Hierarchy<Object3D>* selected : hierarchy.selected_nodes) {
+			if (selected->getRef() == obj) {
+				isSelected = true;
+				break;
 			}
 		}
 
-		if (isSelected) {
+		if (isExploding) {
 			explodingShader.begin();
-			obj->draw();
+			obj->draw(isSelected);
 			explodingShader.end();
 		} else {
-			obj->draw();
+			obj->draw(isSelected);
 		}
 	});
 
@@ -268,16 +266,24 @@ void Renderer3D::importFromPath(const std::string& filepath) {
 	model.load(filepath);
 	// FIXME: Merge the meshes in 1, and keep the ofNode as the offset point.
 	// Update in Object3D is required for this fix.
-	if (model.getMeshCount() >= 1) {
+
+	if (model.getMeshCount() == 1) {
 		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
+		hierarchy.addChild(std::make_shared<Object3D>(model.getMeshNames().at(0), model.getMesh(0), model.getTextureForMesh(0)));
+	} else if (model.getMeshCount() > 1) {
+		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
+
+		std::shared_ptr<Object3D>			   parent = std::make_shared<Object3D>(filepath, ofNode());
+		std::vector<std::shared_ptr<Object3D>> children;
+		children.reserve(model.getMeshCount());
+
 		for (size_t i = 0; i < model.getMeshCount(); i++) {
-			Renderer3D::Get()->hierarchy.addChild(
-				std::make_shared<Object3D>(filepath + std::to_string(i), model.getMesh(i), model.getTextureForMesh(i)));
+			children.emplace_back(std::make_shared<Object3D>(model.getMeshNames().at(i), model.getMesh(i), model.getTextureForMesh(i)));
 		}
+		hierarchy.addChildren(children, parent);
 	} else {
 		IFT_LOG_ERROR << "import failed, object doesn't have a mesh";
 	}
-	// Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>(filepath, filepath));
 }
 
 } // namespace ift3100

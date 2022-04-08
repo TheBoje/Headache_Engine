@@ -36,7 +36,7 @@ public:
 
 	ofNode* getNode();
 
-	void draw();
+	void draw(bool isSelected = false);
 
 	ObjectType getType() const {
 		return _type;
