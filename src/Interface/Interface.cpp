@@ -128,6 +128,9 @@ void Interface::drawingUI() {
 	}
 }
 
+/**
+ * @brief Menu for every instanciation of 3D models and objects
+ */
 void Interface::draw3dRendererUI() {
 	if (ImGui::BeginMenu("Objects")) {
 		if (ImGui::MenuItem("Cube", NULL, false, true)) {
@@ -148,10 +151,22 @@ void Interface::draw3dRendererUI() {
 		if (ImGui::MenuItem("Cylinder", NULL, false, true)) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Cylinder", ofCylinderPrimitive()));
 		}
+		ImGui::Separator();
 		if (ImGui::MenuItem("Camera", NULL, false, true)) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Camera", ofCamera()));
 		}
 
+		ImGui::EndMenu();
+	}
+}
+
+/**
+ * @brief Menu for every options modifying the interface
+ * or the engine functionnality
+ */
+void Interface::drawOptionsMenu() {
+	if (ImGui::BeginMenu("Options")) {
+		ImGui::Checkbox("Enable exploding on selected meshes", &Renderer3D::Get()->isExploding);
 		ImGui::EndMenu();
 	}
 }
@@ -207,6 +222,7 @@ void Interface::draw() {
 
 		if (ImGui::BeginMenuBar()) {
 			draw3dRendererUI();
+			drawOptionsMenu();
 			ImGui::EndMenuBar();
 		}
 

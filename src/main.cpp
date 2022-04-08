@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
 
 	ofGLFWWindowSettings windowSettings;
 	windowSettings.setSize(1024, 1024);
-	// windowSettings.setGLVersion(3, 2);
+	windowSettings.setGLVersion(3, 3);
 	ofCreateWindow(windowSettings);
 	ofRunApp(ift3100::Application::Get());
 

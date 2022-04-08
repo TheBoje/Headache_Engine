@@ -26,6 +26,11 @@ void Renderer3D::setup() {
 	ofNode					  box;
 	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
 
+	explodingShader.load("../../src/shaders/exploding/exploding.vert.glsl",
+		"../../src/shaders/exploding/exploding.frag.glsl",
+		"../../src/shaders/exploding/exploding.geom.glsl");
+	isExploding = false;
+
 	hierarchy.addChild(box_shared);
 	// ----
 
@@ -53,7 +58,6 @@ void Renderer3D::update() {
 	for (auto selected : hierarchy.selected_nodes) {
 		if (selected->getRef()->getType() == ObjectType::Camera) {
 			selectedCamera = ((ofCamera*)selected->getRef()->getNode());
-			break;
 		}
 	}
 
@@ -155,9 +159,27 @@ void Renderer3D::deleteSelected() {
 }
 
 void Renderer3D::drawScene() {
-	hierarchy.mapChildren([](std::shared_ptr<Object3D> obj) {
+	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
 		ofFill();
-		obj->getNode()->draw();
+
+		// Check if the obj is selected and apply the exploding shader if so
+		bool isSelected = false;
+		if (isExploding) {
+			for (Hierarchy<Object3D>* selected : hierarchy.selected_nodes) {
+				if (selected->getRef() == obj) {
+					isSelected = true;
+					break;
+				}
+			}
+		}
+
+		if (isSelected) {
+			explodingShader.begin();
+			obj->getNode()->draw();
+			explodingShader.end();
+		} else {
+			obj->getNode()->draw();
+		}
 	});
 
 	if (selectedCamera != nullptr)

@@ -37,6 +37,9 @@ public:
 
 	static Renderer3D* Get();
 
+	ofShader explodingShader;
+	bool	 isExploding;
+
 	ofFbo	  selectedCameraFBO;
 	ofCamera* selectedCamera;
 
