@@ -5,7 +5,11 @@
 #include "ofMain.h"
 
 int main(int argc, char** argv) {
+#ifdef SILENT
+	ofSetLogLevel(OF_LOG_SILENT);
+#else
 	ofSetLogLevel(OF_LOG_VERBOSE);
+#endif
 
 	ofGLFWWindowSettings windowSettings;
 	windowSettings.setSize(1024, 1024);
