@@ -32,7 +32,7 @@ Object3D::Object3D(std::string name, ofLight node)
 	, _light(new ofLight(node)) { }
 
 Object3D::~Object3D() {
-	delete getNode();
+	// delete getNode(); TODO: delete allocated (throw seg fault if deleted)
 }
 
 Model* Object3D::getModel() {

@@ -193,6 +193,8 @@ void InspectorInterface::textureOptions(Object3D& object) {
 	ImGui::RadioButton("No shader", (int*)&object.getModel()->usingShader, (int)ShaderType::NoShader);
 	ImGui::SameLine();
 	ImGui::RadioButton("Sobel filter", (int*)&object.getModel()->usingShader, (int)ShaderType::SobelFilter);
+	ImGui::SameLine();
+	ImGui::RadioButton("GrayScale filter", (int*)&object.getModel()->usingShader, (int)ShaderType::GrayScale);
 
 	ofTexture* tex = object.getModel()->getTexture();
 	ofxImGui::AddImage(*tex, ofVec2f(ImGui::GetWindowWidth(), ImGui::GetWindowWidth() * (tex->getHeight() / tex->getWidth())));

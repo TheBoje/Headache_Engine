@@ -9,22 +9,27 @@
 
 namespace ift3100 {
 
-enum ShaderType { NoShader, SobelFilter };
+enum ShaderType { NoShader, SobelFilter, GrayScale };
 
 /**
  * @brief Class for imported models in order to map texture on them
  */
 class Model {
 	ofShader _sobelShader;
+	ofShader _grayScaleShader;
 
-	of3dPrimitive _primitive;
 	ofTexture	  _texture;
+	of3dPrimitive _primitive;
 
 public:
 	ShaderType usingShader;
 
 	Model(of3dPrimitive primitive);
 	Model(ofMesh mesh, ofTexture texture = ofTexture());
+
+	~Model() {
+		IFT_LOG_WARNING << "Delete model";
+	}
 
 	void draw();
 	void loadTexture(std::string path);

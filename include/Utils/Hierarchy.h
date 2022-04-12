@@ -65,6 +65,8 @@ public:
 			delete _children[0]; // Delete each time the first element because deleting child will remove itself from parent vector
 		}
 
+		IFT_LOG_WARNING << "children deleted";
+
 		// If this is not the root
 		// search and erase his occurrence in the parent children vector
 		if (_parent != nullptr) {

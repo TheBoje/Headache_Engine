@@ -8,6 +8,7 @@ Model::Model(of3dPrimitive primitive)
 	, _primitive(primitive)
 	, usingShader(ShaderType::NoShader) {
 	_sobelShader.load("../../src/Shaders/Filters/Sobel/sobel.vert.glsl", "../../src/Shaders/Filters/Sobel/sobel.frag.glsl");
+	_grayScaleShader.load("../../src/Shaders/Filters/GrayScale/grayscale.vert.glsl", "../../src/Shaders/Filters/GrayScale/grayscale.frag.glsl");
 }
 
 Model::Model(ofMesh mesh, ofTexture texture)
@@ -16,6 +17,7 @@ Model::Model(ofMesh mesh, ofTexture texture)
 	_primitive.getMesh() = mesh;
 	_primitive.mapTexCoordsFromTexture(_texture);
 	_sobelShader.load("../../src/Shaders/Filters/Sobel/sobel.vert.glsl", "../../src/Shaders/Filters/Sobel/sobel.frag.glsl");
+	_grayScaleShader.load("../../src/Shaders/Filters/GrayScale/grayscale.vert.glsl", "../../src/Shaders/Filters/GrayScale/grayscale.frag.glsl");
 }
 
 void Model::draw() {
@@ -30,6 +32,13 @@ void Model::draw() {
 				_sobelShader.setUniform2f("texSize", _texture.getWidth(), _texture.getHeight());
 				_primitive.draw();
 				_sobelShader.end();
+				break;
+
+			case ShaderType::GrayScale:
+				_grayScaleShader.begin();
+				_primitive.draw();
+				_grayScaleShader.end();
+				break;
 		}
 
 		_texture.unbind();
@@ -41,7 +50,7 @@ void Model::draw() {
 void Model::loadTexture(std::string path) {
 	ofImage image;
 	image.load(path);
-	_texture = image.getTextureReference();
+	_texture = image.getTexture();
 	_primitive.mapTexCoordsFromTexture(_texture);
 }
 } // namespace ift3100

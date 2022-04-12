@@ -151,10 +151,13 @@ void Renderer3D::computeBoundaryBox() {
 void Renderer3D::deleteSelected() {
 	// Delete each selected Object3D in hierarchy
 	for (Hierarchy<Object3D>* selected : hierarchy.selected_nodes) {
-		if (hierarchy.isRoot(*selected))
+		if (hierarchy.isRoot(*selected)) {
+			IFT_LOG_WARNING << "clearing hierarchy";
 			hierarchy.clear();
-		else
+		} else {
+			IFT_LOG_WARNING << "deleting selected";
 			delete selected;
+		}
 	}
 
 	hierarchy.selected_nodes.clear();
