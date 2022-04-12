@@ -9,6 +9,7 @@ Model::Model(of3dPrimitive primitive)
 	, usingShader(ShaderType::NoShader) {
 	_sobelShader.load("../../src/Shaders/Filters/Sobel/sobel.vert.glsl", "../../src/Shaders/Filters/Sobel/sobel.frag.glsl");
 	_grayScaleShader.load("../../src/Shaders/Filters/GrayScale/grayscale.vert.glsl", "../../src/Shaders/Filters/GrayScale/grayscale.frag.glsl");
+	_gaussianShader.load("../../src/Shaders/Filters/Gaussian/gaussian.vert.glsl", "../../src/Shaders/Filters/Gaussian/gaussian.frag.glsl");
 }
 
 Model::Model(ofMesh mesh, ofTexture texture)
@@ -18,6 +19,7 @@ Model::Model(ofMesh mesh, ofTexture texture)
 	_primitive.mapTexCoordsFromTexture(_texture);
 	_sobelShader.load("../../src/Shaders/Filters/Sobel/sobel.vert.glsl", "../../src/Shaders/Filters/Sobel/sobel.frag.glsl");
 	_grayScaleShader.load("../../src/Shaders/Filters/GrayScale/grayscale.vert.glsl", "../../src/Shaders/Filters/GrayScale/grayscale.frag.glsl");
+	_gaussianShader.load("../../src/Shaders/Filters/Gaussian/gaussian.vert.glsl", "../../src/Shaders/Filters/Gaussian/gaussian.frag.glsl");
 }
 
 void Model::draw() {
@@ -38,6 +40,14 @@ void Model::draw() {
 				_grayScaleShader.begin();
 				_primitive.draw();
 				_grayScaleShader.end();
+				break;
+
+			case ShaderType::Gaussian:
+				_gaussianShader.begin();
+				_gaussianShader.setUniform1f("blurAmnt", 4);
+				_gaussianShader.setUniform2f("texSize", _texture.getWidth(), _texture.getHeight());
+				_primitive.draw();
+				_gaussianShader.end();
 				break;
 		}
 

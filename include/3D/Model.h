@@ -9,7 +9,7 @@
 
 namespace ift3100 {
 
-enum ShaderType { NoShader, SobelFilter, GrayScale };
+enum ShaderType { NoShader, SobelFilter, GrayScale, Gaussian };
 
 /**
  * @brief Class for imported models in order to map texture on them
@@ -17,6 +17,7 @@ enum ShaderType { NoShader, SobelFilter, GrayScale };
 class Model {
 	ofShader _sobelShader;
 	ofShader _grayScaleShader;
+	ofShader _gaussianShader;
 
 	ofTexture	  _texture;
 	of3dPrimitive _primitive;

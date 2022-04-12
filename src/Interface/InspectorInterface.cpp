@@ -192,7 +192,7 @@ void InspectorInterface::textureOptions(Object3D& object) {
 
 	ImGui::Separator();
 
-	const char* items[] = {"No filter", "Sobel filter", "Grayscale"};
+	const char* items[] = {"No filter", "Sobel filter", "Grayscale", "Gaussian filter"};
 
 	ImGui::Text("Texture filters:");
 	if (ImGui::BeginListBox("##listbox")) {
