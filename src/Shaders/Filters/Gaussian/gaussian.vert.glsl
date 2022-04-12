@@ -9,8 +9,7 @@ in vec2 texcoord;
 
 out vec2 texCoordVarying;
 
-void main()
-{
-    texCoordVarying = texcoord;
-	gl_Position = modelViewProjectionMatrix * position;
+void main() {
+	texCoordVarying = texcoord;
+	gl_Position		= modelViewProjectionMatrix * position;
 }
