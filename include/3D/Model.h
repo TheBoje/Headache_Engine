@@ -27,10 +27,6 @@ public:
 	Model(of3dPrimitive primitive);
 	Model(ofMesh mesh, ofTexture texture = ofTexture());
 
-	~Model() {
-		IFT_LOG_WARNING << "Delete model";
-	}
-
 	void draw();
 	void loadTexture(std::string path);
 

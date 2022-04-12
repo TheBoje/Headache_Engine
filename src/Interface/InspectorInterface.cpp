@@ -190,11 +190,23 @@ void InspectorInterface::textureOptions(Object3D& object) {
 	if (object.getType() != ObjectType::Model3D)
 		return;
 
-	ImGui::RadioButton("No shader", (int*)&object.getModel()->usingShader, (int)ShaderType::NoShader);
-	ImGui::SameLine();
-	ImGui::RadioButton("Sobel filter", (int*)&object.getModel()->usingShader, (int)ShaderType::SobelFilter);
-	ImGui::SameLine();
-	ImGui::RadioButton("GrayScale filter", (int*)&object.getModel()->usingShader, (int)ShaderType::GrayScale);
+	ImGui::Separator();
+
+	const char* items[] = {"No filter", "Sobel filter", "Grayscale"};
+
+	ImGui::Text("Texture filters:");
+	if (ImGui::BeginListBox("##listbox")) {
+		for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
+			const bool is_selected = (object.getModel()->usingShader == n);
+			if (ImGui::Selectable(items[n], is_selected))
+				object.getModel()->usingShader = (ShaderType)n;
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
 
 	ofTexture* tex = object.getModel()->getTexture();
 	ofxImGui::AddImage(*tex, ofVec2f(ImGui::GetWindowWidth(), ImGui::GetWindowWidth() * (tex->getHeight() / tex->getWidth())));
