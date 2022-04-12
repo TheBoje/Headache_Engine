@@ -17,6 +17,7 @@ Renderer3D* Renderer3D::Get() {
 }
 
 void Renderer3D::setup() {
+	Model::setup();
 	cameraManager.setup();
 
 	_showBoundary = false;

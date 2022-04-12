@@ -3,22 +3,29 @@
 
 namespace ift3100 {
 
-Model::Model(of3dPrimitive primitive)
-	: _texture(ofTexture())
-	, _primitive(primitive)
-	, usingShader(ShaderType::NoShader) {
+ofShader Model::_sobelShader;
+ofShader Model::_grayScaleShader;
+ofShader Model::_gaussianShader;
+
+/**
+ * @brief Setup the static shaders in order to store
+ * only one instance for all of the models
+ */
+void Model::setup() {
 	_sobelShader.load("../../src/Shaders/Filters/Sobel/sobel.vert.glsl", "../../src/Shaders/Filters/Sobel/sobel.frag.glsl");
 	_grayScaleShader.load("../../src/Shaders/Filters/GrayScale/grayscale.vert.glsl", "../../src/Shaders/Filters/GrayScale/grayscale.frag.glsl");
 	_gaussianShader.load("../../src/Shaders/Filters/Gaussian/gaussian.vert.glsl", "../../src/Shaders/Filters/Gaussian/gaussian.frag.glsl");
 }
 
+Model::Model(of3dPrimitive primitive)
+	: _texture(ofTexture())
+	, _primitive(primitive)
+	, usingShader(ShaderType::NoShader) { }
+
 Model::Model(ofMesh mesh, ofTexture texture)
 	: _texture(texture)
 	, usingShader(ShaderType::NoShader) {
 	_primitive.getMesh() = mesh;
-	_sobelShader.load("../../src/Shaders/Filters/Sobel/sobel.vert.glsl", "../../src/Shaders/Filters/Sobel/sobel.frag.glsl");
-	_grayScaleShader.load("../../src/Shaders/Filters/GrayScale/grayscale.vert.glsl", "../../src/Shaders/Filters/GrayScale/grayscale.frag.glsl");
-	_gaussianShader.load("../../src/Shaders/Filters/Gaussian/gaussian.vert.glsl", "../../src/Shaders/Filters/Gaussian/gaussian.frag.glsl");
 }
 
 /**

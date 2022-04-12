@@ -15,14 +15,16 @@ enum ShaderType { NoShader, SobelFilter, GrayScale, Gaussian };
  * @brief Class for imported models in order to map texture on them
  */
 class Model {
-	ofShader _sobelShader;
-	ofShader _grayScaleShader;
-	ofShader _gaussianShader;
+	static ofShader _sobelShader;
+	static ofShader _grayScaleShader;
+	static ofShader _gaussianShader;
 
 	ofTexture	  _texture;
 	of3dPrimitive _primitive;
 
 public:
+	static void setup();
+
 	ShaderType usingShader;
 
 	Model(of3dPrimitive primitive);
@@ -48,6 +50,7 @@ public:
 		_primitive.mapTexCoordsFromTexture(_texture);
 	}
 };
+
 } // namespace ift3100
 
 #endif
