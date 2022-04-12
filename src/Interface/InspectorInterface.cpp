@@ -186,6 +186,13 @@ void InspectorInterface::drawInspector3d(std::vector<Hierarchy<Object3D>*>* obje
 	textureOptions(*node->getRef());
 }
 
+/**
+ * @brief Set up the options for textures in the inspector
+ * - The filter applied
+ * - The preview of the texture
+ * 
+ * @param object 
+ */
 void InspectorInterface::textureOptions(Object3D& object) {
 	if (object.getType() != ObjectType::Model3D)
 		return;

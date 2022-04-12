@@ -16,12 +16,17 @@ Model::Model(ofMesh mesh, ofTexture texture)
 	: _texture(texture)
 	, usingShader(ShaderType::NoShader) {
 	_primitive.getMesh() = mesh;
-	_primitive.mapTexCoordsFromTexture(_texture);
 	_sobelShader.load("../../src/Shaders/Filters/Sobel/sobel.vert.glsl", "../../src/Shaders/Filters/Sobel/sobel.frag.glsl");
 	_grayScaleShader.load("../../src/Shaders/Filters/GrayScale/grayscale.vert.glsl", "../../src/Shaders/Filters/GrayScale/grayscale.frag.glsl");
 	_gaussianShader.load("../../src/Shaders/Filters/Gaussian/gaussian.vert.glsl", "../../src/Shaders/Filters/Gaussian/gaussian.frag.glsl");
 }
 
+/**
+ * @brief Draw the 3D model,
+ * Apply a filter if a texture is set and one is applied 
+ * via the inspectorInterface
+ * @link InspectorInterface @endlink
+ */
 void Model::draw() {
 	if (_texture.isAllocated()) {
 		_texture.bind();
@@ -53,14 +58,19 @@ void Model::draw() {
 
 		_texture.unbind();
 	} else {
-		_primitive.draw();
+		_primitive.drawFaces();
 	}
 }
 
+/**
+ * @brief Load an image and set it as a
+ * texture for the 3D model.	
+ * 
+ * @param path relative path to the image from the bin/data folder
+ */
 void Model::loadTexture(std::string path) {
 	ofImage image;
 	image.load(path);
 	_texture = image.getTexture();
-	_primitive.mapTexCoordsFromTexture(_texture);
 }
 } // namespace ift3100

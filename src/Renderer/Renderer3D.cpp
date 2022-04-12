@@ -164,9 +164,8 @@ void Renderer3D::deleteSelected() {
 }
 
 void Renderer3D::drawScene() {
+	ofFill();
 	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
-		ofFill();
-
 		// Check if the obj is selected and apply the exploding shader if so
 		bool isSelected = false;
 		for (Hierarchy<Object3D>* selected : hierarchy.selected_nodes) {
