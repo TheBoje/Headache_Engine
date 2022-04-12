@@ -26,9 +26,11 @@ void Renderer3D::setup() {
 	ofNode					  box;
 	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
 
-	explodingShader.load("../../src/shaders/exploding/exploding.vert.glsl",
-		"../../src/shaders/exploding/exploding.frag.glsl",
-		"../../src/shaders/exploding/exploding.geom.glsl");
+	// SHADERS
+	explodingShader.load("../../src/Shaders/Exploding/exploding.vert.glsl",
+		"../../src/Shaders/Exploding/exploding.frag.glsl",
+		"../../src/Shaders/Exploding/exploding.geom.glsl");
+
 	isExploding = false;
 
 	hierarchy.addChild(box_shared);

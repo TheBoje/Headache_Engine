@@ -21,10 +21,6 @@ void Application::setup() {
 	ofSetWindowTitle("IFT-3100 Main");
 	ofDisableArbTex();
 
-	IFT_LOG_WARNING << "warning";
-	IFT_LOG_ERROR << "error";
-	IFT_LOG_FATAL << "fatal";
-
 	ofSetVerticalSync(true);
 	ofSetCircleResolution(32);
 	isMouseDown = false;

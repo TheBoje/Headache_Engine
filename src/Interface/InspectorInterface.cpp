@@ -182,5 +182,20 @@ void InspectorInterface::drawInspector3d(std::vector<Hierarchy<Object3D>*>* obje
 		IFT_LOG << "Change rotation z value to " << rotz;
 		node->getRef()->getNode()->setGlobalOrientation(glm::quat(ofVec3f(rotation.x, rotation.y, atof(rotz)) * DEG_TO_RAD));
 	}
+
+	textureOptions(*node->getRef());
 }
+
+void InspectorInterface::textureOptions(Object3D& object) {
+	if (object.getType() != ObjectType::Model3D)
+		return;
+
+	ImGui::RadioButton("No shader", (int*)&object.getModel()->usingShader, (int)ShaderType::NoShader);
+	ImGui::SameLine();
+	ImGui::RadioButton("Sobel filter", (int*)&object.getModel()->usingShader, (int)ShaderType::SobelFilter);
+
+	ofTexture* tex = object.getModel()->getTexture();
+	ofxImGui::AddImage(*tex, ofVec2f(ImGui::GetWindowWidth(), ImGui::GetWindowWidth() * (tex->getHeight() / tex->getWidth())));
+}
+
 } // namespace ift3100
