@@ -3,7 +3,7 @@ name: Run build linux
 on:
   pull_request:
     types:
-      - opened
+      - [opened, edited, created]
   push:
     branches:
       - main
