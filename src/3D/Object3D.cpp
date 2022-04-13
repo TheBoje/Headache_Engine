@@ -13,15 +13,13 @@ Object3D::Object3D(std::string name, ofCamera camera)
 
 Object3D::Object3D(std::string name, of3dPrimitive primitive)
 	: _name(name)
-	, _type(ObjectType::Primitive)
-	, _primitive(new of3dPrimitive(primitive)) { }
+	, _type(ObjectType::Model3D)
+	, _model(new Model(primitive)) { }
 
-Object3D::Object3D(std::string name, ofMesh mesh)
+Object3D::Object3D(std::string name, ofMesh mesh, ofTexture texture)
 	: _name(name)
-	, _type(ObjectType::Primitive)
-	, _primitive(new of3dPrimitive()) {
-	_primitive->getMesh() = mesh;
-}
+	, _type(ObjectType::Model3D)
+	, _model(new Model(mesh, texture)) { }
 
 Object3D::Object3D(std::string name, ofNode node)
 	: _name(name)
@@ -34,13 +32,31 @@ Object3D::Object3D(std::string name, ofLight node)
 	, _light(new ofLight(node)) { }
 
 Object3D::~Object3D() {
-	delete getNode();
+	if (_type == ObjectType::Model3D)
+		delete _model;
+	else
+		delete getNode();
+}
+
+Model* Object3D::getModel() {
+	assert(_type == ObjectType::Model3D);
+	return _model;
+}
+
+void Object3D::draw(bool isSelected) {
+	if (_type == ObjectType::Model3D)
+		_model->draw();
+	else if (ObjectType::Node) {
+		if (isSelected)
+			getNode()->draw();
+	} else
+		getNode()->draw();
 }
 
 ofNode* Object3D::getNode() {
 	switch (_type) {
 		case ObjectType::Camera: return _camera;
-		case ObjectType::Primitive: return _primitive;
+		case ObjectType::Model3D: return _model->getNode();
 		case ObjectType::Node: return _node;
 		case ObjectType::Light: return _light;
 		default: IFT_LOG_ERROR << "try getting node of " << _type << ", returning nullptr instead"; return nullptr;

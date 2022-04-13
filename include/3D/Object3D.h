@@ -6,33 +6,38 @@
 #include "of3dPrimitives.h"
 #include "ofCamera.h"
 #include "ofMesh.h"
+#include "Model.h"
 
 #include <string>
 
 namespace ift3100 {
-enum ObjectType { Camera, Primitive, Node, Light, NoneObj };
+enum ObjectType { Camera, Node, Light, Model3D, NoneObj };
 
 class Object3D : public HierarchyItem {
 	std::string _name;
 	ObjectType	_type;
+	ofTexture	test;
 
 	union {
-		ofCamera*	   _camera;
-		of3dPrimitive* _primitive;
-		ofNode*		   _node;
-		ofLight*	   _light;
+		ofCamera* _camera;
+		Model*	  _model;
+		ofNode*	  _node;
+		ofLight*  _light;
 	};
 
 public:
 	Object3D(std::string name);
 	Object3D(std::string name, ofCamera camera);
 	Object3D(std::string name, of3dPrimitive primitive);
-	Object3D(std::string name, ofMesh mesh);
+	Object3D(std::string name, ofMesh mesh, ofTexture texture = ofTexture());
 	Object3D(std::string name, ofNode node);
 	Object3D(std::string name, ofLight node);
 	~Object3D();
 
 	ofNode* getNode();
+	Model*	getModel();
+
+	void draw(bool isSelected = false);
 
 	ObjectType getType() const {
 		return _type;

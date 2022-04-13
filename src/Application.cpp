@@ -144,6 +144,16 @@ void Application::mouseExited(int x, int y) {
 
 void Application::dragEvent(ofDragInfo dragInfo) {
 	IFT_LOG << dragInfo.files.at(0);
+
+	auto selected_node = Renderer3D::Get()->hierarchy.selected_nodes;
+
+	for (auto node : selected_node) {
+		if (node->getRef()->getType() == ObjectType::Model3D) {
+			node->getRef()->getModel()->loadTexture(dragInfo.files.at(0));
+			return;
+		}
+	}
+
 	interface->loadImage(dragInfo.files.at(0));
 }
 

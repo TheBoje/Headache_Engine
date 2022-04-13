@@ -20,6 +20,8 @@ public:
 	void setup();
 	void drawInspectorVectorPrimitive(std::vector<Hierarchy<VectorPrimitive>*>* vectorPrimitives);
 	void drawInspector3d(std::vector<Hierarchy<Object3D>*>* object3Ds);
+
+	void textureOptions(Object3D& object3Ds);
 };
 } // namespace ift3100
 

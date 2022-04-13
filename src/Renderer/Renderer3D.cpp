@@ -17,6 +17,7 @@ Renderer3D* Renderer3D::Get() {
 }
 
 void Renderer3D::setup() {
+	Model::setup();
 	cameraManager.setup();
 
 	_showBoundary = false;
@@ -26,9 +27,11 @@ void Renderer3D::setup() {
 	ofNode					  box;
 	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
 
-	explodingShader.load("../../src/shaders/exploding/exploding.vert.glsl",
-		"../../src/shaders/exploding/exploding.frag.glsl",
-		"../../src/shaders/exploding/exploding.geom.glsl");
+	// SHADERS
+	explodingShader.load("../../src/Shaders/Exploding/exploding.vert.glsl",
+		"../../src/Shaders/Exploding/exploding.frag.glsl",
+		"../../src/Shaders/Exploding/exploding.geom.glsl");
+
 	isExploding = false;
 
 	hierarchy.addChild(box_shared);
@@ -101,7 +104,7 @@ void Renderer3D::computeBoundaryBox() {
 			ofVec3f nodePos		= object->getNode()->getPosition();
 			ofVec3f nodRotation = object->getNode()->getOrientationEulerDeg();
 
-			if (object->getType() == ObjectType::Primitive) {
+			if (object->getType() == ObjectType::Model3D) {
 				ofMesh		mesh		= ((of3dPrimitive*)object->getNode())->getMesh();
 				std::size_t numVertices = mesh.getNumVertices();
 
@@ -149,36 +152,36 @@ void Renderer3D::computeBoundaryBox() {
 void Renderer3D::deleteSelected() {
 	// Delete each selected Object3D in hierarchy
 	for (Hierarchy<Object3D>* selected : hierarchy.selected_nodes) {
-		if (hierarchy.isRoot(*selected))
+		if (hierarchy.isRoot(*selected)) {
+			IFT_LOG_WARNING << "clearing hierarchy";
 			hierarchy.clear();
-		else
+		} else {
+			IFT_LOG_WARNING << "deleting selected";
 			delete selected;
+		}
 	}
 
 	hierarchy.selected_nodes.clear();
 }
 
 void Renderer3D::drawScene() {
+	ofFill();
 	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
-		ofFill();
-
 		// Check if the obj is selected and apply the exploding shader if so
 		bool isSelected = false;
-		if (isExploding) {
-			for (Hierarchy<Object3D>* selected : hierarchy.selected_nodes) {
-				if (selected->getRef() == obj) {
-					isSelected = true;
-					break;
-				}
+		for (Hierarchy<Object3D>* selected : hierarchy.selected_nodes) {
+			if (selected->getRef() == obj) {
+				isSelected = true;
+				break;
 			}
 		}
 
-		if (isSelected) {
+		if (isExploding) {
 			explodingShader.begin();
-			obj->getNode()->draw();
+			obj->draw(isSelected);
 			explodingShader.end();
 		} else {
-			obj->getNode()->draw();
+			obj->draw(isSelected);
 		}
 	});
 
@@ -268,11 +271,21 @@ void Renderer3D::importFromPath(const std::string& filepath) {
 	model.load(filepath);
 	// FIXME: Merge the meshes in 1, and keep the ofNode as the offset point.
 	// Update in Object3D is required for this fix.
-	if (model.getMeshCount() >= 1) {
+
+	if (model.getMeshCount() == 1) {
 		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
+		hierarchy.addChild(std::make_shared<Object3D>(model.getMeshNames().at(0), model.getMesh(0), model.getTextureForMesh(0)));
+	} else if (model.getMeshCount() > 1) {
+		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
+
+		std::shared_ptr<Object3D>			   parent = std::make_shared<Object3D>(filepath, ofNode());
+		std::vector<std::shared_ptr<Object3D>> children;
+		children.reserve(model.getMeshCount());
+
 		for (size_t i = 0; i < model.getMeshCount(); i++) {
-			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>(filepath + std::to_string(i), model.getMesh(i)));
+			children.emplace_back(std::make_shared<Object3D>(model.getMeshNames().at(i), model.getMesh(i), model.getTextureForMesh(i)));
 		}
+		hierarchy.addChildren(children, parent);
 	} else {
 		IFT_LOG_ERROR << "import failed, object doesn't have a mesh";
 	}
