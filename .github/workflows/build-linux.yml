@@ -2,8 +2,6 @@ name: Run build linux
 
 on:
   pull_request:
-    types:
-      - [edited, created]
   push:
     branches:
       - main
