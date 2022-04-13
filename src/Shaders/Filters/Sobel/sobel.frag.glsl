@@ -1,3 +1,5 @@
+// Shader inspired from https://gist.github.com/Hebali/6ebfc66106459aacee6a9fac029d0115
+
 #version 330
 
 uniform sampler2D tex0;
