@@ -61,7 +61,16 @@ void AnimatorManager::drawUI() {
 			keyframesUI(_animators[i].getKeyframes());
 
 			if (ImGui::Button("Add keyframe")) {
-				_animators[i].addKeyframe(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), 0);
+				Keyframe key;
+				if (_animators[i].getKeyframes().empty()) {
+					ofNode target = *_animators[i].getTarget()->getNode();
+					key.position  = target.getPosition();
+					key.rotation  = target.getOrientationEulerDeg();
+					key.frame	  = 0;
+				} else {
+					key = _animators[i].getKeyframes()[_animators[i].getKeyframes().size() - 1];
+				}
+				_animators[i].addKeyframe(key.position, key.rotation, key.frame);
 			}
 		}
 	}
@@ -82,6 +91,10 @@ void AnimatorManager::keyframesUI(std::vector<Keyframe>& keyframes) {
 		std::strcpy(frame, std::to_string(keyframes[key].frame).c_str());
 		if (ImGui::InputText(("frame" + std::to_string(key)).c_str(), frame, 64, InspectorInterface::INPUT_DECIMAL_FLAGS)) {
 			keyframes[key].frame = atof(frame);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(("Remove key " + std::to_string(key)).c_str())) {
+			keyframes.erase(keyframes.begin() + key);
 		}
 	}
 }
