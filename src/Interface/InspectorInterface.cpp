@@ -106,84 +106,50 @@ void InspectorInterface::drawInspector3d(std::vector<Hierarchy<Object3D>*>* obje
 	}
 
 	/* -- POSITION -- */
-	ImGui::Text("Position");
-	/* X position input decimal */
-	char bufx[64] = "";
-	std::strcpy(bufx, std::to_string(position3d.x).c_str());
-	if (ImGui::InputText("x", bufx, 64, InspectorInterface::INPUT_DECIMAL_FLAGS)) {
-		IFT_LOG << "Change x value to " << bufx;
-		float disp = atof(bufx) - position3d.x;
+	{
+		float pos[3] = {position3d.x, position3d.y, position3d.z};
 
-		for (auto node : *object3Ds) {
-			node->map([=](std::shared_ptr<Object3D> object3D) {
-				object3D->getNode()->setPosition(object3D->getNode()->getPosition() + (ofVec3f(1, 0, 0) * disp));
-			});
-		}
-	}
-
-	/* Y position input decimal */
-	char bufy[64] = "";
-	std::strcpy(bufy, std::to_string(position3d.y).c_str());
-	if (ImGui::InputText("y", bufy, 64, InspectorInterface::INPUT_DECIMAL_FLAGS)) {
-		float disp = atof(bufy) - position3d.y;
-
-		for (auto node : *object3Ds) {
-			node->map([=](std::shared_ptr<Object3D> object3D) {
-				object3D->getNode()->setPosition(object3D->getNode()->getPosition() + (ofVec3f(0, 1, 0) * disp));
-			});
-		}
-	}
-
-	/* Z position input decimal */
-	char bufz[64] = "";
-	std::strcpy(bufz, std::to_string(position3d.z).c_str());
-	if (ImGui::InputText("z", bufz, 64, InspectorInterface::INPUT_DECIMAL_FLAGS)) {
-		IFT_LOG << "Change z value to " << bufz;
-		float disp = atof(bufz) - position3d.z;
-
-		for (auto node : *object3Ds) {
-			node->map([=](std::shared_ptr<Object3D> object3D) {
-				object3D->getNode()->setPosition(object3D->getNode()->getPosition() + (ofVec3f(0, 0, 1) * disp));
-			});
+		if (ImGui::InputFloat3("position : x y z", pos)) {
+			ofVec3f disp((ofVec3f(pos[0], pos[1], pos[2]) - position3d));
+			for (auto node : *object3Ds) {
+				node->map([=](std::shared_ptr<Object3D> object3D) { object3D->getNode()->setPosition(object3D->getNode()->getPosition() + disp); });
+			}
 		}
 	}
 
 	/* -- ROTATION -- */
-	ImGui::Text("Rotation");
-	HelpMarker(
-		"Can rotate only one selected object. The rotation is blocked if more than one is selected. If the object has children, only the selected will rotate.");
+	{
+		Hierarchy<Object3D>* node = object3Ds->at(0);
+		HelpMarker(
+			"Can rotate only one selected object. The rotation is blocked if more than one is selected. If the object has children, only the selected will rotate.");
 
-	if (object3DsSize != 1)
-		return;
+		if (object3DsSize == 1) {
+			ofVec3f rotation = node->getRef()->getNode()->getOrientationEulerDeg();
 
-	Hierarchy<Object3D>* node	  = object3Ds->at(0);
-	ofVec3f				 rotation = node->getRef()->getNode()->getOrientationEulerDeg();
-
-	/* X position input decimal */
-	char rotx[64] = "";
-	std::strcpy(rotx, std::to_string(rotation.x).c_str());
-	if (ImGui::InputText("rot x", rotx, 64, InspectorInterface::INPUT_DECIMAL_FLAGS)) {
-		IFT_LOG << "Change rotation x value to " << rotx;
-		node->getRef()->getNode()->setGlobalOrientation(glm::quat(ofVec3f(atof(rotx), rotation.y, rotation.z) * DEG_TO_RAD));
+			float rot[3] = {rotation.x, rotation.y, rotation.z};
+			if (ImGui::InputFloat3("rotation : x y z", rot)) {
+				node->getRef()->getNode()->setGlobalOrientation(glm::quat(ofVec3f(rot[0], rot[1], rot[2]) * DEG_TO_RAD));
+			}
+		}
 	}
 
-	/* Y position input decimal */
-	char roty[64] = "";
-	std::strcpy(roty, std::to_string(rotation.y).c_str());
-	if (ImGui::InputText("rot y", roty, 64, InspectorInterface::INPUT_DECIMAL_FLAGS)) {
-		IFT_LOG << "Change rotation y value to " << roty;
-		node->getRef()->getNode()->setGlobalOrientation(glm::quat(ofVec3f(rotation.x, atof(roty), rotation.z) * DEG_TO_RAD));
+	/* -- SCALE -- */
+	{
+		ofVec3f scale = object3Ds->at(0)->getRef()->getNode()->getScale();
+		for (size_t i = 1; i < object3Ds->size(); i++) {
+			scale += object3Ds->at(i)->getRef()->getNode()->getScale();
+		}
+		scale = scale / object3Ds->size();
+
+		float sc[3] = {scale.x, scale.y, scale.z};
+		if (ImGui::InputFloat3("scale : x y z", sc)) {
+			for (auto node : *object3Ds) {
+				node->map([=](std::shared_ptr<Object3D> object3D) { object3D->getNode()->setScale(ofVec3f(sc[0], sc[1], sc[2])); });
+			}
+		}
 	}
 
-	/* Z position input decimal */
-	char rotz[64] = "";
-	std::strcpy(rotz, std::to_string(rotation.z).c_str());
-	if (ImGui::InputText("rot z", rotz, 64, InspectorInterface::INPUT_DECIMAL_FLAGS)) {
-		IFT_LOG << "Change rotation z value to " << rotz;
-		node->getRef()->getNode()->setGlobalOrientation(glm::quat(ofVec3f(rotation.x, rotation.y, atof(rotz)) * DEG_TO_RAD));
-	}
-
-	textureOptions(*node->getRef());
+	textureOptions(*object3Ds->at(0)->getRef());
 }
 
 /**
