@@ -19,6 +19,7 @@ Renderer3D* Renderer3D::Get() {
 void Renderer3D::setup() {
 	Model::setup();
 	cameraManager.setup();
+	animatorManager.setup();
 
 	_showBoundary = false;
 
@@ -46,6 +47,8 @@ void Renderer3D::setup() {
 	// animator.reset();
 	// animator.resume();
 
+	animatorManager.addAnimator(box_shared->getNode());
+
 	selectedCamera = nullptr;
 
 	IFT_LOG << "done";
@@ -53,8 +56,8 @@ void Renderer3D::setup() {
 
 void Renderer3D::update() {
 	cameraManager.update();
+	animatorManager.update();
 	computeBoundaryBox();
-	animator.update();
 
 	selectedCamera = nullptr;
 	// Search in selected nodes if there is a camera

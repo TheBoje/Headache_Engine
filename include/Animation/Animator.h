@@ -51,6 +51,13 @@ public:
 	void reset();
 	void pause();
 	void resume();
+
+	inline std::vector<Keyframe>& getKeyframes() {
+		return _keyframes;
+	}
+	inline bool isPaused() {
+		return _paused;
+	}
 };
 
 } // namespace ift3100

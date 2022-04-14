@@ -26,7 +26,6 @@ void Interface::setup() {
 	*mainMenu = true;
 	_gui.setup(theme, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true);
 
-	animPaused = false;
 	inspector.setup();
 
 	primitiveStrokeWidth   = DEFAULT_STROKE_WIDTH;
@@ -172,22 +171,22 @@ void Interface::drawOptionsMenu() {
 }
 
 void Interface::drawAnimator() {
-	if (animPaused) {
-		if (ImGui::Button("Resume")) {
-			Renderer3D::Get()->animator.resume();
-			animPaused = false;
-		}
-	} else {
-		if (ImGui::Button("Pause")) {
-			Renderer3D::Get()->animator.pause();
-			animPaused = true;
-		}
-	}
+	// if (animPaused) {
+	// 	if (ImGui::Button("Resume")) {
+	// 		Renderer3D::Get()->animator.resume();
+	// 		animPaused = false;
+	// 	}
+	// } else {
+	// 	if (ImGui::Button("Pause")) {
+	// 		Renderer3D::Get()->animator.pause();
+	// 		animPaused = true;
+	// 	}
+	// }
 
-	if (ImGui::Button("Reset")) {
-		Renderer3D::Get()->animator.reset();
-		animPaused = true;
-	}
+	// if (ImGui::Button("Reset")) {
+	// 	Renderer3D::Get()->animator.reset();
+	// 	animPaused = true;
+	// }
 }
 
 void Interface::draw() {
@@ -246,6 +245,8 @@ void Interface::draw() {
 		ImGui::Begin("IFT-3100 - Inspector 3D");
 		{ inspector.drawInspector3d(&Renderer3D::Get()->hierarchy.selected_nodes); }
 	}
+
+	Renderer3D::Get()->animatorManager.drawUI();
 
 	auto fbo = Renderer3D::Get()->selectedCameraFBO;
 	if (fbo.isAllocated()) {
