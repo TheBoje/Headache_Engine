@@ -47,7 +47,7 @@ void Renderer3D::setup() {
 	// animator.reset();
 	// animator.resume();
 
-	animatorManager.addAnimator(box_shared->getNode());
+	animatorManager.addAnimator(box_shared);
 
 	selectedCamera = nullptr;
 

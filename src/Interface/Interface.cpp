@@ -246,7 +246,17 @@ void Interface::draw() {
 		{ inspector.drawInspector3d(&Renderer3D::Get()->hierarchy.selected_nodes); }
 	}
 
-	Renderer3D::Get()->animatorManager.drawUI();
+	ImGui::Begin("Animator manager");
+	{
+		Renderer3D::Get()->animatorManager.drawUI();
+		ImGui::Separator();
+
+		if (!Renderer3D::Get()->hierarchy.selected_nodes.empty()) {
+			if (ImGui::Button("Add animator")) {
+				Renderer3D::Get()->animatorManager.addAnimator(Renderer3D::Get()->hierarchy.selected_nodes.at(0)->getRef());
+			}
+		}
+	}
 
 	auto fbo = Renderer3D::Get()->selectedCameraFBO;
 	if (fbo.isAllocated()) {

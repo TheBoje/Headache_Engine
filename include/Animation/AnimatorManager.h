@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "Object3D.h"
 #include "ofxImGui.h"
 #include "Animator.h"
 
@@ -21,7 +22,7 @@ public:
 	void update();
 	void drawUI();
 
-	void addAnimator(ofNode* target);
+	void addAnimator(std::shared_ptr<Object3D> target);
 
 	Animator& getAnimator(size_t i);
 };
