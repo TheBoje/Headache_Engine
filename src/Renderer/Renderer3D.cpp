@@ -105,6 +105,7 @@ void Renderer3D::computeBoundaryBox() {
 
 			// Get the center and the rotation (needed for rotated meshes to compute global vertex position)
 			ofVec3f nodePos		= object->getNode()->getPosition();
+			ofVec3f nodeScale	= object->getNode()->getScale();
 			ofVec3f nodRotation = object->getNode()->getOrientationEulerDeg();
 
 			if (object->getType() == ObjectType::Model3D) {
@@ -113,7 +114,7 @@ void Renderer3D::computeBoundaryBox() {
 
 				// Go through all vertices of the mesh if it exist
 				for (std::size_t i = 0; i < numVertices; i++) {
-					ofVec3f vpos = mesh.getVertex(i) + nodePos;
+					ofVec3f vpos = (mesh.getVertex(i) * nodeScale) + nodePos;
 					vpos.rotate(nodRotation.x, nodePos, ofVec3f(1, 0, 0));
 					vpos.rotate(nodRotation.y, nodePos, ofVec3f(0, 1, 0));
 					vpos.rotate(nodRotation.z, nodePos, ofVec3f(0, 0, 1));
