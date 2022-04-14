@@ -5,6 +5,12 @@ namespace ift3100 {
 
 AnimatorManager::AnimatorManager() { }
 
+/**
+ * @brief Add an animator to the target
+ * If the target already has an animator, no other is added 
+ * 
+ * @param target 
+ */
 void AnimatorManager::addAnimator(std::shared_ptr<Object3D> target) {
 	for (Animator& anim : _animators) {
 		if (anim.getTarget() == target) {
@@ -16,6 +22,12 @@ void AnimatorManager::addAnimator(std::shared_ptr<Object3D> target) {
 	_animators.emplace_back(Animator(target));
 }
 
+/**
+ * @brief Get the i'th animator in the animator manager.
+ * 
+ * @param i 
+ * @return Animator& 
+ */
 Animator& AnimatorManager::getAnimator(size_t i) {
 	assert(i >= 0 && i < _animators.size());
 	return _animators.at(i);
@@ -23,6 +35,10 @@ Animator& AnimatorManager::getAnimator(size_t i) {
 
 void AnimatorManager::setup() { }
 
+/**
+ * @brief Call update on every animator presents in the 
+ * animator manager. If a target is unreferenced, delete the animator.
+ */
 void AnimatorManager::update() {
 	std::vector<size_t> to_remove;
 	for (size_t i = 0; i < _animators.size(); i++) {
@@ -38,6 +54,14 @@ void AnimatorManager::update() {
 	}
 }
 
+/**
+ * @brief Draw the animator manager ui. Contains :
+ * - Resume/Pause and Reset buttons
+ * - keyframes manager (add/delete keyframe, modify keyframe attributs)
+ * When adding a new keyframe, the default values will be :
+ * - if there is no precedent keyframes, the position and rotation of the target with the frame 0
+ * - else the attributs of the precedent keyframe 
+ */
 void AnimatorManager::drawUI() {
 	for (size_t i = 0; i < _animators.size(); i++) {
 		std::string name = ("Anim " + std::to_string(i));
