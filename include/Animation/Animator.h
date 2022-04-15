@@ -2,6 +2,8 @@
 #define ANIMATOR_H
 
 #include "ofMain.h"
+#include "Logger.h"
+#include "Object3D.h"
 
 #include <vector>
 
@@ -17,14 +19,14 @@ struct Keyframe {
 
 /**
  * @brief Animate a target using a vector of @see Keyframe.
- * For now the target can only is an ofNode derivated object.
+ * For now the target can only is an Object3D derivated object.
  * You can change position and rotation for now.
  * As keyframe depends of frame, animation speed depends of the framerate.
  */
 class Animator {
-	ofNode* _target;
-	int		_indexLastKeyFrame;
-	int		_indexNextKeyFrame;
+	std::shared_ptr<Object3D> _target;
+	int						  _indexLastKeyFrame;
+	int						  _indexNextKeyFrame;
 
 	InterpolationType _interpolationType;
 	uint64_t		  _currentFrame;
@@ -39,11 +41,11 @@ class Animator {
 
 public:
 	Animator();
-	Animator(ofNode* target, InterpolationType type = InterpolationType::Linear);
-	Animator(ofNode* target, const std::vector<Keyframe> keyframes, InterpolationType type = InterpolationType::Linear);
+	Animator(std::shared_ptr<Object3D> target, InterpolationType type = InterpolationType::Linear);
+	Animator(std::shared_ptr<Object3D> target, const std::vector<Keyframe> keyframes, InterpolationType type = InterpolationType::Linear);
 
 	void setInterpolationType(InterpolationType type);
-	void setTarget(ofNode* target);
+	void setTarget(std::shared_ptr<Object3D> target);
 	void addKeyframe(const ofVec3f& position, const ofVec3f& rotation, uint64_t frame);
 
 	void setup();
@@ -51,6 +53,16 @@ public:
 	void reset();
 	void pause();
 	void resume();
+
+	inline std::vector<Keyframe>& getKeyframes() {
+		return _keyframes;
+	}
+	inline bool isPaused() {
+		return _paused;
+	}
+	inline std::shared_ptr<Object3D> getTarget() {
+		return _target;
+	}
 };
 
 } // namespace ift3100

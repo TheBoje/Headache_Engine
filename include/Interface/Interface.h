@@ -57,12 +57,6 @@ public:
 	char	imageRenderName[64] = "";
 	char	import3DObj[64]		= "";
 
-	// WIP: add keyframes to animation
-	ofVec3f	 animPosition;
-	ofVec3f	 animRotation;
-	uint64_t animFrame;
-	bool	 animPaused;
-
 	bool axesCameraEnable;
 	bool mainCameraOrtho;
 

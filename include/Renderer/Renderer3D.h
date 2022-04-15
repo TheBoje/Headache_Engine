@@ -1,7 +1,7 @@
 #ifndef IFT3100_RENDERER_3D_H
 #define IFT3100_RENDERER_3D_H
 
-#include "Animator.h"
+#include "AnimatorManager.h"
 #include "CameraManager.h"
 #include "HierarchyContainer.h"
 #include "Object3D.h"
@@ -44,7 +44,7 @@ public:
 	ofCamera* selectedCamera;
 
 	CameraManager				 cameraManager;
-	Animator					 animator;
+	AnimatorManager				 animatorManager;
 	HierarchyContainer<Object3D> hierarchy;
 
 	void setup();
