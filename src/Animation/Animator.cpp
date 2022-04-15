@@ -1,5 +1,4 @@
 #include "Animator.h"
-#include "Logger.h"
 
 namespace ift3100 {
 
@@ -11,7 +10,7 @@ Animator::Animator()
 	, _currentFrame(0)
 	, _paused(true) { }
 
-Animator::Animator(ofNode* target, InterpolationType type)
+Animator::Animator(std::shared_ptr<Object3D> target, InterpolationType type)
 	: _target(target)
 	, _indexLastKeyFrame(-1)
 	, _indexNextKeyFrame(-1)
@@ -19,7 +18,7 @@ Animator::Animator(ofNode* target, InterpolationType type)
 	, _currentFrame(0)
 	, _paused(true) { }
 
-Animator::Animator(ofNode* target, const std::vector<Keyframe> keyframes, InterpolationType type)
+Animator::Animator(std::shared_ptr<Object3D> target, const std::vector<Keyframe> keyframes, InterpolationType type)
 	: _target(target)
 	, _indexLastKeyFrame(-1)
 	, _indexNextKeyFrame(-1)
@@ -37,7 +36,7 @@ void Animator::setInterpolationType(InterpolationType type) {
 	_interpolationType = type;
 }
 
-void Animator::setTarget(ofNode* target) {
+void Animator::setTarget(std::shared_ptr<Object3D> target) {
 	_target = target;
 }
 
@@ -107,8 +106,8 @@ void Animator::reset() {
 		_indexLastKeyFrame = 0;
 		_indexNextKeyFrame = 1;
 
-		_target->setPosition(_keyframes[_indexLastKeyFrame].position);
-		_target->setGlobalOrientation(glm::quat(_keyframes[_indexLastKeyFrame].rotation * DEG_TO_RAD));
+		_target->getNode()->setPosition(_keyframes[_indexLastKeyFrame].position);
+		_target->getNode()->setGlobalOrientation(glm::quat(_keyframes[_indexLastKeyFrame].rotation * DEG_TO_RAD));
 	} else {
 		_indexLastKeyFrame = -1;
 		_indexNextKeyFrame = -1;
@@ -128,11 +127,11 @@ void Animator::computePiecewiseInterpolation() {
 	Keyframe* nextKeyFrame = &_keyframes[_indexNextKeyFrame];
 
 	if ((_currentFrame - lastKeyFrame->frame) < ((nextKeyFrame->frame - lastKeyFrame->frame) / 2)) {
-		_target->setPosition(lastKeyFrame->position);
-		_target->setGlobalOrientation(glm::quat(lastKeyFrame->rotation * DEG_TO_RAD));
+		_target->getNode()->setPosition(lastKeyFrame->position);
+		_target->getNode()->setGlobalOrientation(glm::quat(lastKeyFrame->rotation * DEG_TO_RAD));
 	} else {
-		_target->setPosition(nextKeyFrame->position);
-		_target->setGlobalOrientation(glm::quat(nextKeyFrame->rotation * DEG_TO_RAD));
+		_target->getNode()->setPosition(nextKeyFrame->position);
+		_target->getNode()->setGlobalOrientation(glm::quat(nextKeyFrame->rotation * DEG_TO_RAD));
 	}
 }
 
@@ -149,8 +148,8 @@ void Animator::computeLinearInterpolation() {
 		ofLerpDegrees(lastKeyFrame->rotation.y, nextKeyFrame->rotation.y, alpha),
 		ofLerpDegrees(lastKeyFrame->rotation.z, nextKeyFrame->rotation.z, alpha));
 
-	_target->setPosition(lerpPosition);
-	_target->setGlobalOrientation(glm::quat(lerpRotation * DEG_TO_RAD));
+	_target->getNode()->setPosition(lerpPosition);
+	_target->getNode()->setGlobalOrientation(glm::quat(lerpRotation * DEG_TO_RAD));
 }
 
 void Animator::computeInterpolation() {

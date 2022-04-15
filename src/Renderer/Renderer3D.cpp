@@ -19,6 +19,7 @@ Renderer3D* Renderer3D::Get() {
 void Renderer3D::setup() {
 	Model::setup();
 	cameraManager.setup();
+	animatorManager.setup();
 
 	_showBoundary = false;
 
@@ -46,6 +47,8 @@ void Renderer3D::setup() {
 	// animator.reset();
 	// animator.resume();
 
+	animatorManager.addAnimator(box_shared);
+
 	selectedCamera = nullptr;
 
 	IFT_LOG << "done";
@@ -53,8 +56,8 @@ void Renderer3D::setup() {
 
 void Renderer3D::update() {
 	cameraManager.update();
+	animatorManager.update();
 	computeBoundaryBox();
-	animator.update();
 
 	selectedCamera = nullptr;
 	// Search in selected nodes if there is a camera
@@ -102,6 +105,7 @@ void Renderer3D::computeBoundaryBox() {
 
 			// Get the center and the rotation (needed for rotated meshes to compute global vertex position)
 			ofVec3f nodePos		= object->getNode()->getPosition();
+			ofVec3f nodeScale	= object->getNode()->getScale();
 			ofVec3f nodRotation = object->getNode()->getOrientationEulerDeg();
 
 			if (object->getType() == ObjectType::Model3D) {
@@ -110,7 +114,7 @@ void Renderer3D::computeBoundaryBox() {
 
 				// Go through all vertices of the mesh if it exist
 				for (std::size_t i = 0; i < numVertices; i++) {
-					ofVec3f vpos = mesh.getVertex(i) + nodePos;
+					ofVec3f vpos = (mesh.getVertex(i) * nodeScale) + nodePos;
 					vpos.rotate(nodRotation.x, nodePos, ofVec3f(1, 0, 0));
 					vpos.rotate(nodRotation.y, nodePos, ofVec3f(0, 1, 0));
 					vpos.rotate(nodRotation.z, nodePos, ofVec3f(0, 0, 1));
