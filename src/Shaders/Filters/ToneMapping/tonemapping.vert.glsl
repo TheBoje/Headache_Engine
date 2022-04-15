@@ -12,11 +12,10 @@ in vec2 texcoord;
 // attribut en sortie
 out vec2 surface_texcoord;
 
-void main()
-{
-  // transformation de la position du sommet par les matrices de modèle, vue et projection
-  gl_Position = modelViewProjectionMatrix * position;
+void main() {
+	// transformation de la position du sommet par les matrices de modèle, vue et projection
+	gl_Position = modelViewProjectionMatrix * position;
 
-  // passer les coordonnées de texture au shader de fragment
-  surface_texcoord = texcoord;
+	// passer les coordonnées de texture au shader de fragment
+	surface_texcoord = texcoord;
 }
