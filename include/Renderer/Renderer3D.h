@@ -47,6 +47,8 @@ public:
 	AnimatorManager				 animatorManager;
 	HierarchyContainer<Object3D> hierarchy;
 
+	std::vector<std::shared_ptr<Object3D>> lights;
+
 	void setup();
 	void update();
 

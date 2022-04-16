@@ -154,6 +154,11 @@ void Interface::draw3dRendererUI() {
 		if (ImGui::MenuItem("Camera", NULL, false, true)) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Camera", ofCamera()));
 		}
+		if (ImGui::MenuItem("Light", NULL, false, true)) {
+			std::shared_ptr<Object3D> light = std::make_shared<Object3D>("Light", ofLight());
+			Renderer3D::Get()->lights.emplace_back(light);
+			Renderer3D::Get()->hierarchy.addChild(light);
+		}
 
 		ImGui::EndMenu();
 	}

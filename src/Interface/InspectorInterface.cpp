@@ -150,6 +150,7 @@ void InspectorInterface::drawInspector3d(std::vector<Hierarchy<Object3D>*>* obje
 	}
 
 	textureOptions(*object3Ds->at(0)->getRef());
+	lightOptions(*object3Ds->at(0)->getRef());
 }
 
 /**
@@ -183,6 +184,22 @@ void InspectorInterface::textureOptions(Object3D& object) {
 
 	ofTexture* tex = object.getModel()->getTexture();
 	ofxImGui::AddImage(*tex, ofVec2f(ImGui::GetWindowWidth(), ImGui::GetWindowWidth() * (tex->getHeight() / tex->getWidth())));
+}
+
+void InspectorInterface::lightOptions(Object3D& object) {
+	if (object.getType() != ObjectType::Light)
+		return;
+
+	ofLight* light		= (ofLight*)object.getNode();
+	ImVec4	 lightColor = light->getDiffuseColor();
+	ImGui::ColorEdit4("Light diffuse color", (float*)&lightColor);
+	light->setDiffuseColor(lightColor);
+
+	// light->setAreaLight();
+	// light->setPointLight();
+	// light->setSpotlight();
+	// light->setDirectional();
+	light->getType();
 }
 
 } // namespace ift3100

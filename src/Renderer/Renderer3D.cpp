@@ -170,6 +170,7 @@ void Renderer3D::deleteSelected() {
 
 void Renderer3D::drawScene() {
 	ofFill();
+
 	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
 		// Check if the obj is selected and apply the exploding shader if so
 		bool isSelected = false;
@@ -195,6 +196,8 @@ void Renderer3D::drawScene() {
 
 void Renderer3D::draw() {
 	ofEnableDepthTest();
+	for (std::shared_ptr<Object3D> light : lights)
+		((ofLight*)light->getNode())->enable();
 
 	// Store result of selected camera in the FBO
 	if (selectedCamera != nullptr) {
@@ -235,6 +238,9 @@ void Renderer3D::draw() {
 	drawScene();
 
 	cameraManager.endCamera(3);
+
+	for (std::shared_ptr<Object3D> light : lights)
+		((ofLight*)light->getNode())->disable();
 
 	ofDisableDepthTest();
 }

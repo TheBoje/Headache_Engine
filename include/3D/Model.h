@@ -21,6 +21,7 @@ class Model {
 
 	ofTexture	  _texture;
 	of3dPrimitive _primitive;
+	ofMaterial	  material;
 
 public:
 	static void setup();

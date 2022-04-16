@@ -20,12 +20,26 @@ void Model::setup() {
 Model::Model(of3dPrimitive primitive)
 	: _texture(ofTexture())
 	, _primitive(primitive)
-	, usingShader(ShaderType::NoShader) { }
+	, usingShader(ShaderType::NoShader) {
+	material.setShininess(120);
+
+	material.setSpecularColor(ofColor(255, 255, 255, 255));
+	material.setEmissiveColor(ofColor(0, 0, 0, 255));
+	material.setDiffuseColor(ofColor(255, 255, 255, 255));
+	material.setAmbientColor(ofColor(255, 255, 255, 255));
+}
 
 Model::Model(ofMesh mesh, ofTexture texture)
 	: _texture(texture)
 	, usingShader(ShaderType::NoShader) {
 	_primitive.getMesh() = mesh;
+
+	material.setShininess(120);
+
+	material.setSpecularColor(ofColor(255, 255, 255, 255));
+	material.setEmissiveColor(ofColor(0, 0, 0, 255));
+	material.setDiffuseColor(ofColor(255, 255, 255, 255));
+	material.setAmbientColor(ofColor(255, 255, 255, 255));
 }
 
 /**
@@ -35,9 +49,9 @@ Model::Model(ofMesh mesh, ofTexture texture)
  * @link InspectorInterface @endlink
  */
 void Model::draw() {
+	material.begin();
 	if (_texture.isAllocated()) {
 		_texture.bind();
-
 		switch (usingShader) {
 			case ShaderType::NoShader: _primitive.draw(); break;
 
@@ -62,11 +76,11 @@ void Model::draw() {
 				_gaussianShader.end();
 				break;
 		}
-
 		_texture.unbind();
 	} else {
 		_primitive.drawFaces();
 	}
+	material.end();
 }
 
 /**
