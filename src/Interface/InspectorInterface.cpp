@@ -165,20 +165,34 @@ void InspectorInterface::textureOptions(Object3D& object) {
 
 	ImGui::Separator();
 
-	const char* items[] = {"No filter", "Sobel filter", "Grayscale", "Gaussian filter"};
+	const char* items[] = {"No filter", "Sobel filter", "Grayscale", "Gaussian filter", "Tone mapping"};
 
 	ImGui::Text("Texture filters:");
 	if (ImGui::BeginListBox("##listbox")) {
 		for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
 			const bool is_selected = (object.getModel()->usingShader == n);
-			if (ImGui::Selectable(items[n], is_selected))
+			if (ImGui::Selectable(items[n], is_selected)) {
 				object.getModel()->usingShader = (ShaderType)n;
-
+			}
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
 				ImGui::SetItemDefaultFocus();
 		}
 		ImGui::EndListBox();
+	}
+
+	if (object.getModel()->usingShader == ShaderType::SobelFilter) {
+		ImGui::SliderFloat("Blur amount", &object.getModel()->sobelThreshold, 0, 10);
+	}
+
+	if (object.getModel()->usingShader == ShaderType::Gaussian) {
+		ImGui::SliderFloat("Blur amount", &object.getModel()->blurAmnt, 0, 10);
+	}
+
+	if (object.getModel()->usingShader == ShaderType::ToneMapping) {
+		ImGui::SliderFloat("Exposure", &object.getModel()->toneMappingExposure, 0, 10);
+		ImGui::SliderFloat("Gamma", &object.getModel()->toneMappingGamma, 0, 10);
+		ImGui::Checkbox("Toggle aces filming/Reihnard", &object.getModel()->toggleToneMapping);
 	}
 
 	ofTexture* tex = object.getModel()->getTexture();
