@@ -33,6 +33,8 @@ void Renderer3D::setup() {
 		"../../src/Shaders/Exploding/exploding.frag.glsl",
 		"../../src/Shaders/Exploding/exploding.geom.glsl");
 
+	_phong.load("../../src/Shaders/Lighting/Phong/phong.vert.glsl", "../../src/Shaders/Lighting/Phong/phong.frag.glsl");
+
 	isExploding = false;
 
 	hierarchy.addChild(box_shared);
@@ -196,6 +198,14 @@ void Renderer3D::drawScene() {
 
 void Renderer3D::draw() {
 	ofEnableDepthTest();
+	for (std::shared_ptr<Object3D> obj : lights) {
+		ofLight* light = ((ofLight*)obj->getNode());
+		_phong.begin();
+		_phong.setUniform3f("color_ambient", light->getAmbientColor().r, light->getAmbientColor().g, light->getAmbientColor().b);
+		_phong.setUniform3f("color_diffuse", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
+		_phong.setUniform3f("light_position", light->getGlobalPosition());
+	}
+
 	for (std::shared_ptr<Object3D> light : lights)
 		((ofLight*)light->getNode())->enable();
 
@@ -242,6 +252,9 @@ void Renderer3D::draw() {
 	for (std::shared_ptr<Object3D> light : lights)
 		((ofLight*)light->getNode())->disable();
 
+	for (std::shared_ptr<Object3D> obj : lights) {
+		_phong.end();
+	}
 	ofDisableDepthTest();
 }
 
