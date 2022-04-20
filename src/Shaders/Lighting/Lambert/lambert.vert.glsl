@@ -4,18 +4,13 @@
 in vec4 position;
 in vec4 normal;
 
-in vec2 texcoord;
-
 // attributs en sortie
 out vec3 surface_position;
 out vec3 surface_normal;
 
-out vec2 texCoordVarying;
-
 // attributs uniformes
 uniform mat4x4 modelViewMatrix;
 uniform mat4x4 projectionMatrix;
-uniform mat4 textureMatrix;
 
 void main()
 {
@@ -28,7 +23,6 @@ void main()
   // transformation de la position du sommet dans l'espace de vue
   surface_position = vec3(modelViewMatrix * position);
 
-	texCoordVarying = texcoord;
   // transformation de la position du sommet par les matrices de modèle, vue et projection
   gl_Position = projectionMatrix * modelViewMatrix * position;
 }

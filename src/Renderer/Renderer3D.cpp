@@ -23,6 +23,8 @@ void Renderer3D::setup() {
 
 	_showBoundary = false;
 
+	illumination = IlluminationStyle::Default;
+
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
 	ofNode					  box;
@@ -34,6 +36,9 @@ void Renderer3D::setup() {
 		"../../src/Shaders/Exploding/exploding.geom.glsl");
 
 	_phong.load("../../src/Shaders/Lighting/Phong/phong.vert.glsl", "../../src/Shaders/Lighting/Phong/phong.frag.glsl");
+	_lambert.load("../../src/Shaders/Lighting/Lambert/lambert.vert.glsl", "../../src/Shaders/Lighting/Lambert/lambert.frag.glsl");
+	_gouraud.load("../../src/Shaders/Lighting/Gouraud/gouraud.vert.glsl", "../../src/Shaders/Lighting/Gouraud/gouraud.frag.glsl");
+	_blinnphong.load("../../src/Shaders/Lighting/BlinnPhong/blinnphong.vert.glsl", "../../src/Shaders/Lighting/BlinnPhong/blinnphong.frag.glsl");
 
 	isExploding = false;
 
@@ -198,12 +203,29 @@ void Renderer3D::drawScene() {
 
 void Renderer3D::draw() {
 	ofEnableDepthTest();
-	for (std::shared_ptr<Object3D> obj : lights) {
-		ofLight* light = ((ofLight*)obj->getNode());
-		_phong.begin();
-		_phong.setUniform3f("color_ambient", light->getAmbientColor().r, light->getAmbientColor().g, light->getAmbientColor().b);
-		_phong.setUniform3f("color_diffuse", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
-		_phong.setUniform3f("light_position", light->getGlobalPosition());
+
+	ofShader* illum = nullptr;
+	// TODO: test pour voir si les shaders marchent, envoyer le tout dans un shader manager après
+	if (illumination != Default) {
+		switch (illumination) {
+			case Phong: illum = &_phong; break;
+
+			case Lambert: illum = &_lambert; break;
+
+			case Gouraud: illum = &_gouraud; break;
+
+			case BlinnPhong: illum = &_blinnphong; break;
+		}
+
+		for (std::shared_ptr<Object3D> obj : lights) {
+			ofLight* light = ((ofLight*)obj->getNode());
+			illum->begin();
+			illum->setUniform3f("color_ambient", light->getAmbientColor().r, light->getAmbientColor().g, light->getAmbientColor().b);
+			illum->setUniform3f("color_diffuse", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
+			illum->setUniform3f("color_specular", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
+			illum->setUniform1f("brightness", light->getDiffuseColor().getBrightness());
+			illum->setUniform3f("light_position", light->getGlobalPosition());
+		}
 	}
 
 	for (std::shared_ptr<Object3D> light : lights)
@@ -252,8 +274,10 @@ void Renderer3D::draw() {
 	for (std::shared_ptr<Object3D> light : lights)
 		((ofLight*)light->getNode())->disable();
 
-	for (std::shared_ptr<Object3D> obj : lights) {
-		_phong.end();
+	if (illumination != Default) {
+		for (std::shared_ptr<Object3D> obj : lights) {
+			illum->end();
+		}
 	}
 	ofDisableDepthTest();
 }

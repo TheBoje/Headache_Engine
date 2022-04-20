@@ -1,35 +1,39 @@
 #version 330
 
-// attributs interpolés à partir des valeurs en sortie du shader de sommets
-in vec3 surface_position;
-in vec3 surface_normal;
+// attributs de sommet
+in vec4 position;
+in vec4 normal;
 
-// in vec2 texCoordVarying;
+// attributs en sortie
+out vec3 surface_color;
 
-// attribut en sortie
-out vec4 fragment_color;
+// attributs uniformes
+uniform mat4x4 modelViewMatrix;
+uniform mat4x4 projectionMatrix;
 
 // couleurs de réflexion du matériau
 uniform vec3 color_ambient;
 uniform vec3 color_diffuse;
 uniform vec3 color_specular;
 
-// uniform sampler2D tex0;
-
 // facteur de brillance spéculaire du matériau
 uniform float brightness;
 
 // position d'une source de lumière
-uniform vec3 light_position;  
+uniform vec3 light_position;
 
 void main()
 {
-  // à terme utiliser la specular map, diffuse map etc...
-  vec3 ca = color_ambient;//(color_ambient * texture(tex0, texCoordVarying).rgb);
-  vec3 cd = color_diffuse;//(color_diffuse * texture(tex0, texCoordVarying).rgb);
-  vec3 cs = color_specular;//(color_specular * texture(tex0, texCoordVarying).rgb);
+  // calculer la matrice normale
+  mat4x4 normalMatrix = transpose(inverse(modelViewMatrix));
 
-  // re-normaliser la normale après interpolation
+  // transformation de la normale du sommet dans l'espace de vue
+  vec3 surface_normal = vec3(normalMatrix * normal);
+
+  // transformation de la position du sommet dans l'espace de vue
+  vec3 surface_position = vec3(modelViewMatrix * position);
+
+  // re-normaliser la normale
   vec3 n = normalize(surface_normal);
 
   // calculer la direction de la surface vers la lumière (l)
@@ -47,7 +51,7 @@ void main()
     // calculer la direction de la surface vers la caméra (v)
     vec3 v = normalize(-surface_position);
 
-    // calculer la direction de la réflection (r) du rayon incident (-l) en fonction de la normale (n)
+    // calculer la direction de la réflection (v) du rayon incident (-l) en fonction de la normale (n)
     vec3 r = reflect(-l, n);
 
     // calculer le niveau de réflexion spéculaire (r • v)
@@ -55,8 +59,11 @@ void main()
   }
 
   // calculer la couleur du fragment
-  fragment_color = vec4(
-    ca +
-    cd * reflection_diffuse +
-    cs * reflection_specular, 1.0);
+  surface_color = vec3(
+    color_ambient +
+    color_diffuse * reflection_diffuse +
+    color_specular * reflection_specular);
+
+  // transformation de la position du sommet par les matrices de modèle, vue et projection
+  gl_Position = projectionMatrix * modelViewMatrix * position;
 }
