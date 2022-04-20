@@ -3,6 +3,7 @@
 // attributs interpolés à partir des valeurs en sortie du shader de sommets
 in vec3 surface_position;
 in vec3 surface_normal;
+in vec3 light_position;  
 
 // in vec2 texCoordVarying;
 
@@ -20,7 +21,6 @@ uniform vec3 color_specular;
 uniform float brightness;
 
 // position d'une source de lumière
-uniform vec3 light_position;  
 
 void main()
 {

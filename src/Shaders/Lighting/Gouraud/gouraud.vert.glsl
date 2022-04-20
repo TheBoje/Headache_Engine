@@ -20,10 +20,12 @@ uniform vec3 color_specular;
 uniform float brightness;
 
 // position d'une source de lumière
-uniform vec3 light_position;
+uniform vec3 lightPos;
 
 void main()
 {
+  vec3 light_position = vec3(modelViewMatrix * vec4(lightPos, 1.0));
+  
   // calculer la matrice normale
   mat4x4 normalMatrix = transpose(inverse(modelViewMatrix));
 

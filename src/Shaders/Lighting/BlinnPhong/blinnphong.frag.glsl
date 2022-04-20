@@ -3,6 +3,7 @@
 // attributs interpolés à partir des valeurs en sortie du shader de sommet
 in vec3 surface_position;
 in vec3 surface_normal;
+in vec3 light_position;
 
 // attribut en sortie
 out vec4 fragment_color;
@@ -15,8 +16,6 @@ uniform vec3 color_specular;
 // facteur de brillance spéculaire du matériau
 uniform float brightness;
 
-// position d'une source de lumière
-uniform vec3 light_position;
 
 void main()
 {

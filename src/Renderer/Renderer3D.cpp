@@ -203,6 +203,10 @@ void Renderer3D::drawScene() {
 
 void Renderer3D::draw() {
 	ofEnableDepthTest();
+	ofEnableLighting();
+
+	for (std::shared_ptr<Object3D> light : lights)
+		((ofLight*)light->getNode())->enable();
 
 	ofShader* illum = nullptr;
 	// TODO: test pour voir si les shaders marchent, envoyer le tout dans un shader manager après
@@ -224,12 +228,9 @@ void Renderer3D::draw() {
 			illum->setUniform3f("color_diffuse", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
 			illum->setUniform3f("color_specular", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
 			illum->setUniform1f("brightness", light->getDiffuseColor().getBrightness());
-			illum->setUniform3f("light_position", light->getGlobalPosition());
+			illum->setUniform3f("lightPos", light->getGlobalPosition());
 		}
 	}
-
-	for (std::shared_ptr<Object3D> light : lights)
-		((ofLight*)light->getNode())->enable();
 
 	// Store result of selected camera in the FBO
 	if (selectedCamera != nullptr) {
@@ -271,14 +272,14 @@ void Renderer3D::draw() {
 
 	cameraManager.endCamera(3);
 
-	for (std::shared_ptr<Object3D> light : lights)
-		((ofLight*)light->getNode())->disable();
-
 	if (illumination != Default) {
 		for (std::shared_ptr<Object3D> obj : lights) {
 			illum->end();
 		}
 	}
+	for (std::shared_ptr<Object3D> light : lights)
+		((ofLight*)light->getNode())->disable();
+	ofDisableLighting();
 	ofDisableDepthTest();
 }
 
