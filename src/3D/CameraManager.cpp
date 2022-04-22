@@ -1,6 +1,6 @@
 #include "CameraManager.h"
-#include "ofMain.h"
 #include "Logger.h"
+#include "ofMain.h"
 
 namespace ift3100 {
 static const ofVec3f OFFSET_DATA[] = {
@@ -131,5 +131,16 @@ void CameraManager::toggleAxesCameras(bool enabled) {
 
 bool const CameraManager::axesCamerasEnabled() const {
 	return _axes_cameras_enabled;
+}
+
+const ofCamera& CameraManager::get(int i) const {
+	if (i == 3) {
+		return _main_camera;
+	} else if (i < NB_AXES_CAM && i >= 0) {
+		return _axes_cameras[i];
+	} else {
+		IFT_LOG_ERROR << "Trying to get camera [" << i << "] is out of range (" << NB_AXES_CAM << "), failed";
+		exit(EXIT_FAILURE);
+	}
 }
 } // namespace ift3100
