@@ -34,6 +34,8 @@ public:
 	void draw();
 	void loadTexture(std::string path);
 
+	void setMesh(const ofMesh& mesh);
+
 	inline ofMesh* getMesh() {
 		return _primitive.getMeshPtr();
 	}

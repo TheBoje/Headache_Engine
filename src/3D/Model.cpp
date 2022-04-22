@@ -94,4 +94,9 @@ void Model::loadTexture(std::string path) {
 	image.load(path);
 	_texture = image.getTexture();
 }
+
+void Model::setMesh(const ofMesh& mesh) {
+	_primitive.getMesh() = ofMesh(mesh);
+}
+
 } // namespace ift3100

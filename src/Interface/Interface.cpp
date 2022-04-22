@@ -171,24 +171,6 @@ void Interface::draw3dRendererUI() {
 void Interface::drawOptionsMenu() {
 	if (ImGui::BeginMenu("Options")) {
 		ImGui::Checkbox("Enable exploding on selected meshes", &Renderer3D::Get()->isExploding);
-		ImGui::Separator();
-
-		const char* items[] = {"Default", "Phong illumination", "Lambert illumination", "Gouraud illumination", "BlinnPhong illumination"};
-
-		ImGui::Text("illumination:");
-		if (ImGui::BeginListBox("##listbox")) {
-			for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
-				const bool is_selected = (Renderer3D::Get()->illumination == n);
-				if (ImGui::Selectable(items[n], is_selected))
-					Renderer3D::Get()->illumination = (IlluminationStyle)n;
-
-				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-				if (is_selected)
-					ImGui::SetItemDefaultFocus();
-			}
-			ImGui::EndListBox();
-		}
-
 		ImGui::EndMenu();
 	}
 }
@@ -210,6 +192,65 @@ void Interface::drawAnimator() {
 	// 	Renderer3D::Get()->animator.reset();
 	// 	animPaused = true;
 	// }
+}
+
+void Interface::drawMaterialViewer() {
+	Model* mod = nullptr;
+	for (auto selected : Renderer3D::Get()->hierarchy.selected_nodes) {
+		if (selected->getRef()->getType() == ObjectType::Model3D) {
+			mod = new Model(*selected->getRef()->getModel());
+			break;
+		}
+	}
+
+	// If there is no model selected in the Renderer3D, we escape the function
+	if (mod == nullptr)
+		return;
+
+	ImGui::Begin("Material preview");
+
+	const char* items[] = {"Default", "Phong illumination", "Lambert illumination", "Gouraud illumination", "BlinnPhong illumination"};
+
+	ImGui::Text("illumination:");
+	if (ImGui::BeginListBox("##listbox")) {
+		for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
+			const bool is_selected = (MaterialViewer::Get()->illuminationStyle == n);
+			if (ImGui::Selectable(items[n], is_selected))
+				MaterialViewer::Get()->illuminationStyle = (IlluminationStyle)n;
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+
+	const char* itemsPrimitive[] = {"Sphere", "Cube", "IcoSphere", "Cone"};
+
+	ImGui::Text("Primitive:");
+	if (ImGui::BeginListBox("##listbox2")) {
+		for (int n = 0; n < IM_ARRAYSIZE(itemsPrimitive); n++) {
+			const bool is_selected = (MaterialViewer::Get()->getType() == n);
+			if (ImGui::Selectable(itemsPrimitive[n], is_selected))
+				MaterialViewer::Get()->setPrimitiveType((PreviewPrimitiveType)n);
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+
+	MaterialViewer::Get()->setTarget(*mod);
+	MaterialViewer::Get()->draw();
+
+	ImGui::Begin("Preview");
+	{
+		ofxImGui::AddImage(MaterialViewer::Get()->getFbo(),
+			ofVec2f(ImGui::GetWindowHeight() * (MaterialViewer::Get()->getFbo().getWidth() / MaterialViewer::Get()->getFbo().getHeight()),
+				ImGui::GetWindowHeight()));
+	}
+	ImGui::End();
 }
 
 void Interface::draw() {
@@ -268,6 +309,8 @@ void Interface::draw() {
 		ImGui::Begin("IFT-3100 - Inspector 3D");
 		{ inspector.drawInspector3d(&Renderer3D::Get()->hierarchy.selected_nodes); }
 	}
+
+	drawMaterialViewer();
 
 	ImGui::Begin("Animator manager");
 	{
