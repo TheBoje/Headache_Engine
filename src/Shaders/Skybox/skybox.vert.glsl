@@ -6,10 +6,8 @@ layout(location = 1) in vec4 color;
 layout(location = 2) in vec3 normal;
 layout(location = 3) in vec2 texcoord;
 
-uniform mat4 projectionMatrix;
 uniform mat4 modelViewMatrix;
 uniform mat4 modelViewProjectionMatrix;
-uniform mat4 normalMatrix;
 
 out VertexAttrib {
 	vec3 texcoord;

@@ -134,12 +134,12 @@ bool const CameraManager::axesCamerasEnabled() const {
 }
 
 const ofCamera& CameraManager::get(int i) const {
+	assert(i >= 0 && i <= 3);
 	if (i == 3) {
 		return _main_camera;
 	} else if (i < NB_AXES_CAM && i >= 0) {
 		return _axes_cameras[i];
 	} else {
-		IFT_LOG_ERROR << "Trying to get camera [" << i << "] is out of range (" << NB_AXES_CAM << "), failed";
 		exit(EXIT_FAILURE);
 	}
 }
