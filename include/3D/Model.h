@@ -28,6 +28,7 @@ public:
 
 	ShaderType usingShader;
 
+	Model(const Model& model);
 	Model(of3dPrimitive primitive);
 	Model(ofMesh mesh, ofTexture texture = ofTexture());
 

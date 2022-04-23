@@ -48,6 +48,14 @@ public:
 
 	void setPrimitiveType(PreviewPrimitiveType type);
 
+	inline ofFloatColor getLightColor() {
+		return _light.getAmbientColor();
+	}
+
+	inline void setLightColor(ofColor color) {
+		_light.setAmbientColor(color);
+	}
+
 	inline PreviewPrimitiveType getType() {
 		return _primitiveType;
 	}

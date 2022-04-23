@@ -207,6 +207,9 @@ void Interface::drawMaterialViewer() {
 	if (mod == nullptr)
 		return;
 
+	MaterialViewer::Get()->setTarget(*mod);
+	MaterialViewer::Get()->draw();
+
 	ImGui::Begin("Material preview");
 
 	const char* items[] = {"Default", "Phong illumination", "Lambert illumination", "Gouraud illumination", "BlinnPhong illumination"};
@@ -241,8 +244,10 @@ void Interface::drawMaterialViewer() {
 		ImGui::EndListBox();
 	}
 
-	MaterialViewer::Get()->setTarget(*mod);
-	MaterialViewer::Get()->draw();
+	ImVec4 lightColor = MaterialViewer::Get()->getLightColor();
+	if (ImGui::ColorEdit4("Light color", (float*)&lightColor)) {
+		MaterialViewer::Get()->setLightColor(lightColor);
+	}
 
 	ImGui::Begin("Preview");
 	{

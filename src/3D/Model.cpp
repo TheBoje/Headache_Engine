@@ -17,6 +17,11 @@ void Model::setup() {
 	_gaussianShader.load("../../src/Shaders/Filters/Gaussian/gaussian.vert.glsl", "../../src/Shaders/Filters/Gaussian/gaussian.frag.glsl");
 }
 
+Model::Model(const Model& model)
+	: _texture(model._texture)
+	, _primitive(model._primitive)
+	, usingShader(model.usingShader) { }
+
 Model::Model(of3dPrimitive primitive)
 	: _texture(ofTexture())
 	, _primitive(primitive)
