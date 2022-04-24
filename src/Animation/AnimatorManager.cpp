@@ -1,4 +1,5 @@
 #include "AnimatorManager.h"
+#include "Asserts.h"
 #include "InspectorInterface.h"
 
 namespace ift3100 {
@@ -7,9 +8,9 @@ AnimatorManager::AnimatorManager() { }
 
 /**
  * @brief Add an animator to the target
- * If the target already has an animator, no other is added 
- * 
- * @param target 
+ * If the target already has an animator, no other is added
+ *
+ * @param target
  */
 void AnimatorManager::addAnimator(std::shared_ptr<Object3D> target) {
 	for (Animator& anim : _animators) {
@@ -24,19 +25,19 @@ void AnimatorManager::addAnimator(std::shared_ptr<Object3D> target) {
 
 /**
  * @brief Get the i'th animator in the animator manager.
- * 
- * @param i 
- * @return Animator& 
+ *
+ * @param i
+ * @return Animator&
  */
 Animator& AnimatorManager::getAnimator(size_t i) {
-	assert(i >= 0 && i < _animators.size());
+	IFT_ASSERT(i >= 0 && i < _animators.size(), "Could not get animator [" << i << "], out of range [0, " << _animators.size() << "]");
 	return _animators.at(i);
 }
 
 void AnimatorManager::setup() { }
 
 /**
- * @brief Call update on every animator presents in the 
+ * @brief Call update on every animator presents in the
  * animator manager. If a target is unreferenced, delete the animator.
  */
 void AnimatorManager::update() {
@@ -60,7 +61,7 @@ void AnimatorManager::update() {
  * - keyframes manager (add/delete keyframe, modify keyframe attributs)
  * When adding a new keyframe, the default values will be :
  * - if there is no precedent keyframes, the position and rotation of the target with the frame 0
- * - else the attributs of the precedent keyframe 
+ * - else the attributs of the precedent keyframe
  */
 void AnimatorManager::drawUI() {
 	for (size_t i = 0; i < _animators.size(); i++) {

@@ -1,4 +1,5 @@
 #include "CameraManager.h"
+#include "Asserts.h"
 #include "Logger.h"
 #include "ofMain.h"
 
@@ -134,7 +135,7 @@ bool const CameraManager::axesCamerasEnabled() const {
 }
 
 const ofCamera& CameraManager::get(int i) const {
-	assert(i >= 0 && i <= 3);
+	IFT_ASSERT(i >= 0 && i <= 3, "Could not get camera [" << i << "], out of range [0, 3]");
 	if (i == 3) {
 		return _main_camera;
 	} else if (i < NB_AXES_CAM && i >= 0) {

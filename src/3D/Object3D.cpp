@@ -1,4 +1,5 @@
 #include "Object3D.h"
+#include "Asserts.h"
 #include "Logger.h"
 
 namespace ift3100 {
@@ -39,7 +40,7 @@ Object3D::~Object3D() {
 }
 
 Model* Object3D::getModel() {
-	assert(_type == ObjectType::Model3D);
+	IFT_ASSERT(_type == ObjectType::Model3D, "Get model is forbidden for non-Model3D objects. Try get getType() before.");
 	return _model;
 }
 
