@@ -30,12 +30,16 @@ Object3D::Object3D(std::string name, ofLight node)
 	: _name(name)
 	, _type(ObjectType::Light)
 	, _light(new ofLight(node)) { }
-
+Object3D::Object3D(std::string name, ParamCurve curve)
+	: _name(name)
+	, _type(ObjectType::ParametricCurve)
+	, _curve(new ParamCurve(curve)) { }
 Object3D::~Object3D() {
-	if (_type == ObjectType::Model3D)
-		delete _model;
-	else
-		delete getNode();
+	switch (_type) {
+		case ObjectType::Model3D: delete _model; break;
+		case ObjectType::ParametricCurve: delete _curve; break;
+		default: delete getNode(); break;
+	}
 }
 
 Model* Object3D::getModel() {
@@ -43,14 +47,27 @@ Model* Object3D::getModel() {
 	return _model;
 }
 
+ParamCurve* Object3D::getCurve() {
+	assert(_type == ObjectType::ParametricCurve);
+	return _curve;
+}
+
 void Object3D::draw(bool isSelected) {
-	if (_type == ObjectType::Model3D)
-		_model->draw();
-	else if (ObjectType::Node) {
-		if (isSelected)
-			getNode()->draw();
-	} else
-		getNode()->draw();
+	switch (_type) {
+		case ObjectType::Model3D: _model->draw(); break;
+		case ObjectType::ParametricCurve: _curve->draw(); break;
+		case ObjectType::Node:
+			if (isSelected)
+				getNode()->draw();
+		default: getNode()->draw(); break;
+	}
+}
+
+void Object3D::update() {
+	switch (_type) {
+		case ObjectType::ParametricCurve: _curve->update(); break;
+		default: break;
+	}
 }
 
 ofNode* Object3D::getNode() {
@@ -59,6 +76,7 @@ ofNode* Object3D::getNode() {
 		case ObjectType::Model3D: return _model->getNode();
 		case ObjectType::Node: return _node;
 		case ObjectType::Light: return _light;
+		case ObjectType::ParametricCurve: return &_curve->pos;
 		default: IFT_LOG_ERROR << "try getting node of " << _type << ", returning nullptr instead"; return nullptr;
 	}
 }

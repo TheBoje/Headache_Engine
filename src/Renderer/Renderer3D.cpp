@@ -1,6 +1,6 @@
 #include "Renderer3D.h"
 #include "Application.h"
-
+#include "ParamCurve.h"
 namespace ift3100 {
 
 Renderer3D* Renderer3D::_renderer3D = nullptr;
@@ -35,9 +35,9 @@ void Renderer3D::setup() {
 
 	isExploding = false;
 
-	hierarchy.addChild(box_shared);
-	// ----
+	// hierarchy.addChild(box_shared);
 
+	// ----
 	// Note: Uncomment me to enable animator testing, this is temporary until we implement a proper UI!
 	// animator.setup();
 	// animator.setTarget(box_shared->getNode());
@@ -57,6 +57,7 @@ void Renderer3D::setup() {
 void Renderer3D::update() {
 	cameraManager.update();
 	animatorManager.update();
+	hierarchy.update();
 	computeBoundaryBox();
 
 	selectedCamera = nullptr;
