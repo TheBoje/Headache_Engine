@@ -35,10 +35,10 @@ void Renderer3D::setup() {
 		"../../src/Shaders/Exploding/exploding.frag.glsl",
 		"../../src/Shaders/Exploding/exploding.geom.glsl");
 
-	// _phong.load("../../src/Shaders/Lighting/Phong/phong.vert.glsl", "../../src/Shaders/Lighting/Phong/phong.frag.glsl");
-	// _lambert.load("../../src/Shaders/Lighting/Lambert/lambert.vert.glsl", "../../src/Shaders/Lighting/Lambert/lambert.frag.glsl");
-	// _gouraud.load("../../src/Shaders/Lighting/Gouraud/gouraud.vert.glsl", "../../src/Shaders/Lighting/Gouraud/gouraud.frag.glsl");
-	// _blinnphong.load("../../src/Shaders/Lighting/BlinnPhong/blinnphong.vert.glsl", "../../src/Shaders/Lighting/BlinnPhong/blinnphong.frag.glsl");
+	_phong.load("../../src/Shaders/Lighting/Phong/phong.vert.glsl", "../../src/Shaders/Lighting/Phong/phong.frag.glsl");
+	_lambert.load("../../src/Shaders/Lighting/Lambert/lambert.vert.glsl", "../../src/Shaders/Lighting/Lambert/lambert.frag.glsl");
+	_gouraud.load("../../src/Shaders/Lighting/Gouraud/gouraud.vert.glsl", "../../src/Shaders/Lighting/Gouraud/gouraud.frag.glsl");
+	_blinnphong.load("../../src/Shaders/Lighting/BlinnPhong/blinnphong.vert.glsl", "../../src/Shaders/Lighting/BlinnPhong/blinnphong.frag.glsl");
 
 	isExploding = false;
 
@@ -195,32 +195,44 @@ void Renderer3D::draw() {
 	ofEnableDepthTest();
 	ofEnableLighting();
 
-	for (std::shared_ptr<Object3D> light : lights)
+	float arrayLightPosition[lights.size() * 3];
+
+	// TODO: limiter à 8 lumières
+	for (int i = 0; i < lights.size(); i++) {
+		std::shared_ptr<Object3D> light = lights[i];
 		((ofLight*)light->getNode())->enable();
+		ofVec3f pos = ((ofLight*)light->getNode())->getGlobalPosition();
 
-	// ofShader* illum = nullptr;
+		arrayLightPosition[i * 3]	  = pos.x;
+		arrayLightPosition[i * 3 + 1] = pos.y;
+		arrayLightPosition[i * 3 + 2] = pos.z;
+	}
+
+	ofShader* illum = nullptr;
 	// TODO: test pour voir si les shaders marchent, envoyer le tout dans un shader manager après
-	// if (illumination != Default) {
-	// 	switch (illumination) {
-	// 		case Phong: illum = &_phong; break;
+	if (illumination != Default) {
+		switch (illumination) {
+			case Phong: illum = &_phong; break;
 
-	// 		case Lambert: illum = &_lambert; break;
+			case Lambert: illum = &_lambert; break;
 
-	// 		case Gouraud: illum = &_gouraud; break;
+			case Gouraud: illum = &_gouraud; break;
 
-	// 		case BlinnPhong: illum = &_blinnphong; break;
-	// 	}
+			case BlinnPhong: illum = &_blinnphong; break;
+		}
 
-	// 	for (std::shared_ptr<Object3D> obj : lights) {
-	// 		ofLight* light = ((ofLight*)obj->getNode());
-	// 		illum->begin();
-	// 		illum->setUniform3f("color_ambient", light->getAmbientColor().r, light->getAmbientColor().g, light->getAmbientColor().b);
-	// 		illum->setUniform3f("color_diffuse", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
-	// 		illum->setUniform3f("color_specular", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
-	// 		illum->setUniform1f("brightness", light->getDiffuseColor().getBrightness());
-	// 		illum->setUniform3f("lightPos", light->getGlobalPosition());
-	// 	}
-	// }
+		for (std::shared_ptr<Object3D> obj : lights) {
+			ofLight* light = ((ofLight*)obj->getNode());
+			illum->begin();
+			illum->setUniform3f("color_ambient", light->getAmbientColor().r, light->getAmbientColor().g, light->getAmbientColor().b);
+			illum->setUniform3f("color_diffuse", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
+			illum->setUniform3f("color_specular", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
+			illum->setUniform1f("brightness", light->getDiffuseColor().getBrightness());
+			illum->setUniform3f("lightPos", light->getGlobalPosition());
+			illum->setUniform1i("nbLights", lights.size());
+			illum->setUniform3fv("lightPos", arrayLightPosition, lights.size());
+		}
+	}
 
 	// Store result of selected camera in the FBO
 	if (selectedCamera != nullptr) {
@@ -262,13 +274,14 @@ void Renderer3D::draw() {
 
 	cameraManager.endCamera(3);
 
-	// if (illumination != Default) {
-	// for (std::shared_ptr<Object3D> obj : lights) {
-	// illum->end();
-	// }
-	// }
+	if (illumination != Default) {
+		for (std::shared_ptr<Object3D> obj : lights) {
+			illum->end();
+		}
+	}
 	for (std::shared_ptr<Object3D> light : lights)
 		((ofLight*)light->getNode())->disable();
+
 	ofDisableLighting();
 	ofDisableDepthTest();
 }

@@ -44,13 +44,14 @@ void MaterialViewer::draw() {
 			case Gouraud: illum = &_gouraud; break;
 			case BlinnPhong: illum = &_blinnphong; break;
 		}
-
+		float array[] = {_light.getGlobalPosition().x, _light.getGlobalPosition().y, _light.getGlobalPosition().z};
 		illum->begin();
 		illum->setUniform3f("color_ambient", _light.getAmbientColor().r, _light.getAmbientColor().g, _light.getAmbientColor().b);
 		illum->setUniform3f("color_diffuse", _light.getDiffuseColor().r, _light.getDiffuseColor().g, _light.getDiffuseColor().b);
 		illum->setUniform3f("color_specular", _light.getDiffuseColor().r, _light.getDiffuseColor().g, _light.getDiffuseColor().b);
 		illum->setUniform1f("brightness", _light.getDiffuseColor().getBrightness());
-		illum->setUniform3f("lightPos", _light.getGlobalPosition());
+		illum->setUniform1i("nbLights", 1);
+		illum->setUniform3fv("lightPos", array, 1);
 	}
 
 	_fbo.begin();
@@ -78,7 +79,7 @@ void MaterialViewer::draw() {
  */
 void MaterialViewer::setTarget(Model& target) {
 	// TODO: rajouter les matériaux quand ils seront là
-	_target.setTexture(*target.getTexture());
+	_target.setTexture(target.getTexture()->isAllocated() ? *target.getTexture() : ofTexture());
 }
 
 /**

@@ -6,6 +6,7 @@
 #include "HierarchyContainer.h"
 #include "Object3D.h"
 #include "ofxAssimpModelLoader.h"
+#include "MaterialViewer.h"
 
 namespace ift3100 {
 class Application;
@@ -25,10 +26,10 @@ class Renderer3D {
 	ofBoxPrimitive _boudaryBox;
 	bool		   _showBoundary;
 
-	// ofShader _lambert;
-	// ofShader _phong;
-	// ofShader _gouraud;
-	// ofShader _blinnphong;
+	ofShader _lambert;
+	ofShader _phong;
+	ofShader _gouraud;
+	ofShader _blinnphong;
 
 	static Renderer3D* _renderer3D;
 
@@ -45,7 +46,7 @@ public:
 
 	static Renderer3D* Get();
 
-	// IlluminationStyle illumination;
+	IlluminationStyle illumination;
 
 	ofShader explodingShader;
 	bool	 isExploding;

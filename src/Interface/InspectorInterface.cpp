@@ -183,7 +183,8 @@ void InspectorInterface::textureOptions(Object3D& object) {
 	}
 
 	ofTexture* tex = object.getModel()->getTexture();
-	ofxImGui::AddImage(*tex, ofVec2f(ImGui::GetWindowWidth(), ImGui::GetWindowWidth() * (tex->getHeight() / tex->getWidth())));
+	if (tex->isAllocated())
+		ofxImGui::AddImage(*tex, ofVec2f(ImGui::GetWindowWidth(), ImGui::GetWindowWidth() * (tex->getHeight() / tex->getWidth())));
 }
 
 void InspectorInterface::lightOptions(Object3D& object) {

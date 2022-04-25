@@ -171,28 +171,28 @@ void Interface::draw3dRendererUI() {
 void Interface::drawOptionsMenu() {
 	if (ImGui::BeginMenu("Options")) {
 		ImGui::Checkbox("Enable exploding on selected meshes", &Renderer3D::Get()->isExploding);
+		ImGui::Separator();
+
+		const char* items[] = {"Default", "Phong illumination", "Lambert illumination", "Gouraud illumination", "BlinnPhong illumination"};
+
+		ImGui::Text("illumination:");
+		if (ImGui::BeginListBox("##listboxIllum")) {
+			for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
+				const bool is_selected = (Renderer3D::Get()->illumination == n);
+				if (ImGui::Selectable(items[n], is_selected))
+					Renderer3D::Get()->illumination = (IlluminationStyle)n;
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndListBox();
+		}
 		ImGui::EndMenu();
 	}
 }
 
-void Interface::drawAnimator() {
-	// if (animPaused) {
-	// 	if (ImGui::Button("Resume")) {
-	// 		Renderer3D::Get()->animator.resume();
-	// 		animPaused = false;
-	// 	}
-	// } else {
-	// 	if (ImGui::Button("Pause")) {
-	// 		Renderer3D::Get()->animator.pause();
-	// 		animPaused = true;
-	// 	}
-	// }
-
-	// if (ImGui::Button("Reset")) {
-	// 	Renderer3D::Get()->animator.reset();
-	// 	animPaused = true;
-	// }
-}
+void Interface::drawAnimator() { }
 
 void Interface::drawMaterialViewer() {
 	Model* mod = nullptr;
