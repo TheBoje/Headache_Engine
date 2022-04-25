@@ -6,15 +6,21 @@
 in vec4 position;
 in vec4 normal;
 
+in vec2 texcoord;
+
 // attributs en sortie
 out vec3 surface_position;
 out vec3 surface_normal;
+
+out vec2 texCoordVarying;
 out vec3 light_position[MAX_LIGHTS]; 
+
+out int count;
 
 // attributs uniformes
 uniform mat4x4 modelViewMatrix;
 uniform mat4x4 projectionMatrix;
-
+uniform mat4 textureMatrix;
 uniform vec3 lightPos[MAX_LIGHTS];
 uniform int nbLights;
 

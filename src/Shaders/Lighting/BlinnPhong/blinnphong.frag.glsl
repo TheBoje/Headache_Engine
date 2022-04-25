@@ -7,6 +7,8 @@ in vec3 surface_position;
 in vec3 surface_normal;
 in vec3 light_position[MAX_LIGHTS];
 
+in vec2 texCoordVarying;
+
 // attribut en sortie
 out vec4 fragment_color;
 
@@ -14,17 +16,23 @@ out vec4 fragment_color;
 uniform vec3 color_ambient;
 uniform vec3 color_diffuse;
 uniform vec3 color_specular;
+uniform int nbLights;
+uniform int isTexturePresent = 0;
+
+uniform sampler2D tex0;
 
 // facteur de brillance spéculaire du matériau
 uniform float brightness;
-uniform int nbLights;
 
 
 void main()
 {
   // re-normaliser la normale après interpolation
   vec3 n = normalize(surface_normal);
-  fragment_color = vec4(vec3(0), 1);
+  vec3 colorSum = vec3(0);
+
+  vec3 cd = isTexturePresent * (color_diffuse * texture(tex0, texCoordVarying).rgb) + abs((isTexturePresent - 1) * color_diffuse);
+  vec3 cs = isTexturePresent * (color_specular * texture(tex0, texCoordVarying).rgb) + abs((isTexturePresent - 1) * color_specular);
 
   for(int i = 0; i < nbLights; i++) {
     // calculer la direction de la surface vers la lumière (l)
@@ -50,9 +58,10 @@ void main()
     }
 
     // calculer la couleur du fragment
-    fragment_color += vec4(
-      color_ambient +
-      color_diffuse * reflection_diffuse +
-      color_specular * reflection_specular, 0.0);
+    colorSum += vec3(
+      cd * reflection_diffuse +
+      cs * reflection_specular);
   }
+  
+  fragment_color = vec4(color_ambient + colorSum, 1);
 }
