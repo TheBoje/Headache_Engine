@@ -165,7 +165,7 @@ void Renderer3D::deleteSelected() {
 	hierarchy.selected_nodes.clear();
 }
 
-void Renderer3D::drawScene() {
+void Renderer3D::drawScene(ofShader* illumShader) {
 	ofFill();
 
 	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
@@ -176,6 +176,10 @@ void Renderer3D::drawScene() {
 				isSelected = true;
 				break;
 			}
+		}
+
+		if (obj->getType() == ObjectType::Model3D && illumShader != nullptr) {
+			illumShader->setUniform1i("isTexturePresent", obj->getModel()->getTexture()->isAllocated() ? 1 : 0);
 		}
 
 		if (isExploding) {
@@ -241,7 +245,7 @@ void Renderer3D::draw() {
 		ofClear(120, 120, 120, 255);
 
 		selectedCamera->begin();
-		drawScene();
+		drawScene(illum);
 		selectedCamera->end();
 
 		selectedCameraFBO.end();
@@ -257,7 +261,7 @@ void Renderer3D::draw() {
 				ofSetColor(255);
 			}
 
-			drawScene();
+			drawScene(illum);
 			cameraManager.endCamera(i);
 		}
 	}
@@ -270,7 +274,7 @@ void Renderer3D::draw() {
 		ofSetColor(255);
 	}
 
-	drawScene();
+	drawScene(illum);
 
 	cameraManager.endCamera(3);
 

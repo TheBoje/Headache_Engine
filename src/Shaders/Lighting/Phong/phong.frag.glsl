@@ -17,6 +17,7 @@ uniform vec3 color_ambient;
 uniform vec3 color_diffuse;
 uniform vec3 color_specular;
 uniform int nbLights;
+uniform int isTexturePresent = 0;
 
 uniform sampler2D tex0;
 
@@ -28,9 +29,9 @@ uniform float brightness;
 void main()
 {
   // à terme utiliser la specular map, diffuse map etc...
-  vec3 ca = (color_ambient * texture(tex0, texCoordVarying).rgb);
-  vec3 cd = (color_diffuse * texture(tex0, texCoordVarying).rgb);
-  vec3 cs = (color_specular * texture(tex0, texCoordVarying).rgb);
+  vec3 ca = color_ambient;
+  vec3 cd = isTexturePresent * (color_diffuse * texture(tex0, texCoordVarying).rgb) + abs((isTexturePresent - 1) * color_diffuse);
+  vec3 cs = isTexturePresent * (color_specular * texture(tex0, texCoordVarying).rgb) + abs((isTexturePresent - 1) * color_specular);
 
   vec3 n = normalize(surface_normal);
   vec3 v = normalize(-surface_position);

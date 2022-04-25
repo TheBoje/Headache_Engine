@@ -52,6 +52,8 @@ void MaterialViewer::draw() {
 		illum->setUniform1f("brightness", _light.getDiffuseColor().getBrightness());
 		illum->setUniform1i("nbLights", 1);
 		illum->setUniform3fv("lightPos", array, 1);
+		if (_target.getTexture()->isAllocated())
+			illum->setUniform1i("isTexturePresent", 1);
 	}
 
 	_fbo.begin();
