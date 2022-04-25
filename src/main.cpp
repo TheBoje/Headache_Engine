@@ -8,7 +8,7 @@ int main(int argc, char** argv) {
 #ifdef SILENT
 	ofSetLogLevel(OF_LOG_SILENT);
 #else
-	ofSetLogLevel(OF_LOG_VERBOSE);
+	ofSetLogLevel(OF_LOG_NOTICE);
 #endif
 
 	ofGLFWWindowSettings windowSettings;

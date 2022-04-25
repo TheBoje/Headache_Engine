@@ -17,14 +17,15 @@ class Sprite {
 	size_t _index; // The actual index of the iterator in _image_parts
 
 public:
-	Sprite(const ofImage& img, int part_height, int part_width, size_t part_counts);
+	Sprite();
 	~Sprite();
 
+	void setup(const ofImage& img, int part_height, int part_width, std::size_t part_counts);
 	void concatenate(const Sprite& sprite);
-	void concatenate(const ofImage& image, size_t part_counts);
+	void concatenate(const ofImage& image, std::size_t part_counts);
 
 	ofImage next();
-	ofImage getPart(size_t index);
+	ofImage getPart(std::size_t index);
 };
 } // namespace ift3100
 

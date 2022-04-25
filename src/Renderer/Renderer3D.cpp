@@ -20,6 +20,7 @@ void Renderer3D::setup() {
 	Model::setup();
 	cameraManager.setup();
 	animatorManager.setup();
+	cubemap.setup("/home/boj/code/fac/M1/IFT-3100/data/Skybox/sprite.png", 1024);
 
 	_showBoundary = false;
 
@@ -204,6 +205,7 @@ void Renderer3D::draw() {
 		ofClear(120, 120, 120, 255);
 
 		selectedCamera->begin();
+		cubemap.draw(selectedCamera->getGlobalPosition());
 		drawScene();
 		selectedCamera->end();
 
@@ -219,6 +221,7 @@ void Renderer3D::draw() {
 				_boudaryBox.drawWireframe();
 				ofSetColor(255);
 			}
+			cubemap.draw(cameraManager.get(i).getGlobalPosition());
 
 			drawScene();
 			cameraManager.endCamera(i);
@@ -232,7 +235,7 @@ void Renderer3D::draw() {
 		_boudaryBox.drawWireframe();
 		ofSetColor(255);
 	}
-
+	cubemap.draw(cameraManager.get(3).getGlobalPosition());
 	drawScene();
 
 	cameraManager.endCamera(3);
