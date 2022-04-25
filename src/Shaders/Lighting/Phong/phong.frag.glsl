@@ -28,9 +28,9 @@ uniform float brightness;
 void main()
 {
   // à terme utiliser la specular map, diffuse map etc...
-  vec3 ca = color_ambient;//(color_ambient * texture(tex0, texCoordVarying).rgb);
-  vec3 cd = color_diffuse;//(color_diffuse * texture(tex0, texCoordVarying).rgb);
-  vec3 cs = color_specular;//(color_specular * texture(tex0, texCoordVarying).rgb);
+  vec3 ca = (color_ambient * texture(tex0, texCoordVarying).rgb);
+  vec3 cd = (color_diffuse * texture(tex0, texCoordVarying).rgb);
+  vec3 cs = (color_specular * texture(tex0, texCoordVarying).rgb);
 
   vec3 n = normalize(surface_normal);
   vec3 v = normalize(-surface_position);

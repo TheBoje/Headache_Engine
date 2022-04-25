@@ -179,8 +179,10 @@ void Interface::drawOptionsMenu() {
 		if (ImGui::BeginListBox("##listboxIllum")) {
 			for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
 				const bool is_selected = (Renderer3D::Get()->illumination == n);
-				if (ImGui::Selectable(items[n], is_selected))
+				if (ImGui::Selectable(items[n], is_selected)) {
 					Renderer3D::Get()->illumination = (IlluminationStyle)n;
+					IFT_LOG << "switched to " << items[n];
+				}
 
 				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 				if (is_selected)
@@ -218,8 +220,10 @@ void Interface::drawMaterialViewer() {
 	if (ImGui::BeginListBox("##listbox")) {
 		for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
 			const bool is_selected = (MaterialViewer::Get()->illuminationStyle == n);
-			if (ImGui::Selectable(items[n], is_selected))
+			if (ImGui::Selectable(items[n], is_selected)) {
 				MaterialViewer::Get()->illuminationStyle = (IlluminationStyle)n;
+				IFT_LOG << "switched to " << items[n];
+			}
 
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)
@@ -234,8 +238,10 @@ void Interface::drawMaterialViewer() {
 	if (ImGui::BeginListBox("##listbox2")) {
 		for (int n = 0; n < IM_ARRAYSIZE(itemsPrimitive); n++) {
 			const bool is_selected = (MaterialViewer::Get()->getType() == n);
-			if (ImGui::Selectable(itemsPrimitive[n], is_selected))
+			if (ImGui::Selectable(itemsPrimitive[n], is_selected)) {
 				MaterialViewer::Get()->setPrimitiveType((PreviewPrimitiveType)n);
+				IFT_LOG << "switched to " << itemsPrimitive[n] << " display type";
+			}
 
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
 			if (is_selected)

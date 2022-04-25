@@ -80,6 +80,12 @@ void MaterialViewer::draw() {
 void MaterialViewer::setTarget(Model& target) {
 	// TODO: rajouter les matériaux quand ils seront là
 	_target.setTexture(target.getTexture()->isAllocated() ? *target.getTexture() : ofTexture());
+
+	// reload the mesh to bind correctly the texture
+	// don't know why
+	PreviewPrimitiveType prev = _primitiveType;
+	setPrimitiveType(PreviewPrimitiveType::Sphere);
+	setPrimitiveType(prev);
 }
 
 /**
@@ -89,6 +95,7 @@ void MaterialViewer::setTarget(Model& target) {
  */
 void MaterialViewer::setPrimitiveType(PreviewPrimitiveType type) {
 	of3dPrimitive pt;
+	_primitiveType = type;
 	_camera.setPosition(0, 0, 100);
 	switch (_primitiveType) {
 		case PreviewPrimitiveType::Sphere: pt = ofSpherePrimitive(); break;
@@ -104,7 +111,6 @@ void MaterialViewer::setPrimitiveType(PreviewPrimitiveType type) {
 	}
 
 	_target.setMesh(pt.getMesh());
-	_primitiveType = type;
 }
 
 } // namespace ift3100
