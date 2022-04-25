@@ -191,7 +191,7 @@ void Interface::drawAnimator() {
 
 void Interface::draw() {
 	_gui.begin();
-	ImGui::Begin("IFT-3100 - Main menu", mainMenu, ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("Main menu", mainMenu, ImGuiWindowFlags_MenuBar);
 
 	{
 		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -237,16 +237,16 @@ void Interface::draw() {
 	}
 
 	if (!Renderer2D::Get()->hierarchyPrimitives.selected_nodes.empty()) {
-		ImGui::Begin("IFT-3100 - Inspector");
+		ImGui::Begin("Inspector 2D");
 		{ inspector.drawInspectorVectorPrimitive(&Renderer2D::Get()->hierarchyPrimitives.selected_nodes); }
 	}
 
 	if (!Renderer3D::Get()->hierarchy.selected_nodes.empty()) {
-		ImGui::Begin("IFT-3100 - Inspector 3D");
+		ImGui::Begin("Inspector 3D");
 		{ inspector.drawInspector3d(&Renderer3D::Get()->hierarchy.selected_nodes); }
 	}
 
-	ImGui::Begin("Animator manager");
+	ImGui::Begin("Animator");
 	{
 		Renderer3D::Get()->animatorManager.drawUI();
 		ImGui::Separator();

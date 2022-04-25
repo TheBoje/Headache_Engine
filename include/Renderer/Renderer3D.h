@@ -3,6 +3,7 @@
 
 #include "AnimatorManager.h"
 #include "CameraManager.h"
+#include "Cubemap.h"
 #include "HierarchyContainer.h"
 #include "Object3D.h"
 #include "ofxAssimpModelLoader.h"
@@ -46,6 +47,7 @@ public:
 	CameraManager				 cameraManager;
 	AnimatorManager				 animatorManager;
 	HierarchyContainer<Object3D> hierarchy;
+	Cubemap						 cubemap;
 
 	void setup();
 	void update();

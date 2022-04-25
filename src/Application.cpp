@@ -18,9 +18,8 @@ Application* Application::Get() {
 
 // fonction d'initialisation de l'application
 void Application::setup() {
-	ofSetWindowTitle("IFT-3100 Main");
+	ofSetWindowTitle("IFT-3100 - Main");
 	ofDisableArbTex();
-
 	ofSetVerticalSync(true);
 	ofSetCircleResolution(32);
 	isMouseDown = false;
@@ -71,7 +70,7 @@ void Application::draw() {
 
 // fonction appelée juste avant de quitter l'application
 void Application::exit() {
-	IFT_LOG;
+	IFT_LOG << "done";
 }
 
 void Application::keyReleased(int key) {
