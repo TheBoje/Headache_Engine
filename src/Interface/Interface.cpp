@@ -1,5 +1,6 @@
 #include "Interface.h"
 #include "Application.h"
+#include "ParamCurve.h"
 
 #include <string>
 
@@ -154,13 +155,30 @@ void Interface::draw3dRendererUI() {
 		}
 		if (ImGui::MenuItem("Curve Bezier", NULL, false, true)) {
 			ParamCurve pc(ParamCurveType::Bezier, 50);
-			pc.setup(ofNode(), {-100, 0, 0}, {-50, 100, 0}, {50, -100, 0}, {100, 0, 0});
+			pc.setup({-100, 0, 0}, {-50, 100, 0}, {50, -100, 0}, {100, 0, 0});
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("bezier curve", pc));
 		}
 		if (ImGui::MenuItem("Curve Hermite", NULL, false, true)) {
 			ParamCurve pc(ParamCurveType::Hermite, 50);
-			pc.setup(ofNode(), {-100, 0, 0}, {-50, 100, 0}, {50, -100, 0}, {100, 0, 0});
+			pc.setup({-100, 0, 0}, {-50, 100, 0}, {50, -100, 0}, {100, 0, 0});
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("hermite curve", pc));
+		}
+		if (ImGui::MenuItem("Surface Coons (Bezier)", NULL, false, true)) {
+			// TODO(Louis): Change control points translation from UI!
+			ParamSurface ps(ParamSurfaceType::Coons, 20, 20);
+			ps.setup({{-15, 0, -15},
+				{-5, -10, -15},
+				{5, 50, -15},
+				{15, 0, -15},
+				{15, -10, -5},
+				{15, -40, 5},
+				{15, 0, 15},
+				{5, 20, 15},
+				{-5, 0, 15},
+				{-15, 10, 15},
+				{-15, -30, 15},
+				{-15, 0, 5}});
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("surface coons", ps));
 		}
 		ImGui::Separator();
 		if (ImGui::MenuItem("Camera", NULL, false, true)) {

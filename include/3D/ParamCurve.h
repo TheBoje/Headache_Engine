@@ -18,20 +18,24 @@ public:
 
 	/**
 	 * Set proper data for curve computation
-	 * @param pos position of center of the curve
 	 * @param p1 control point number 1
 	 * @param p2 control point number 2
 	 * @param p3 control point number 3
 	 * @param p4 control point number 4
 	 *
 	*/
-	void setup(ofNode _pos, ofVec3f p1, ofVec3f p2, ofVec3f p3, ofVec3f p4);
+	void setup(ofVec3f p1, ofVec3f p2, ofVec3f p3, ofVec3f p4);
 	void draw();
 
 	/**
 	 * Compute line points from control points
 	*/
 	void update();
+
+	/**
+	 * @return approximate position of point at i.
+	*/
+	ofVec3f getValue(double i);
 
 	ofPolyline line; // Rendered line
 

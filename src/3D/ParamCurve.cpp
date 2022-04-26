@@ -1,4 +1,5 @@
 #include "ParamCurve.h"
+#include "Asserts.h"
 #include "Logger.h"
 
 namespace ift3100 {
@@ -7,9 +8,8 @@ ParamCurve::ParamCurve(ParamCurveType t, int _precision)
 	, pos(ofNode())
 	, precision(_precision) { }
 
-void ParamCurve::setup(ofNode _pos, ofVec3f p1, ofVec3f p2, ofVec3f p3, ofVec3f p4) {
-	pos			  = _pos;
-	cached_pos	  = _pos;
+void ParamCurve::setup(ofVec3f p1, ofVec3f p2, ofVec3f p3, ofVec3f p4) {
+	cached_pos	  = pos;
 	points		  = {p1, p2, p3, p4};
 	cached_points = {}; // Force first iteration computation on update
 	for (int i = 0; i <= precision; i++) {
@@ -22,7 +22,8 @@ void ParamCurve::update() {
 	if (pos.getGlobalTransformMatrix() == cached_pos.getGlobalTransformMatrix() && points == cached_points) {
 		return;
 	}
-	cached_pos	  = pos; // If changed, update cached data
+	// If changed, update cached data
+	cached_pos	  = pos;
 	cached_points = points;
 	// Compute points
 	switch (type) {
@@ -43,19 +44,14 @@ void ParamCurve::update() {
 			ofVec3f v1 = points.at(1) - points.at(0);
 			ofVec3f v2 = points.at(2) - points.at(3);
 			for (int i = 0; i <= precision; i++) {
-				float t	  = i / (float)precision;
-				float u	  = 1 - t;
-				float uu  = u * u;
-				float uuu = uu * u;
-				float tt  = t * t;
-				float ttt = tt * t;
+				float t = i / (float)precision;
 
-				float x =
-					(2 * ttt - 3 * tt + 1) * points.at(0).x + (ttt - 2 * tt + t) * v1.x + (ttt - tt) * v2.x + (-2 * ttt + 3 * tt) * points.at(3).x;
-				float y =
-					(2 * ttt - 3 * tt + 1) * points.at(0).y + (ttt - 2 * tt + t) * v1.y + (ttt - tt) * v2.y + (-2 * ttt + 3 * tt) * points.at(3).y;
-				float z =
-					(2 * ttt - 3 * tt + 1) * points.at(0).z + (ttt - 2 * tt + t) * v1.z + (ttt - tt) * v2.z + (-2 * ttt + 3 * tt) * points.at(3).z;
+				float x = (2 * pow(t, 3) - 3 * (t * t) + 1) * points.at(0).x + (pow(t, 3) - 2 * pow(t, 2) + t) * v1.x +
+						  (pow(t, 3) - pow(t, 2)) * v2.x + (-2 * pow(t, 3) + 3 * pow(t, 2)) * points.at(3).x;
+				float y = (2 * pow(t, 3) - 3 * pow(t, 2) + 1) * points.at(0).y + (pow(t, 3) - 2 * pow(t, 2) + t) * v1.y +
+						  (pow(t, 3) - pow(t, 2)) * v2.y + (-2 * pow(t, 3) + 3 * pow(t, 2)) * points.at(3).y;
+				float z = (2 * pow(t, 3) - 3 * pow(t, 2) + 1) * points.at(0).z + (pow(t, 2) - 2 * pow(t, 2) + t) * v1.z +
+						  (pow(t, 3) - pow(t, 2)) * v2.z + (-2 * pow(t, 3) + 3 * pow(t, 2)) * points.at(3).z;
 				line[i] = {x, y, z};
 			}
 			break;
@@ -63,19 +59,23 @@ void ParamCurve::update() {
 }
 
 void ParamCurve::draw() {
-	ofNoFill();
+	ofFill();
 	ofSetColor(255, 255, 255);
 	ofSetLineWidth(50);
 	ofPushMatrix();
 	ofTranslate(pos.getPosition());
 	ofVec3f rot = pos.getOrientationEulerDeg();
-	ofRotate(rot.x, 1, 0, 0);
-	ofRotate(rot.y, 0, 1, 0);
-	ofRotate(rot.z, 0, 0, 1);
+	ofRotateDeg(rot.x, 1, 0, 0);
+	ofRotateDeg(rot.y, 0, 1, 0);
+	ofRotateDeg(rot.z, 0, 0, 1);
 	ofScale(pos.getScale());
 	line.draw();
 	ofPopMatrix();
-	// pos.draw();
+}
+
+ofVec3f ParamCurve::getValue(double i) {
+	update(); // Maybe the line is outdated if not init?
+	return line.getPointAtPercent(i);
 }
 
 } // namespace ift3100

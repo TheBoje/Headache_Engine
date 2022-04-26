@@ -1,6 +1,6 @@
 #include "Renderer3D.h"
 #include "Application.h"
-#include "ParamCurve.h"
+
 namespace ift3100 {
 
 Renderer3D* Renderer3D::_renderer3D = nullptr;
@@ -35,8 +35,6 @@ void Renderer3D::setup() {
 		"../../src/Shaders/Exploding/exploding.geom.glsl");
 
 	isExploding = false;
-
-	// hierarchy.addChild(box_shared);
 
 	// ----
 	// Note: Uncomment me to enable animator testing, this is temporary until we implement a proper UI!

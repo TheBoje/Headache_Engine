@@ -150,6 +150,9 @@ void Application::dragEvent(ofDragInfo dragInfo) {
 		if (node->getRef()->getType() == ObjectType::Model3D) {
 			node->getRef()->getModel()->loadTexture(dragInfo.files.at(0));
 			return;
+		} else if (node->getRef()->getType() == ObjectType::ParametricSurface) {
+			node->getRef()->getSurface()->loadTexture(dragInfo.files.at(0));
+			return;
 		}
 	}
 
