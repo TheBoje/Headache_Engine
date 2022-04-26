@@ -83,7 +83,11 @@ void Model::draw() {
 		}
 		_texture.unbind();
 	} else {
-		_primitive.drawFaces();
+		ofPushMatrix();
+		ofMultMatrix(_primitive.getGlobalTransformMatrix());
+		_primitive.getMesh().drawFaces();
+
+		ofPopMatrix();
 	}
 	// material.end();
 }
