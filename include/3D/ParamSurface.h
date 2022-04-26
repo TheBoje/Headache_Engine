@@ -20,7 +20,7 @@ public:
 	std::vector<ofVec3f> points, cached_points;
 	ofNode				 pos, cached_pos;
 	int					 precisionX, precisionY;
-	ofTexture _texture;
+	ofTexture			 _texture;
 };
 } // namespace ift3100
 
