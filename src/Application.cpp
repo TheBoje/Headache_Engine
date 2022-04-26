@@ -19,6 +19,8 @@ Application* Application::Get() {
 // fonction d'initialisation de l'application
 void Application::setup() {
 	ofSetWindowTitle("IFT-3100 - Main");
+	ofAppGLFWWindow* win = dynamic_cast<ofAppGLFWWindow*>(ofGetWindowPtr());
+	win->setWindowIcon("../../&.ico");
 	ofDisableArbTex();
 	ofSetVerticalSync(true);
 	ofSetCircleResolution(32);
