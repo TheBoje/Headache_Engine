@@ -15,4 +15,9 @@ void HierarchyContainer<VectorPrimitive>::update() {
 		}
 	}
 }
+
+template <>
+void HierarchyContainer<Object3D>::update() {
+	_root.map([=](std::shared_ptr<Object3D> o) { o->update(); });
+}
 } // namespace ift3100

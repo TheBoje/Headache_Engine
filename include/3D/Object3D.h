@@ -3,15 +3,17 @@
 
 #include "HierarchyItem.h"
 
+#include "Model.h"
+#include "ParamCurve.h"
+#include "ParamSurface.h"
 #include "of3dPrimitives.h"
 #include "ofCamera.h"
 #include "ofMesh.h"
-#include "Model.h"
 
 #include <string>
 
 namespace ift3100 {
-enum ObjectType { Camera, Node, Light, Model3D, NoneObj };
+enum ObjectType { Camera, Node, Light, Model3D, ParametricCurve, ParametricSurface, NoneObj };
 
 class Object3D : public HierarchyItem {
 	std::string _name;
@@ -19,10 +21,12 @@ class Object3D : public HierarchyItem {
 	ofTexture	test;
 
 	union {
-		ofCamera* _camera;
-		Model*	  _model;
-		ofNode*	  _node;
-		ofLight*  _light;
+		ofCamera*	  _camera;
+		Model*		  _model;
+		ofNode*		  _node;
+		ofLight*	  _light;
+		ParamCurve*	  _curve;
+		ParamSurface* _surface;
 	};
 
 public:
@@ -32,12 +36,17 @@ public:
 	Object3D(std::string name, ofMesh mesh, ofTexture texture = ofTexture());
 	Object3D(std::string name, ofNode node);
 	Object3D(std::string name, ofLight node);
+	Object3D(std::string name, ParamCurve curve);
+	Object3D(std::string name, ParamSurface surface);
 	~Object3D();
 
-	ofNode* getNode();
-	Model*	getModel();
+	ofNode*		  getNode();
+	Model*		  getModel();
+	ParamCurve*	  getCurve();
+	ParamSurface* getSurface();
 
 	void draw(bool isSelected = false);
+	void update();
 
 	ObjectType getType() const {
 		return _type;
