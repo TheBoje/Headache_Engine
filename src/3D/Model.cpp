@@ -29,12 +29,12 @@ Model::Model(of3dPrimitive primitive)
 	: _texture(ofTexture())
 	, _primitive(primitive)
 	, usingShader(ShaderType::NoShader) {
-	material.setShininess(120);
+	_material.setShininess(120);
 
-	material.setSpecularColor(ofColor(255, 255, 255, 255));
-	material.setEmissiveColor(ofColor(0, 0, 0, 255));
-	material.setDiffuseColor(ofColor(255, 255, 255, 255));
-	material.setAmbientColor(ofColor(255, 255, 255, 255));
+	_material.setSpecularColor(ofColor(255, 255, 255, 255));
+	_material.setEmissiveColor(ofColor(0, 0, 0, 255));
+	_material.setDiffuseColor(ofColor(255, 255, 255, 255));
+	_material.setAmbientColor(ofColor(255, 255, 255, 255));
 }
 
 Model::Model(ofMesh mesh, ofTexture texture)
@@ -42,23 +42,23 @@ Model::Model(ofMesh mesh, ofTexture texture)
 	, usingShader(ShaderType::NoShader) {
 	_primitive.getMesh() = mesh;
 
-	material.setShininess(120);
+	_material.setShininess(120);
 
-	material.setSpecularColor(ofColor(255, 255, 255, 255));
-	material.setEmissiveColor(ofColor(0, 0, 0, 255));
-	material.setDiffuseColor(ofColor(255, 255, 255, 255));
-	material.setAmbientColor(ofColor(255, 255, 255, 255));
+	_material.setSpecularColor(ofColor(255, 255, 255, 255));
+	_material.setEmissiveColor(ofColor(0, 0, 0, 255));
+	_material.setDiffuseColor(ofColor(255, 255, 255, 255));
+	_material.setAmbientColor(ofColor(255, 255, 255, 255));
 }
 
 /**
  * @brief Draw the 3D model,
- * Apply a filter if a texture is set and one is applied 
+ * Apply a filter if a texture is set and one is applied
  * via the inspectorInterface
  * @link InspectorInterface @endlink
  */
 void Model::draw(bool isMaterialEnabled) {
 	if (isMaterialEnabled)
-		material.begin();
+		_material.begin();
 
 	if (_texture.isAllocated()) {
 		_texture.bind();
@@ -101,13 +101,13 @@ void Model::draw(bool isMaterialEnabled) {
 	}
 
 	if (isMaterialEnabled)
-		material.end();
+		_material.end();
 }
 
 /**
  * @brief Load an image and set it as a
- * texture for the 3D model.	
- * 
+ * texture for the 3D model.
+ *
  * @param path relative path to the image from the bin/data folder
  */
 void Model::loadTexture(std::string path) {

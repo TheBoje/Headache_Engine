@@ -5,15 +5,12 @@
 #include "CameraManager.h"
 #include "Cubemap.h"
 #include "HierarchyContainer.h"
+#include "MaterialViewer.h"
 #include "Object3D.h"
 #include "ofxAssimpModelLoader.h"
-#include "MaterialViewer.h"
 
 namespace ift3100 {
 class Application;
-
-// enum IlluminationStyle { Default, Phong, Lambert, Gouraud, BlinnPhong };
-
 /**
  * Singleton class managing rendering of 3D objects.
  *
