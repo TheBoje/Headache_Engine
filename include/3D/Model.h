@@ -56,6 +56,13 @@ public:
 		_texture = texture;
 		_primitive.mapTexCoordsFromTexture(_texture);
 	}
+
+	ofMaterial material;
+
+
+
+
+
 };
 
 } // namespace ift3100

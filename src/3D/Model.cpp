@@ -79,6 +79,12 @@ void Model::draw() {
 	} else {
 		_primitive.drawFaces();
 	}
+	material.setAmbientColor(ofColor(63, 63, 63));
+	material.setDiffuseColor(ofColor(127, 0, 0));
+	material.setEmissiveColor(ofColor( 31, 0, 0));
+	material.setSpecularColor(ofColor(127, 127, 127));
+	material.setShininess(16.0f);
+
 }
 
 /**
