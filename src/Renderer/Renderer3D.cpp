@@ -20,7 +20,7 @@ void Renderer3D::setup() {
 	Model::setup();
 	cameraManager.setup();
 	animatorManager.setup();
-	cubemap.setup("/home/boj/code/fac/M1/IFT-3100/data/Skybox/sprite.png", 1024);
+	cubemap.setup("../../data/Skybox/sprite.png", 1024);
 
 	_showBoundary = false;
 
