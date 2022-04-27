@@ -2,6 +2,7 @@
 #define HIERARCHY_CONTAINER_H
 
 #include "Hierarchy.h"
+#include "Object3D.h"
 #include "VectorPrimitive.h"
 #include "ofxImGui.h"
 
@@ -62,6 +63,7 @@ public:
 		else
 			selected_nodes[0]->addChild(ref, CURRENT_INDEX);
 		CURRENT_INDEX++;
+		IFT_LOG << "added item to hierarchy";
 	}
 
 	void addChildren(std::vector<std::shared_ptr<T>>& children, std::shared_ptr<T> parent) {
@@ -127,6 +129,9 @@ public:
 };
 template <>
 void HierarchyContainer<VectorPrimitive>::update();
+
+template <>
+void HierarchyContainer<Object3D>::update();
 } // namespace ift3100
 
 #endif

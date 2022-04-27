@@ -18,9 +18,10 @@ Application* Application::Get() {
 
 // fonction d'initialisation de l'application
 void Application::setup() {
-	ofSetWindowTitle("IFT-3100 Main");
+	ofSetWindowTitle("IFT-3100 - Main");
+	// ofAppGLFWWindow* win = dynamic_cast<ofAppGLFWWindow*>(ofGetWindowPtr());
+	// win->setWindowIcon("../../&.ico");
 	ofDisableArbTex();
-
 	ofSetVerticalSync(true);
 	ofSetCircleResolution(32);
 	isMouseDown = false;
@@ -41,8 +42,7 @@ void Application::setup() {
 // fonction de mise à jour de la logique de l'application
 void Application::update() {
 	// Draw 2D primitive preview if UI not used && drawing mode on
-	if (isMouseDown && interface->mouseAction == DrawPrimitive &&
-		(!ImGui::IsWindowFocused() || !ImGui::IsWindowHovered() || !ImGui::IsAnyItemHovered())) {
+	if (isMouseDown && interface->mouseAction == DrawPrimitive && (!ImGui::IsWindowHovered() || !ImGui::IsAnyItemHovered())) {
 		// NOTE(Refactor): Maybe this bit belongs in `Interface`?
 		Renderer2D::Get()->addPreviewPrimitive(mousePos,
 			interface->drawMode,
@@ -71,7 +71,7 @@ void Application::draw() {
 
 // fonction appelée juste avant de quitter l'application
 void Application::exit() {
-	IFT_LOG;
+	IFT_LOG << "done";
 }
 
 void Application::keyReleased(int key) {
@@ -150,6 +150,9 @@ void Application::dragEvent(ofDragInfo dragInfo) {
 	for (auto node : selected_node) {
 		if (node->getRef()->getType() == ObjectType::Model3D) {
 			node->getRef()->getModel()->loadTexture(dragInfo.files.at(0));
+			return;
+		} else if (node->getRef()->getType() == ObjectType::ParametricSurface) {
+			node->getRef()->getSurface()->loadTexture(dragInfo.files.at(0));
 			return;
 		}
 	}

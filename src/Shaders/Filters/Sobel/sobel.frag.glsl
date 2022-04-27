@@ -1,7 +1,10 @@
+// Shader inspired from https://gist.github.com/Hebali/6ebfc66106459aacee6a9fac029d0115
+
 #version 330
 
 uniform sampler2D tex0;
 uniform vec2	  texSize;
+uniform float	  threshold;
 
 in vec2 texCoordVarying;
 
@@ -26,8 +29,8 @@ void main() {
 	vec4 n[9];
 	make_kernel(n, tex0, texCoordVarying);
 
-	vec4 sobel_edge_h = n[2] + (2.0 * n[5]) + n[8] - (n[0] + (2.0 * n[3]) + n[6]);
-	vec4 sobel_edge_v = n[0] + (2.0 * n[1]) + n[2] - (n[6] + (2.0 * n[7]) + n[8]);
+	vec4 sobel_edge_h = n[2] + (threshold * n[5]) + n[8] - (n[0] + (threshold * n[3]) + n[6]);
+	vec4 sobel_edge_v = n[0] + (threshold * n[1]) + n[2] - (n[6] + (threshold * n[7]) + n[8]);
 	vec4 sobel		  = sqrt((sobel_edge_h * sobel_edge_h) + (sobel_edge_v * sobel_edge_v));
 
 	outputColor = vec4(sobel.rgb, texture(tex0, texCoordVarying).a);

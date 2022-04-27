@@ -1,3 +1,5 @@
+// Shader inspired from https://openframeworks.cc/ofBook/chapters/shaders.html#blurring
+
 #version 330
 
 uniform sampler2D tex0;

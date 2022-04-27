@@ -1,5 +1,6 @@
 #include "Interface.h"
 #include "Application.h"
+#include "ParamCurve.h"
 
 #include <string>
 
@@ -21,10 +22,12 @@ Interface* Interface::Get() {
 }
 
 void Interface::setup() {
-	theme	  = new Theme();
-	mainMenu  = new bool;
-	*mainMenu = true;
-	_gui.setup(theme, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true);
+	theme				   = new Theme();
+	mainMenu			   = new bool;
+	*mainMenu			   = true;
+	ImGuiConfigFlags flags = ImGuiConfigFlags_DockingEnable;
+	// flags |= ImGuiConfigFlag	s_ViewportsEnable;
+	_gui.setup(theme, true, flags, true);
 
 	inspector.setup();
 
@@ -150,6 +153,33 @@ void Interface::draw3dRendererUI() {
 		if (ImGui::MenuItem("Cylinder", NULL, false, true)) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Cylinder", ofCylinderPrimitive()));
 		}
+		if (ImGui::MenuItem("Curve Bezier", NULL, false, true)) {
+			ParamCurve pc(ParamCurveType::Bezier, 50);
+			pc.setup({-100, 0, 0}, {-50, 100, 0}, {50, -100, 0}, {100, 0, 0});
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("bezier curve", pc));
+		}
+		if (ImGui::MenuItem("Curve Hermite", NULL, false, true)) {
+			ParamCurve pc(ParamCurveType::Hermite, 50);
+			pc.setup({-100, 0, 0}, {-50, 100, 0}, {50, -100, 0}, {100, 0, 0});
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("hermite curve", pc));
+		}
+		if (ImGui::MenuItem("Surface Coons (Bezier)", NULL, false, true)) {
+			// TODO(Louis): Change control points translation from UI!
+			ParamSurface ps(ParamSurfaceType::Coons, 20, 20);
+			ps.setup({{-15, 0, -15},
+				{-5, -10, -15},
+				{5, 50, -15},
+				{15, 0, -15},
+				{15, -10, -5},
+				{15, -40, 5},
+				{15, 0, 15},
+				{5, 20, 15},
+				{-5, 0, 15},
+				{-15, 10, 15},
+				{-15, -30, 15},
+				{-15, 0, 5}});
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("surface coons", ps));
+		}
 		ImGui::Separator();
 		if (ImGui::MenuItem("Camera", NULL, false, true)) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Camera", ofCamera()));
@@ -270,7 +300,7 @@ void Interface::drawMaterialViewer() {
 
 void Interface::draw() {
 	_gui.begin();
-	ImGui::Begin("IFT-3100 - Main menu", mainMenu, ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("Main menu", mainMenu, ImGuiWindowFlags_MenuBar);
 
 	{
 		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -294,10 +324,6 @@ void Interface::draw() {
 			drawingUI();
 		}
 
-		if (ImGui::CollapsingHeader("Animator")) {
-			drawAnimator();
-		}
-
 		if (ImGui::BeginMenuBar()) {
 			draw3dRendererUI();
 			drawOptionsMenu();
@@ -316,18 +342,18 @@ void Interface::draw() {
 	}
 
 	if (!Renderer2D::Get()->hierarchyPrimitives.selected_nodes.empty()) {
-		ImGui::Begin("IFT-3100 - Inspector");
+		ImGui::Begin("Inspector 2D");
 		{ inspector.drawInspectorVectorPrimitive(&Renderer2D::Get()->hierarchyPrimitives.selected_nodes); }
 	}
 
 	if (!Renderer3D::Get()->hierarchy.selected_nodes.empty()) {
-		ImGui::Begin("IFT-3100 - Inspector 3D");
+		ImGui::Begin("Inspector 3D");
 		{ inspector.drawInspector3d(&Renderer3D::Get()->hierarchy.selected_nodes); }
 	}
 
 	drawMaterialViewer();
 
-	ImGui::Begin("Animator manager");
+	ImGui::Begin("Animator");
 	{
 		Renderer3D::Get()->animatorManager.drawUI();
 		ImGui::Separator();
