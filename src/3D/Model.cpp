@@ -54,7 +54,7 @@ Model::Model(ofMesh mesh, ofTexture texture)
  * @link InspectorInterface @endlink
  */
 void Model::draw() {
-	// material.begin();
+	material.begin();
 	if (_texture.isAllocated()) {
 		_texture.bind();
 		switch (usingShader) {
@@ -83,13 +83,9 @@ void Model::draw() {
 		}
 		_texture.unbind();
 	} else {
-		ofPushMatrix();
-		ofMultMatrix(_primitive.getGlobalTransformMatrix());
-		_primitive.getMesh().drawFaces();
-
-		ofPopMatrix();
+		_primitive.draw();
 	}
-	// material.end();
+	material.end();
 }
 
 /**

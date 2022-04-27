@@ -36,7 +36,7 @@ class Renderer3D {
 protected:
 	Renderer3D();
 
-	void drawScene(ofShader* illumShader);
+	void drawScene();
 
 public:
 	Renderer3D(const Renderer3D& renderer3D) = delete;

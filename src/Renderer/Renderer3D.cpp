@@ -165,7 +165,7 @@ void Renderer3D::deleteSelected() {
 	hierarchy.selected_nodes.clear();
 }
 
-void Renderer3D::drawScene(ofShader* illumShader) {
+void Renderer3D::drawScene() {
 	ofFill();
 
 	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
@@ -176,10 +176,6 @@ void Renderer3D::drawScene(ofShader* illumShader) {
 				isSelected = true;
 				break;
 			}
-		}
-
-		if (obj->getType() == ObjectType::Model3D && illumShader != nullptr) {
-			illumShader->setUniform1i("isTexturePresent", obj->getModel()->getTexture()->isAllocated() ? 1 : 0);
 		}
 
 		if (isExploding) {
@@ -199,43 +195,9 @@ void Renderer3D::draw() {
 	ofEnableDepthTest();
 	ofEnableLighting();
 
-	float arrayLightPosition[lights.size() * 3];
-
 	// TODO: limiter à 8 lumières
 	for (int i = 0; i < lights.size(); i++) {
-		std::shared_ptr<Object3D> light = lights[i];
-		((ofLight*)light->getNode())->enable();
-		ofVec3f pos = ((ofLight*)light->getNode())->getGlobalPosition();
-
-		arrayLightPosition[i * 3]	  = pos.x;
-		arrayLightPosition[i * 3 + 1] = pos.y;
-		arrayLightPosition[i * 3 + 2] = pos.z;
-	}
-
-	ofShader* illum = nullptr;
-	// TODO: test pour voir si les shaders marchent, envoyer le tout dans un shader manager après
-	if (illumination != Default) {
-		switch (illumination) {
-			case Phong: illum = &_phong; break;
-
-			case Lambert: illum = &_lambert; break;
-
-			case Gouraud: illum = &_gouraud; break;
-
-			case BlinnPhong: illum = &_blinnphong; break;
-		}
-
-		for (std::shared_ptr<Object3D> obj : lights) {
-			ofLight* light = ((ofLight*)obj->getNode());
-			illum->begin();
-			illum->setUniform3f("color_ambient", light->getAmbientColor().r, light->getAmbientColor().g, light->getAmbientColor().b);
-			illum->setUniform3f("color_diffuse", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
-			illum->setUniform3f("color_specular", light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b);
-			illum->setUniform1f("brightness", light->getDiffuseColor().getBrightness());
-			illum->setUniform3f("lightPos", light->getGlobalPosition());
-			illum->setUniform1i("nbLights", lights.size());
-			illum->setUniform3fv("lightPos", arrayLightPosition, lights.size());
-		}
+		((ofLight*)lights[i]->getNode())->enable();
 	}
 
 	// Store result of selected camera in the FBO
@@ -245,7 +207,7 @@ void Renderer3D::draw() {
 		ofClear(120, 120, 120, 255);
 
 		selectedCamera->begin();
-		drawScene(illum);
+		drawScene();
 		selectedCamera->end();
 
 		selectedCameraFBO.end();
@@ -261,7 +223,7 @@ void Renderer3D::draw() {
 				ofSetColor(255);
 			}
 
-			drawScene(illum);
+			drawScene();
 			cameraManager.endCamera(i);
 		}
 	}
@@ -274,15 +236,10 @@ void Renderer3D::draw() {
 		ofSetColor(255);
 	}
 
-	drawScene(illum);
+	drawScene();
 
 	cameraManager.endCamera(3);
 
-	if (illumination != Default) {
-		for (std::shared_ptr<Object3D> obj : lights) {
-			illum->end();
-		}
-	}
 	for (std::shared_ptr<Object3D> light : lights)
 		((ofLight*)light->getNode())->disable();
 
