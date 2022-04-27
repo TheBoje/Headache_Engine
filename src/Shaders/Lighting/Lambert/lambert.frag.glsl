@@ -18,25 +18,24 @@ uniform vec3 color_diffuse;
 
 uniform int nbLights;
 
-uniform int isTexturePresent = 0;
+uniform int		  isTexturePresent = 0;
 uniform sampler2D tex0;
 
-void main()
-{
-  // re-normaliser la normale après interpolation (n)
-  vec3 n = normalize(surface_normal);
-  vec3 cd = isTexturePresent * (color_diffuse * texture(tex0, texCoordVarying).rgb) + abs((isTexturePresent - 1) * color_diffuse);
+void main() {
+	// re-normaliser la normale après interpolation (n)
+	vec3 n	= normalize(surface_normal);
+	vec3 cd = isTexturePresent * (color_diffuse * texture(tex0, texCoordVarying).rgb) + abs((isTexturePresent - 1) * color_diffuse);
 
-  // calculer la direction de la surface vers la lumière (l)
-  
-  float reflection_diffuse = 0.0;
-  for(int i = 0; i < nbLights; i++) {
-    vec3 l = normalize(light_position[i] - surface_position);
+	// calculer la direction de la surface vers la lumière (l)
 
-    // calculer le niveau de réflexion diffuse (n • l)
-    reflection_diffuse += max(dot(n, l), 0.0);
-  }
+	float reflection_diffuse = 0.0;
+	for (int i = 0; i < nbLights; i++) {
+		vec3 l = normalize(light_position[i] - surface_position);
 
-  // déterminer la couleur du fragment
-  fragment_color = vec4(color_ambient + cd * reflection_diffuse, 1.0);
+		// calculer le niveau de réflexion diffuse (n • l)
+		reflection_diffuse += max(dot(n, l), 0.0);
+	}
+
+	// déterminer la couleur du fragment
+	fragment_color = vec4(color_ambient + cd * reflection_diffuse, 1.0);
 }
