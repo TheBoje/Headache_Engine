@@ -1,11 +1,11 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include "Logger.h"
 #include "of3dPrimitives.h"
-#include "ofTexture.h"
 #include "ofMesh.h"
 #include "ofNode.h"
-#include "Logger.h"
+#include "ofTexture.h"
 
 namespace ift3100 {
 
@@ -22,6 +22,7 @@ class Model {
 
 	ofTexture	  _texture;
 	of3dPrimitive _primitive;
+	ofMaterial	  _material;
 
 public:
 	static void setup();
@@ -34,11 +35,14 @@ public:
 
 	ShaderType usingShader;
 
+	Model(const Model& model);
 	Model(of3dPrimitive primitive);
 	Model(ofMesh mesh, ofTexture texture = ofTexture());
 
-	void draw();
+	void draw(bool isMaterialEnabled = true);
 	void loadTexture(std::string path);
+
+	void setMesh(const ofMesh& mesh);
 
 	inline ofMesh* getMesh() {
 		return _primitive.getMeshPtr();
