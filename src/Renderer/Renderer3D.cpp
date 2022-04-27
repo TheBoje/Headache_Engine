@@ -35,11 +35,6 @@ void Renderer3D::setup() {
 		"../../src/Shaders/Exploding/exploding.frag.glsl",
 		"../../src/Shaders/Exploding/exploding.geom.glsl");
 
-	_phong.load("../../src/Shaders/Lighting/Phong/phong.vert.glsl", "../../src/Shaders/Lighting/Phong/phong.frag.glsl");
-	_lambert.load("../../src/Shaders/Lighting/Lambert/lambert.vert.glsl", "../../src/Shaders/Lighting/Lambert/lambert.frag.glsl");
-	_gouraud.load("../../src/Shaders/Lighting/Gouraud/gouraud.vert.glsl", "../../src/Shaders/Lighting/Gouraud/gouraud.frag.glsl");
-	_blinnphong.load("../../src/Shaders/Lighting/BlinnPhong/blinnphong.vert.glsl", "../../src/Shaders/Lighting/BlinnPhong/blinnphong.frag.glsl");
-
 	isExploding = false;
 
 	hierarchy.addChild(box_shared);

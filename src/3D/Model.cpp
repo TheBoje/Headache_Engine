@@ -53,8 +53,10 @@ Model::Model(ofMesh mesh, ofTexture texture)
  * via the inspectorInterface
  * @link InspectorInterface @endlink
  */
-void Model::draw() {
-	material.begin();
+void Model::draw(bool isMaterialEnabled) {
+	if (isMaterialEnabled)
+		material.begin();
+
 	if (_texture.isAllocated()) {
 		_texture.bind();
 		switch (usingShader) {
@@ -85,7 +87,9 @@ void Model::draw() {
 	} else {
 		_primitive.draw();
 	}
-	material.end();
+
+	if (isMaterialEnabled)
+		material.end();
 }
 
 /**

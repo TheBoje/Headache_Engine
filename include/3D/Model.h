@@ -32,7 +32,7 @@ public:
 	Model(of3dPrimitive primitive);
 	Model(ofMesh mesh, ofTexture texture = ofTexture());
 
-	void draw();
+	void draw(bool isMaterialEnabled = true);
 	void loadTexture(std::string path);
 
 	void setMesh(const ofMesh& mesh);

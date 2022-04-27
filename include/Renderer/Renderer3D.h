@@ -26,11 +26,6 @@ class Renderer3D {
 	ofBoxPrimitive _boudaryBox;
 	bool		   _showBoundary;
 
-	ofShader _lambert;
-	ofShader _phong;
-	ofShader _gouraud;
-	ofShader _blinnphong;
-
 	static Renderer3D* _renderer3D;
 
 protected:

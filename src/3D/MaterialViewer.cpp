@@ -61,7 +61,7 @@ void MaterialViewer::draw() {
 		ofClear(120, 120, 120, 255);
 		_light.enable();
 		_camera.begin();
-		_target.draw();
+		_target.draw(illuminationStyle == IlluminationStyle::Default);
 		_camera.end();
 		_light.disable();
 	}
