@@ -196,11 +196,55 @@ void InspectorInterface::lightOptions(Object3D& object) {
 	ImGui::ColorEdit4("Light diffuse color", (float*)&lightColor);
 	light->setDiffuseColor(lightColor);
 
-	// light->setAreaLight();
-	// light->setPointLight();
-	// light->setSpotlight();
-	// light->setDirectional();
-	light->getType();
+	float attenuation[] = {light->getAttenuationConstant(), light->getAttenuationLinear(), light->getAttenuationQuadratic()};
+	ImGui::Text("Constant, linear, quadratic attenuation");
+	if (ImGui::SliderFloat3("##sliderattenuation", attenuation, 0, 10, "%.3f", 1)) {
+		light->setAttenuation(attenuation[0], attenuation[1], attenuation[2]);
+	}
+
+	bool lightType[]			= {false, false, false, false};
+	lightType[light->getType()] = true;
+
+	if (ImGui::RadioButton("Point light", &lightType[ofLightType::OF_LIGHT_POINT])) {
+		light->setPointLight();
+	}
+	if (ImGui::RadioButton("Directional light", &lightType[ofLightType::OF_LIGHT_DIRECTIONAL])) {
+		light->setDirectional();
+	}
+	if (ImGui::RadioButton("Spot light", &lightType[ofLightType::OF_LIGHT_SPOT])) {
+		light->setSpotlight();
+	}
+	if (ImGui::RadioButton("Area light", &lightType[ofLightType::OF_LIGHT_AREA])) {
+		light->setAreaLight(100, 100);
+	}
+
+	switch (light->getType()) {
+		case ofLightType::OF_LIGHT_POINT: pointLightOptions(*light); break;
+
+		case ofLightType::OF_LIGHT_DIRECTIONAL: directionalLightOptions(*light); break;
+
+		case ofLightType::OF_LIGHT_SPOT: spotLightOptions(*light); break;
+
+		case ofLightType::OF_LIGHT_AREA: areaLightOptions(*light); break;
+	}
 }
+
+void InspectorInterface::pointLightOptions(ofLight& light) { }
+
+void InspectorInterface::directionalLightOptions(ofLight& light) { }
+
+void InspectorInterface::spotLightOptions(ofLight& light) {
+	float concentration = light.getSpotConcentration();
+	if (ImGui::SliderFloat("Concentration", &concentration, 0, 100, "%.2f", 1)) {
+		light.setSpotConcentration(concentration);
+	}
+
+	float cutoff = light.getSpotlightCutOff();
+	if (ImGui::InputFloat("Cutoff", &cutoff)) {
+		light.setSpotlightCutOff(cutoff);
+	}
+}
+
+void InspectorInterface::areaLightOptions(ofLight& light) { }
 
 } // namespace ift3100

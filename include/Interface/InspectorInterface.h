@@ -23,7 +23,12 @@ public:
 	void drawInspector3d(std::vector<Hierarchy<Object3D>*>* object3Ds);
 
 	void textureOptions(Object3D& object3Ds);
+
 	void lightOptions(Object3D& light);
+	void spotLightOptions(ofLight& light);
+	void directionalLightOptions(ofLight& light);
+	void areaLightOptions(ofLight& light);
+	void pointLightOptions(ofLight& light);
 };
 } // namespace ift3100
 
