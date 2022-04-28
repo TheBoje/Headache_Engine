@@ -10,7 +10,7 @@ please use the following commands :
 
 In `Makefile` change the `OF_ROOT` at line 9 to your current openFrameworks location.
 
-The package `voro++` (version >= 0.4.5) must be installed on the system.
+Install voro++ using `cd libs/voro++-0.4.6 && sudo make install`.
 
 ## Compilation
 

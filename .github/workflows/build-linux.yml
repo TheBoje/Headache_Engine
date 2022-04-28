@@ -48,7 +48,7 @@ jobs:
       - name: Add gcc-6 repository
         run: |
           sudo apt update -y
-          sudo apt-get install libasound2 voro++
+          sudo apt-get install libasound2
 
       - name: Download openFrameworks libs
         run: sudo openFrameworks/scripts/linux/download_libs.sh -a 64gcc6;
@@ -70,6 +70,6 @@ jobs:
           cd IFT-3100
           make -j4 OF_ROOT=${{ github.workspace }}/openFrameworks
 
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #   if: ${{ failure() }}
+      #   uses: mxschmitt/action-tmate@v3

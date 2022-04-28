@@ -183,6 +183,7 @@ void Voronoi3D::compute() {
 	cellsWireframe.clear();
 	cellsWireframe = getCells(*con, true);
 
+	delete con;
 	IFT_LOG << "updated points";
 }
 } // namespace ift3100
