@@ -185,7 +185,6 @@ void Renderer3D::drawScene() {
 				ofSetColor(0, 255, 0);
 				ofSphere(inter.position, 1);
 				ray.reflect(inter).draw();
-				ray.refract(inter, 0.5, 1).draw();
 				ofPopStyle();
 			}
 		}
