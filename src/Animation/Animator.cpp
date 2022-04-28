@@ -52,7 +52,7 @@ void Animator::addKeyframe(const ofVec3f& position, const ofVec3f& rotation, uin
 	Keyframe kf;
 	kf.position = position;
 	kf.rotation = rotation;
-	kf.frame	= frame;
+	kf.frame = frame;
 
 	std::size_t keyframes_size = _keyframes.size();
 
@@ -100,7 +100,7 @@ void Animator::update() {
  */
 void Animator::reset() {
 	_currentFrame = 0;
-	_paused		  = true;
+	_paused = true;
 
 	if (_keyframes.size() >= 2) {
 		_indexLastKeyFrame = 0;
@@ -139,7 +139,7 @@ void Animator::computeLinearInterpolation() {
 	Keyframe* lastKeyFrame = &_keyframes[_indexLastKeyFrame];
 	Keyframe* nextKeyFrame = &_keyframes[_indexNextKeyFrame];
 
-	float	alpha = (float)(_currentFrame - lastKeyFrame->frame) / (float)(nextKeyFrame->frame - lastKeyFrame->frame);
+	float alpha = (float)(_currentFrame - lastKeyFrame->frame) / (float)(nextKeyFrame->frame - lastKeyFrame->frame);
 	ofVec3f lerpPosition(ofLerp(lastKeyFrame->position.x, nextKeyFrame->position.x, alpha),
 		ofLerp(lastKeyFrame->position.y, nextKeyFrame->position.y, alpha),
 		ofLerp(lastKeyFrame->position.z, nextKeyFrame->position.z, alpha));

@@ -23,8 +23,8 @@ void ImageUtils::exportImage(const std::string& name) {
      * @return a 3 lengthen array of 256 lengthen unsigned int vectors for rbg colors
      */
 unsigned int** ImageUtils::computeHistRGB(const ofImage& image) {
-	int			   channels = 3;
-	unsigned int** hist		= new unsigned int*[channels];
+	int channels = 3;
+	unsigned int** hist = new unsigned int*[channels];
 
 	for (int i = 0; i < channels; i++)
 		hist[i] = new unsigned int[256]();

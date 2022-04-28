@@ -14,13 +14,13 @@ public:
 	void draw();
 	void loadTexture(std::string path);
 
-	ofMesh			 mesh;
+	ofMesh mesh;
 	ParamSurfaceType type;
 
 	std::vector<ofVec3f> points, cached_points;
-	ofNode				 pos, cached_pos;
-	int					 precisionX, precisionY;
-	ofTexture			 _texture;
+	ofNode pos, cached_pos;
+	int precisionX, precisionY;
+	ofTexture _texture;
 };
 } // namespace ift3100
 

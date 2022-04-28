@@ -10,6 +10,7 @@
 #include "ofImage.h"
 #include "ofMain.h"
 #include "ofxImGui.h"
+#include "MaterialViewer.h"
 
 #include <string.h>
 
@@ -34,28 +35,28 @@ public:
 	InspectorInterface inspector;
 
 	ofxImGui::Gui _gui;
-	Theme*		  theme;
-	bool*		  mainMenu;
+	Theme* theme;
+	bool* mainMenu;
 
 	unsigned int** _rgb;
 
-	float  primitiveStrokeWidth;
+	float primitiveStrokeWidth;
 	ImVec4 primitiveStrokeColor; // Dont question it.
-	bool   primitiveFill;
+	bool primitiveFill;
 	ImVec4 primitiveFillColor; // Forget it.
 
 	PrimitiveType drawMode;
-	MouseAction	  mouseAction;
+	MouseAction mouseAction;
 
 	ofTexture textureSource;
-	GLuint	  textureSourceID;
+	GLuint textureSourceID;
 	ofTexture cameraTexture;
-	GLuint	  cameraTextureID;
+	GLuint cameraTextureID;
 
 	ofImage image;
-	bool	isHistComputed;
-	char	imageRenderName[64] = "";
-	char	import3DObj[64]		= "";
+	bool isHistComputed;
+	char imageRenderName[64] = "";
+	char import3DObj[64] = "";
 
 	bool axesCameraEnable;
 	bool mainCameraOrtho;
@@ -68,6 +69,7 @@ public:
 	void draw3dRendererUI();
 	void drawOptionsMenu();
 	void drawAnimator();
+	void drawMaterialViewer();
 
 	void draw();
 	void button_pressed();

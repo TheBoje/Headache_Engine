@@ -42,10 +42,10 @@ public:
 	std::vector<ofVec3f> points;		// Control points
 	std::vector<ofVec3f> cached_points; // Cache to reduce update calls
 
-	ParamCurveType type;	   // Type of the curve
-	ofNode		   pos;		   // Offset/Position of the curve
-	ofNode		   cached_pos; // Cache to reduce update calls
-	int			   precision;  // Amount of generated vertices
+	ParamCurveType type; // Type of the curve
+	ofNode pos;			 // Offset/Position of the curve
+	ofNode cached_pos;	 // Cache to reduce update calls
+	int precision;		 // Amount of generated vertices
 };
 } // namespace ift3100
 

@@ -34,10 +34,10 @@ public:
 	void unbind();
 
 private:
-	Sprite	 sprite;
+	Sprite sprite;
 	ofShader shader;
-	uint	 textureObjectID;
-	int		 bindID;
+	uint textureObjectID;
+	int bindID;
 };
 } // namespace ift3100
 

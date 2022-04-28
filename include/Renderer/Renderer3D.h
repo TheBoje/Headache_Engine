@@ -5,8 +5,8 @@
 #include "CameraManager.h"
 #include "Cubemap.h"
 #include "HierarchyContainer.h"
+#include "MaterialViewer.h"
 #include "Object3D.h"
-#include "Voronoi3D.h"
 #include "ofxAssimpModelLoader.h"
 
 namespace ift3100 {
@@ -39,6 +39,8 @@ public:
 
 	static Renderer3D* Get();
 
+	IlluminationStyle illumination;
+
 	ofShader explodingShader;
 	bool isExploding;
 
@@ -49,7 +51,8 @@ public:
 	AnimatorManager animatorManager;
 	HierarchyContainer<Object3D> hierarchy;
 	Cubemap cubemap;
-	Voronoi3D v3d;
+
+	std::vector<std::shared_ptr<Object3D>> lights;
 
 	void setup();
 	void update();

@@ -10,12 +10,12 @@
 
 namespace ift3100 {
 class InspectorInterface {
-	ImVec2	primitivePosition;
+	ImVec2 primitivePosition;
 	ofVec3f position3d;
 
 public:
 	// TODO: les mettre dans constant.h
-	static const ImGuiInputTextFlags INPUT_FLAGS		 = ImGuiInputTextFlags_EnterReturnsTrue;
+	static const ImGuiInputTextFlags INPUT_FLAGS = ImGuiInputTextFlags_EnterReturnsTrue;
 	static const ImGuiInputTextFlags INPUT_DECIMAL_FLAGS = INPUT_FLAGS | ImGuiInputTextFlags_EnterReturnsTrue;
 
 	void setup();
@@ -23,6 +23,12 @@ public:
 	void drawInspector3d(std::vector<Hierarchy<Object3D>*>* object3Ds);
 
 	void textureOptions(Object3D& object3Ds);
+
+	void lightOptions(Object3D& light);
+	void spotLightOptions(ofLight& light);
+	void directionalLightOptions(ofLight& light);
+	void areaLightOptions(ofLight& light);
+	void pointLightOptions(ofLight& light);
 };
 } // namespace ift3100
 
