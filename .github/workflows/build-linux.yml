@@ -69,3 +69,7 @@ jobs:
           ls
           cd IFT-3100
           make -j4 OF_ROOT=${{ github.workspace }}/openFrameworks
+
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
