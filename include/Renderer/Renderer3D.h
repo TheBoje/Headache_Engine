@@ -6,6 +6,7 @@
 #include "Cubemap.h"
 #include "HierarchyContainer.h"
 #include "Object3D.h"
+#include "Voronoi3D.h"
 #include "ofxAssimpModelLoader.h"
 
 namespace ift3100 {
@@ -21,7 +22,7 @@ class Application;
 */
 class Renderer3D {
 	ofBoxPrimitive _boudaryBox;
-	bool		   _showBoundary;
+	bool _showBoundary;
 
 	static Renderer3D* _renderer3D;
 
@@ -39,15 +40,16 @@ public:
 	static Renderer3D* Get();
 
 	ofShader explodingShader;
-	bool	 isExploding;
+	bool isExploding;
 
-	ofFbo	  selectedCameraFBO;
+	ofFbo selectedCameraFBO;
 	ofCamera* selectedCamera;
 
-	CameraManager				 cameraManager;
-	AnimatorManager				 animatorManager;
+	CameraManager cameraManager;
+	AnimatorManager animatorManager;
 	HierarchyContainer<Object3D> hierarchy;
-	Cubemap						 cubemap;
+	Cubemap cubemap;
+	Voronoi3D v3d;
 
 	void setup();
 	void update();

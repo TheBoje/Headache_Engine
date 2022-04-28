@@ -31,20 +31,28 @@ Object3D::Object3D(std::string name, ofLight node)
 	: _name(name)
 	, _type(ObjectType::Light)
 	, _light(new ofLight(node)) { }
+
 Object3D::Object3D(std::string name, ParamCurve curve)
 	: _name(name)
 	, _type(ObjectType::ParametricCurve)
 	, _curve(new ParamCurve(curve)) { }
+
 Object3D::Object3D(std::string name, ParamSurface surface)
 	: _name(name)
 	, _type(ObjectType::ParametricSurface)
 	, _surface(new ParamSurface(surface)) { }
+
+Object3D::Object3D(std::string name, Voronoi3D voronoi)
+	: _name(name)
+	, _type(ObjectType::Voronoi)
+	, _voronoi3D(new Voronoi3D(voronoi)) { }
 
 Object3D::~Object3D() {
 	switch (_type) {
 		case ObjectType::Model3D: delete _model; break;
 		case ObjectType::ParametricCurve: delete _curve; break;
 		case ObjectType::ParametricSurface: delete _surface; break;
+		case ObjectType::Voronoi: delete _voronoi3D; break;
 		default: delete getNode(); break;
 	}
 }
@@ -64,11 +72,17 @@ ParamSurface* Object3D::getSurface() {
 	return _surface;
 }
 
+Voronoi3D* Object3D::getVoronoi3D() {
+	IFT_ASSERT(_type == ObjectType::Voronoi, "Get surface is forbidden for non-Voronoi3D objects. Try get getType() before.");
+	return _voronoi3D;
+}
+
 void Object3D::draw(bool isSelected) {
 	switch (_type) {
 		case ObjectType::Model3D: _model->draw(); break;
 		case ObjectType::ParametricCurve: _curve->draw(); break;
 		case ObjectType::ParametricSurface: _surface->draw(); break;
+		case ObjectType::Voronoi: _voronoi3D->draw(); break;
 		case ObjectType::Node:
 			if (isSelected)
 				getNode()->draw();
@@ -80,6 +94,7 @@ void Object3D::update() {
 	switch (_type) {
 		case ObjectType::ParametricCurve: _curve->update(); break;
 		case ObjectType::ParametricSurface: _surface->update(); break;
+		case ObjectType::Voronoi: _voronoi3D->update(); break;
 		default: break;
 	}
 }
@@ -92,6 +107,7 @@ ofNode* Object3D::getNode() {
 		case ObjectType::Light: return _light;
 		case ObjectType::ParametricCurve: return &_curve->pos;
 		case ObjectType::ParametricSurface: return &_surface->pos;
+		case ObjectType::Voronoi: return &_voronoi3D->pos;
 		default: IFT_LOG_ERROR << "try getting node of " << _type << ", returning nullptr instead"; return nullptr;
 	}
 }

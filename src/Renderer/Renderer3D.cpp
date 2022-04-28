@@ -26,9 +26,9 @@ void Renderer3D::setup() {
 
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
-	ofNode					  box;
+	ofNode box;
 	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
-
+	hierarchy.addChild(box_shared);
 	// SHADERS
 	explodingShader.load("../../src/Shaders/Exploding/exploding.vert.glsl",
 		"../../src/Shaders/Exploding/exploding.frag.glsl",
@@ -49,6 +49,7 @@ void Renderer3D::setup() {
 	animatorManager.addAnimator(box_shared);
 
 	selectedCamera = nullptr;
+	ofBoxPrimitive bounds = ofBoxPrimitive(300, 300, 300);
 
 	IFT_LOG << "done";
 }
@@ -104,12 +105,12 @@ void Renderer3D::computeBoundaryBox() {
 				return;
 
 			// Get the center and the rotation (needed for rotated meshes to compute global vertex position)
-			ofVec3f nodePos		= object->getNode()->getPosition();
-			ofVec3f nodeScale	= object->getNode()->getScale();
+			ofVec3f nodePos = object->getNode()->getPosition();
+			ofVec3f nodeScale = object->getNode()->getScale();
 			ofVec3f nodRotation = object->getNode()->getOrientationEulerDeg();
 
 			if (object->getType() == ObjectType::Model3D) {
-				ofMesh		mesh		= ((of3dPrimitive*)object->getNode())->getMesh();
+				ofMesh mesh = ((of3dPrimitive*)object->getNode())->getMesh();
 				std::size_t numVertices = mesh.getNumVertices();
 
 				// Go through all vertices of the mesh if it exist
@@ -170,6 +171,7 @@ void Renderer3D::deleteSelected() {
 
 void Renderer3D::drawScene() {
 	ofFill();
+	v3d.draw();
 	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
 		// Check if the obj is selected and apply the exploding shader if so
 		bool isSelected = false;
@@ -284,7 +286,7 @@ void Renderer3D::importFromPath(const std::string& filepath) {
 	} else if (model.getMeshCount() > 1) {
 		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
 
-		std::shared_ptr<Object3D>			   parent = std::make_shared<Object3D>(filepath, ofNode());
+		std::shared_ptr<Object3D> parent = std::make_shared<Object3D>(filepath, ofNode());
 		std::vector<std::shared_ptr<Object3D>> children;
 		children.reserve(model.getMeshCount());
 
