@@ -12,8 +12,8 @@
 
   AccessModifierOffset: -4,
   AlignAfterOpenBracket: false,
-  AlignConsecutiveAssignments: Consecutive,
-  AlignConsecutiveDeclarations: Consecutive,
+  AlignConsecutiveAssignments: None,
+  AlignConsecutiveDeclarations: None,
   AlignOperands: Align,
   AlignTrailingComments: true,
   AllowAllParametersOfDeclarationOnNextLine: true,
