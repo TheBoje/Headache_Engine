@@ -198,6 +198,20 @@ void Interface::drawOptionsMenu() {
 		ImGui::Checkbox("Enable exploding on selected meshes", &Renderer3D::Get()->isExploding);
 		ImGui::EndMenu();
 	}
+/*
+	if (ImGui::BeginMenu("Material")) {
+		if (ImGui::MenuItem("Material 1", NULL, false, true)) {
+			choixMaterial = 1;
+		}
+		else if (ImGui::MenuItem("Material 2", NULL, false, true)) {
+			choixMaterial = 2;
+		}
+		else if (ImGui::MenuItem("Material 3", NULL, false, true)) {
+			choixMaterial = 3;
+		}
+		ImGui::EndMenu();
+	}
+ */
 }
 
 void Interface::drawAnimator() {

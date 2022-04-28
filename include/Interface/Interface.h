@@ -71,6 +71,8 @@ public:
 
 	void draw();
 	void button_pressed();
+
+	//int choixMaterial;
 };
 } // namespace ift3100
 
