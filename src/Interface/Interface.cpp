@@ -145,7 +145,7 @@ void Interface::draw3dRendererUI() {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Plane", ofPlanePrimitive()));
 		}
 		if (ImGui::MenuItem("Sphere", NULL, false, true)) {
-			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Sphere", ofSpherePrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Sphere", ofSpherePrimitive(10, 64)));
 		}
 		if (ImGui::MenuItem("IcoSphere", NULL, false, true)) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("IcoSphere", ofIcoSpherePrimitive()));

@@ -167,7 +167,6 @@ void Renderer3D::drawScene() {
 	ofFill();
 	Ray ray(ofVec3f(100, 0, 0), ofVec3f(-1, 0, 0));
 	ray.draw();
-	// ray.intersect(box);
 
 	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
 		// Check if the obj is selected and apply the exploding shader if so
@@ -182,10 +181,11 @@ void Renderer3D::drawScene() {
 		if (obj->getType() == ObjectType::Model3D) {
 			Intersection inter = ray.intersect(obj->getModel()->getPrimitive());
 			if (inter.intersect) {
-				IFT_LOG << "intersection at " << inter.position;
 				ofPushStyle();
 				ofSetColor(0, 255, 0);
 				ofSphere(inter.position, 1);
+				ray.reflect(inter).draw();
+				ray.refract(inter, 0.5, 1).draw();
 				ofPopStyle();
 			}
 		}

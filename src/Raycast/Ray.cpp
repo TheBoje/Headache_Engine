@@ -44,6 +44,7 @@ Intersection Ray::intersect(of3dPrimitive obj) {
 	Intersection inter;
 	inter.intersect = false;
 	inter.position	= ofVec3f(0, 0, 0);
+	inter.normal	= ofVec3f(0, 0, 0);
 
 	ofVec3f objPosition = obj.getPosition();
 	ofMesh	mesh		= obj.getMesh();
@@ -78,12 +79,39 @@ Intersection Ray::intersect(of3dPrimitive obj) {
 
 			if (w0 > 0 && w1 > 0 && w2 > 0 && (w1 + w2 <= 1)) {
 				inter.position	= (_origin + _direction * t);
+				inter.normal	= normal;
 				inter.intersect = true;
 			}
 		}
 	}
 
 	return inter;
+}
+
+Ray Ray::reflect(Intersection inter) {
+	IFT_ASSERT(inter.intersect, "there must be an intersection to compute reflection");
+	return Ray(inter.position, (_direction + 2 * inter.normal.dot(-_direction) * inter.normal));
+}
+
+/**
+ * @brief Compute the refraction using the refraction indices n1 and n2
+ * 
+ * @param inter 
+ * @param n1 
+ * @param n2 
+ * @return Ray 
+ */
+Ray Ray::refract(Intersection inter, float n1, float n2) {
+	IFT_ASSERT(inter.intersect, "there must be an intersection to compute reflection");
+	IFT_ASSERT(n2 > 0, "n2 must be > 0");
+
+	float n = n1 / n2;
+	float k = 1 - n * n * (1 - inter.normal.dot(_direction) * inter.normal.dot(_direction));
+
+	if (k < 0)
+		return Ray(ofVec3f(0, 0, 0));
+	else
+		return Ray(inter.position, (n * _direction) - (n * inter.normal.dot(_direction) + std::sqrt(k)) * inter.normal);
 }
 
 } // namespace ift3100

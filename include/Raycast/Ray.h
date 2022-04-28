@@ -9,6 +9,7 @@ namespace ift3100 {
 typedef struct inter {
 	bool	intersect;
 	ofVec3f position;
+	ofVec3f normal;
 } Intersection;
 
 class Ray {
@@ -27,6 +28,8 @@ public:
 	void draw();
 
 	Intersection intersect(of3dPrimitive obj);
+	Ray			 reflect(Intersection inter);
+	Ray			 refract(Intersection inter, float n1, float n2);
 
 	/**
      * @brief Set the direction of the Ray to dir.normalized()
