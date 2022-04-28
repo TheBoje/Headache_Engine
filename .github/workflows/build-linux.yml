@@ -53,10 +53,11 @@ jobs:
       - name: Download openFrameworks libs
         run: sudo openFrameworks/scripts/linux/download_libs.sh -a 64gcc6;
 
-      - name: Manual voro++ install
+      - name: libvoro++.so install
         run: |
-          cd ${{ github.workspace }}/IFT-3100/libs/voro++-0.4.6
-          sudo make install
+          sudo apt-get update
+          sudo apt-get install -y voro++
+          ld -lvoro++ --verbose
 
       - name: Install openFrameworks dependencies
         run: |
