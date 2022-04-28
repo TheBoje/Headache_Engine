@@ -40,6 +40,14 @@ void Ray::draw() {
 	ofPopStyle();
 }
 
+/**
+ * @brief Compute intersection between the ray and the primitive.
+ * return an Intersection struct
+ * @see Intersection
+ * 
+ * @param obj 
+ * @return Intersection 
+ */
 Intersection Ray::intersect(of3dPrimitive obj) {
 	Intersection inter;
 	inter.intersect = false;

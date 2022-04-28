@@ -6,6 +6,12 @@
 
 namespace ift3100 {
 
+/**
+ * @brief structure storing :
+ * intersect: bool - evaluate if there is an intersection
+ * position: ofVec3f - the position of the intersection in the global world
+ * normal: ofVec3f - the normal of the triangle intersected
+ */
 typedef struct inter {
 	bool	intersect;
 	ofVec3f position;
