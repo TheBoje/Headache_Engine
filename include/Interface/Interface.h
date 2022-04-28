@@ -10,6 +10,7 @@
 #include "ofImage.h"
 #include "ofMain.h"
 #include "ofxImGui.h"
+#include "MaterialViewer.h"
 
 #include <string.h>
 
@@ -68,6 +69,7 @@ public:
 	void draw3dRendererUI();
 	void drawOptionsMenu();
 	void drawAnimator();
+	void drawMaterialViewer();
 
 	void draw();
 	void button_pressed();

@@ -17,6 +17,8 @@ const int NB_AXES_CAM = 3;
 
 const int CAMERA_WIDTH = 1024;
 
+const int MAX_LIGHTS = 8;
+
 } // namespace ift3100
 
 #endif

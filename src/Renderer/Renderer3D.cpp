@@ -24,6 +24,8 @@ void Renderer3D::setup() {
 
 	_showBoundary = false;
 
+	// illumination = IlluminationStyle::Default;
+
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
 	ofNode box;
@@ -36,15 +38,7 @@ void Renderer3D::setup() {
 
 	isExploding = false;
 
-	// ----
-	// Note: Uncomment me to enable animator testing, this is temporary until we implement a proper UI!
-	// animator.setup();
-	// animator.setTarget(box_shared->getNode());
-	// animator.addKeyframe(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), 0);
-	// animator.addKeyframe(ofVec3f(0, 100, 0), ofVec3f(90, 0, 0), 100);
-	// animator.addKeyframe(ofVec3f(0, 100, -100), ofVec3f(0, 0, 0), 200);
-	// animator.reset();
-	// animator.resume();
+	hierarchy.addChild(box_shared);
 
 	animatorManager.addAnimator(box_shared);
 
@@ -171,7 +165,6 @@ void Renderer3D::deleteSelected() {
 
 void Renderer3D::drawScene() {
 	ofFill();
-	v3d.draw();
 	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
 		// Check if the obj is selected and apply the exploding shader if so
 		bool isSelected = false;
@@ -197,6 +190,12 @@ void Renderer3D::drawScene() {
 
 void Renderer3D::draw() {
 	ofEnableDepthTest();
+	ofEnableLighting();
+
+	// TODO: limiter à 8 lumières
+	for (int i = 0; i < lights.size(); i++) {
+		((ofLight*)lights[i]->getNode())->enable();
+	}
 
 	// Store result of selected camera in the FBO
 	if (selectedCamera != nullptr) {
@@ -240,6 +239,10 @@ void Renderer3D::draw() {
 
 	cameraManager.endCamera(3);
 
+	for (std::shared_ptr<Object3D> light : lights)
+		((ofLight*)light->getNode())->disable();
+
+	ofDisableLighting();
 	ofDisableDepthTest();
 }
 
