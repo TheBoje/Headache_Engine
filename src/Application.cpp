@@ -26,7 +26,7 @@ void Application::setup() {
 	ofSetCircleResolution(32);
 	isMouseDown = false;
 
-	interface  = Interface::Get();
+	interface = Interface::Get();
 	renderer2D = Renderer2D::Get();
 	renderer3D = Renderer3D::Get();
 
@@ -98,10 +98,10 @@ void Application::mouseDragged(int x, int y, int button) {
 }
 
 void Application::mousePressed(int x, int y, int button) {
-	mousePos.x	= x;
-	mousePos.y	= y;
-	mousePos.z	= x;
-	mousePos.w	= y;
+	mousePos.x = x;
+	mousePos.y = y;
+	mousePos.z = x;
+	mousePos.w = y;
 	isMouseDown = true;
 	if (ImGui::IsWindowHovered() || ImGui::IsAnyItemHovered() || interface->mouseAction == DrawPrimitive) {
 		renderer3D->setMouseInput(false); // Disable camera mouse input
@@ -109,8 +109,8 @@ void Application::mousePressed(int x, int y, int button) {
 }
 
 void Application::mouseReleased(int x, int y, int button) {
-	mousePos.x	= x;
-	mousePos.y	= y;
+	mousePos.x = x;
+	mousePos.y = y;
 	isMouseDown = false;
 	renderer3D->setMouseInput(true); // Enable mouse input
 

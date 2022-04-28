@@ -14,10 +14,10 @@ Sprite::~Sprite() = default;
  * @param part_counts the number of patches
  */
 void Sprite::setup(const ofImage& img, int part_height, int part_width, std::size_t part_counts) {
-	_parts_count		   = part_counts;
-	_parts_width		   = part_width;
-	_parts_height		   = part_height;
-	_index				   = 0;
+	_parts_count = part_counts;
+	_parts_width = part_width;
+	_parts_height = part_height;
+	_index = 0;
 	const ofPixels& pixels = img.getPixels();
 
 	std::size_t width = pixels.getWidth();

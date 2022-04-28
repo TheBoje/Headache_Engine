@@ -12,5 +12,5 @@ out vec4 fragColor;
 
 void main(void) {
 	vec4 envColor = texture(EnvMap, vertex.texcoord);
-	fragColor	  = envColor;
+	fragColor = envColor;
 }

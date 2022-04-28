@@ -23,7 +23,7 @@ uniform float brightness;
 
 // position d'une source de lumière
 uniform vec3 lightPos[MAX_LIGHTS];
-uniform int	 nbLights;
+uniform int nbLights;
 
 void main() {
 	vec3 light_position[MAX_LIGHTS];

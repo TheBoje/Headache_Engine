@@ -31,7 +31,7 @@ void InspectorInterface::setup() {
      */
 void InspectorInterface::drawInspectorVectorPrimitive(std::vector<Hierarchy<VectorPrimitive>*>* vectorPrimitives) {
 	std::size_t vectorPrimitivesSize = vectorPrimitives->size();
-	ImVec2		sum(0, 0);
+	ImVec2 sum(0, 0);
 
 	// get the mean of all selected primitive position
 	for (auto node : *vectorPrimitives) {
@@ -83,7 +83,7 @@ void InspectorInterface::drawInspectorVectorPrimitive(std::vector<Hierarchy<Vect
 
 void InspectorInterface::drawInspector3d(std::vector<Hierarchy<Object3D>*>* object3Ds) {
 	std::size_t object3DsSize = object3Ds->size();
-	ofVec3f		sum(0);
+	ofVec3f sum(0);
 
 	// get the mean of all selected primitive position
 	for (auto node : *object3Ds) {
@@ -205,8 +205,8 @@ void InspectorInterface::lightOptions(Object3D& object) {
 	if (object.getType() != ObjectType::Light)
 		return;
 
-	ofLight* light		= (ofLight*)object.getNode();
-	ImVec4	 lightColor = light->getDiffuseColor();
+	ofLight* light = (ofLight*)object.getNode();
+	ImVec4 lightColor = light->getDiffuseColor();
 	ImGui::ColorEdit4("Light diffuse color", (float*)&lightColor);
 	light->setDiffuseColor(lightColor);
 
@@ -216,7 +216,7 @@ void InspectorInterface::lightOptions(Object3D& object) {
 		light->setAttenuation(attenuation[0], attenuation[1], attenuation[2]);
 	}
 
-	bool lightType[]			= {false, false, false, false};
+	bool lightType[] = {false, false, false, false};
 	lightType[light->getType()] = true;
 
 	if (ImGui::RadioButton("Point light", &lightType[ofLightType::OF_LIGHT_POINT])) {

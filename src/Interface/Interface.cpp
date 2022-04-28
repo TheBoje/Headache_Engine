@@ -22,25 +22,25 @@ Interface* Interface::Get() {
 }
 
 void Interface::setup() {
-	theme				   = new Theme();
-	mainMenu			   = new bool;
-	*mainMenu			   = true;
+	theme = new Theme();
+	mainMenu = new bool;
+	*mainMenu = true;
 	ImGuiConfigFlags flags = ImGuiConfigFlags_DockingEnable;
 	// flags |= ImGuiConfigFlag	s_ViewportsEnable;
 	_gui.setup(theme, true, flags, true);
 
 	inspector.setup();
 
-	primitiveStrokeWidth   = DEFAULT_STROKE_WIDTH;
-	primitiveStrokeColor   = ofColor::white;
+	primitiveStrokeWidth = DEFAULT_STROKE_WIDTH;
+	primitiveStrokeColor = ofColor::white;
 	primitiveStrokeColor.w = 1;
-	primitiveFillColor	   = ofColor::gray;
-	primitiveFillColor.w   = 1;
-	primitiveFill		   = true;
-	mouseAction			   = None;
-	drawMode			   = Line;
-	axesCameraEnable	   = false;
-	mainCameraOrtho		   = false;
+	primitiveFillColor = ofColor::gray;
+	primitiveFillColor.w = 1;
+	primitiveFill = true;
+	mouseAction = None;
+	drawMode = Line;
+	axesCameraEnable = false;
+	mainCameraOrtho = false;
 
 	isHistComputed = false;
 
@@ -58,7 +58,7 @@ void Interface::loadImage(std::string path) {
 
 void Interface::imageUI() {
 	if (ImGui::Button("compute histogram") && image.isAllocated()) {
-		_rgb		   = ImageUtils::computeHistRGB(image);
+		_rgb = ImageUtils::computeHistRGB(image);
 		isHistComputed = true;
 	}
 

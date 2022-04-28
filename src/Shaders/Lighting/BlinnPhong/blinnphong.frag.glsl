@@ -16,8 +16,8 @@ out vec4 fragment_color;
 uniform vec3 color_ambient;
 uniform vec3 color_diffuse;
 uniform vec3 color_specular;
-uniform int	 nbLights;
-uniform int	 isTexturePresent = 0;
+uniform int nbLights;
+uniform int isTexturePresent = 0;
 
 uniform sampler2D tex0;
 
@@ -26,7 +26,7 @@ uniform float brightness;
 
 void main() {
 	// re-normaliser la normale après interpolation
-	vec3 n		  = normalize(surface_normal);
+	vec3 n = normalize(surface_normal);
 	vec3 colorSum = vec3(0);
 
 	vec3 cd = isTexturePresent * (color_diffuse * texture(tex0, texCoordVarying).rgb) + abs((isTexturePresent - 1) * color_diffuse);
