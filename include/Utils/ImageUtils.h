@@ -13,6 +13,7 @@ public:
 	static void exportImage(const std::string& name);
 	static unsigned int** computeHistRGB(const ofImage& image);
 	static cv::Mat convert(const ofImage& image, int code);
+	static ofTexture getChessboard(int size, int sizeSquare);
 };
 } // namespace ift3100
 
