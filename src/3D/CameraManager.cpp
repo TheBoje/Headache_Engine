@@ -18,7 +18,7 @@ CameraManager::CameraManager()
      *
      */
 void CameraManager::computeViewports() {
-	float width	 = ofGetWidth();
+	float width = ofGetWidth();
 	float height = ofGetHeight();
 
 	int i = 0;
@@ -26,17 +26,17 @@ void CameraManager::computeViewports() {
 		for (; i < NB_AXES_CAM; i++) {
 			_axes_cameras[i].enableOrtho();
 
-			viewports[i].x		= (CameraManager::OFFSET / 2) + ((width) / 2) * (i % 2);
-			viewports[i].y		= (CameraManager::OFFSET / 2) + ((height) / 2) * (i / 2);
-			viewports[i].width	= (width / 2) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
+			viewports[i].x = (CameraManager::OFFSET / 2) + ((width) / 2) * (i % 2);
+			viewports[i].y = (CameraManager::OFFSET / 2) + ((height) / 2) * (i / 2);
+			viewports[i].width = (width / 2) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
 			viewports[i].height = (height / 2) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
 		}
 	}
 
 	// i = 3 main camera viewport
-	viewports[3].x		= (CameraManager::OFFSET / 2) - CameraManager::STROKE_WIDTH + ((width) / 2) * (i % 2);
-	viewports[3].y		= (CameraManager::OFFSET / 2) - CameraManager::STROKE_WIDTH + ((height) / 2) * (i / 2);
-	viewports[3].width	= (width / (i == 0 ? 1 : 2)) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
+	viewports[3].x = (CameraManager::OFFSET / 2) - CameraManager::STROKE_WIDTH + ((width) / 2) * (i % 2);
+	viewports[3].y = (CameraManager::OFFSET / 2) - CameraManager::STROKE_WIDTH + ((height) / 2) * (i / 2);
+	viewports[3].width = (width / (i == 0 ? 1 : 2)) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
 	viewports[3].height = (height / (i == 0 ? 1 : 2)) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
 }
 

@@ -17,15 +17,15 @@ enum ObjectType { Camera, Node, Light, Model3D, ParametricCurve, ParametricSurfa
 
 class Object3D : public HierarchyItem {
 	std::string _name;
-	ObjectType	_type;
-	ofTexture	test;
+	ObjectType _type;
+	ofTexture test;
 
 	union {
-		ofCamera*	  _camera;
-		Model*		  _model;
-		ofNode*		  _node;
-		ofLight*	  _light;
-		ParamCurve*	  _curve;
+		ofCamera* _camera;
+		Model* _model;
+		ofNode* _node;
+		ofLight* _light;
+		ParamCurve* _curve;
 		ParamSurface* _surface;
 	};
 
@@ -40,9 +40,9 @@ public:
 	Object3D(std::string name, ParamSurface surface);
 	~Object3D();
 
-	ofNode*		  getNode();
-	Model*		  getModel();
-	ParamCurve*	  getCurve();
+	ofNode* getNode();
+	Model* getModel();
+	ParamCurve* getCurve();
 	ParamSurface* getSurface();
 
 	void draw(bool isSelected = false);

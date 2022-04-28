@@ -27,12 +27,12 @@ public:
 
 	Application& operator=(const Application&) = delete;
 
-	Interface*	interface;
+	Interface* interface;
 	Renderer2D* renderer2D;
 	Renderer3D* renderer3D;
-	Cursor		cursor;
+	Cursor cursor;
 
-	bool	isMouseDown;
+	bool isMouseDown;
 	ofVec4f mousePos;
 
 public:

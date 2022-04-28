@@ -16,8 +16,8 @@ out vec4 fragment_color;
 uniform vec3 color_ambient;
 uniform vec3 color_diffuse;
 uniform vec3 color_specular;
-uniform int	 nbLights;
-uniform int	 isTexturePresent = 0;
+uniform int nbLights;
+uniform int isTexturePresent = 0;
 
 uniform sampler2D tex0;
 
@@ -40,7 +40,7 @@ void main() {
 	for (int i = 0; i < nbLights; i++) {
 		vec3 l = normalize(light_position[i] - surface_position);
 
-		float reflection_diffuse  = max(dot(n, l), 0.0);
+		float reflection_diffuse = max(dot(n, l), 0.0);
 		float reflection_specular = 0.0;
 
 		if (reflection_diffuse > 0.0) {

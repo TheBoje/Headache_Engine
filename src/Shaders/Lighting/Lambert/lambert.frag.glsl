@@ -18,12 +18,12 @@ uniform vec3 color_diffuse;
 
 uniform int nbLights;
 
-uniform int		  isTexturePresent = 0;
+uniform int isTexturePresent = 0;
 uniform sampler2D tex0;
 
 void main() {
 	// re-normaliser la normale après interpolation (n)
-	vec3 n	= normalize(surface_normal);
+	vec3 n = normalize(surface_normal);
 	vec3 cd = isTexturePresent * (color_diffuse * texture(tex0, texCoordVarying).rgb) + abs((isTexturePresent - 1) * color_diffuse);
 
 	// calculer la direction de la surface vers la lumière (l)

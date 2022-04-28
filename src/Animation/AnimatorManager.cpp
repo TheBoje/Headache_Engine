@@ -89,9 +89,9 @@ void AnimatorManager::drawUI() {
 				Keyframe key;
 				if (_animators[i].getKeyframes().empty()) {
 					ofNode target = *_animators[i].getTarget()->getNode();
-					key.position  = target.getPosition();
-					key.rotation  = target.getOrientationEulerDeg();
-					key.frame	  = 0;
+					key.position = target.getPosition();
+					key.rotation = target.getOrientationEulerDeg();
+					key.frame = 0;
 				} else {
 					key = _animators[i].getKeyframes()[_animators[i].getKeyframes().size() - 1];
 				}

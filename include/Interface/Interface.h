@@ -35,28 +35,28 @@ public:
 	InspectorInterface inspector;
 
 	ofxImGui::Gui _gui;
-	Theme*		  theme;
-	bool*		  mainMenu;
+	Theme* theme;
+	bool* mainMenu;
 
 	unsigned int** _rgb;
 
-	float  primitiveStrokeWidth;
+	float primitiveStrokeWidth;
 	ImVec4 primitiveStrokeColor; // Dont question it.
-	bool   primitiveFill;
+	bool primitiveFill;
 	ImVec4 primitiveFillColor; // Forget it.
 
 	PrimitiveType drawMode;
-	MouseAction	  mouseAction;
+	MouseAction mouseAction;
 
 	ofTexture textureSource;
-	GLuint	  textureSourceID;
+	GLuint textureSourceID;
 	ofTexture cameraTexture;
-	GLuint	  cameraTextureID;
+	GLuint cameraTextureID;
 
 	ofImage image;
-	bool	isHistComputed;
-	char	imageRenderName[64] = "";
-	char	import3DObj[64]		= "";
+	bool isHistComputed;
+	char imageRenderName[64] = "";
+	char import3DObj[64] = "";
 
 	bool axesCameraEnable;
 	bool mainCameraOrtho;

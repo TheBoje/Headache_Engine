@@ -22,7 +22,7 @@ class Application;
 */
 class Renderer3D {
 	ofBoxPrimitive _boudaryBox;
-	bool		   _showBoundary;
+	bool _showBoundary;
 
 	static Renderer3D* _renderer3D;
 
@@ -42,15 +42,15 @@ public:
 	IlluminationStyle illumination;
 
 	ofShader explodingShader;
-	bool	 isExploding;
+	bool isExploding;
 
-	ofFbo	  selectedCameraFBO;
+	ofFbo selectedCameraFBO;
 	ofCamera* selectedCamera;
 
-	CameraManager				 cameraManager;
-	AnimatorManager				 animatorManager;
+	CameraManager cameraManager;
+	AnimatorManager animatorManager;
 	HierarchyContainer<Object3D> hierarchy;
-	Cubemap						 cubemap;
+	Cubemap cubemap;
 
 	std::vector<std::shared_ptr<Object3D>> lights;
 

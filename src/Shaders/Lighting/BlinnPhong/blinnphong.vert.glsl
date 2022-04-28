@@ -20,9 +20,9 @@ out int count;
 // attributs uniformes
 uniform mat4x4 modelViewMatrix;
 uniform mat4x4 projectionMatrix;
-uniform mat4   textureMatrix;
-uniform vec3   lightPos[MAX_LIGHTS];
-uniform int	   nbLights;
+uniform mat4 textureMatrix;
+uniform vec3 lightPos[MAX_LIGHTS];
+uniform int nbLights;
 
 void main() {
 	// calculer la matrice normale
