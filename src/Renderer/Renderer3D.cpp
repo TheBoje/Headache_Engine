@@ -43,7 +43,6 @@ void Renderer3D::setup() {
 	animatorManager.addAnimator(box_shared);
 
 	selectedCamera = nullptr;
-	ofBoxPrimitive bounds = ofBoxPrimitive(300, 300, 300);
 
 	IFT_LOG << "done";
 }
