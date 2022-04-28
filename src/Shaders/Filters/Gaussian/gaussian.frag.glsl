@@ -3,10 +3,10 @@
 #version 330
 
 uniform sampler2D tex0;
-uniform float	  blurAmnt;
-uniform vec2	  texSize;
+uniform float blurAmnt;
+uniform vec2 texSize;
 
-in vec2	 texCoordVarying;
+in vec2 texCoordVarying;
 out vec4 outputColor;
 
 void main() {

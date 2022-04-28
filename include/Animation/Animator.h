@@ -12,8 +12,8 @@ namespace ift3100 {
 enum InterpolationType { Piecewise, Linear };
 
 struct Keyframe {
-	ofVec3f	 position;
-	ofVec3f	 rotation;
+	ofVec3f position;
+	ofVec3f rotation;
 	uint64_t frame;
 };
 
@@ -25,13 +25,13 @@ struct Keyframe {
  */
 class Animator {
 	std::shared_ptr<Object3D> _target;
-	int						  _indexLastKeyFrame;
-	int						  _indexNextKeyFrame;
+	int _indexLastKeyFrame;
+	int _indexNextKeyFrame;
 
 	InterpolationType _interpolationType;
-	uint64_t		  _currentFrame;
+	uint64_t _currentFrame;
 
-	bool				  _paused;
+	bool _paused;
 	std::vector<Keyframe> _keyframes;
 
 	void computePiecewiseInterpolation();

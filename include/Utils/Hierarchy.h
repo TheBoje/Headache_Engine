@@ -26,7 +26,7 @@ class Hierarchy {
 
 	int _index;
 
-	Hierarchy<T>*			   _parent;
+	Hierarchy<T>* _parent;
 	std::vector<Hierarchy<T>*> _children;
 
 public:
@@ -80,7 +80,7 @@ public:
 		}
 
 		_parent = nullptr;
-		_ref	= nullptr;
+		_ref = nullptr;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public:
 		if (&other != this) {
 			clear();
 
-			_ref	= std::make_shared<T>(*(other._ref));
+			_ref = std::make_shared<T>(*(other._ref));
 			_parent = nullptr;
 
 			int children_size = other._children.size();
@@ -182,8 +182,8 @@ public:
          */
 	void drawUI(std::vector<Hierarchy<T>*>& selected) {
 		// check if the node is selected and apply the flag if true
-		ImGuiTreeNodeFlags flags		  = NODE_FLAGS;
-		int				   selected_index = -1;
+		ImGuiTreeNodeFlags flags = NODE_FLAGS;
+		int selected_index = -1;
 
 		for (std::size_t i = 0; i < selected.size(); i++) {
 			if (selected[i]->_index == _index) {

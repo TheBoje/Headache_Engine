@@ -31,7 +31,7 @@ void InspectorInterface::setup() {
      */
 void InspectorInterface::drawInspectorVectorPrimitive(std::vector<Hierarchy<VectorPrimitive>*>* vectorPrimitives) {
 	std::size_t vectorPrimitivesSize = vectorPrimitives->size();
-	ImVec2		sum(0, 0);
+	ImVec2 sum(0, 0);
 
 	// get the mean of all selected primitive position
 	for (auto node : *vectorPrimitives) {
@@ -83,7 +83,7 @@ void InspectorInterface::drawInspectorVectorPrimitive(std::vector<Hierarchy<Vect
 
 void InspectorInterface::drawInspector3d(std::vector<Hierarchy<Object3D>*>* object3Ds) {
 	std::size_t object3DsSize = object3Ds->size();
-	ofVec3f		sum(0);
+	ofVec3f sum(0);
 
 	// get the mean of all selected primitive position
 	for (auto node : *object3Ds) {

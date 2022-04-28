@@ -42,7 +42,7 @@ void ParamSurface::update() {
 		return;
 	}
 	// If changed, update cached data
-	cached_pos	  = pos;
+	cached_pos = pos;
 	cached_points = points;
 	switch (type) {
 		case Coons:
