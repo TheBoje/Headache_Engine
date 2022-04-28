@@ -60,6 +60,10 @@ public:
 		_texture = texture;
 		_primitive.mapTexCoordsFromTexture(_texture);
 	}
+
+	inline of3dPrimitive& getPrimitive() {
+		return _primitive;
+	}
 };
 
 } // namespace ift3100

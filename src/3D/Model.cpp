@@ -57,8 +57,8 @@ Model::Model(ofMesh mesh, ofTexture texture)
  * @link InspectorInterface @endlink
  */
 void Model::draw(bool isMaterialEnabled) {
-	if (isMaterialEnabled)
-		_material.begin();
+	// if (isMaterialEnabled)
+	// 	_material.begin();
 
 	if (_texture.isAllocated()) {
 		_texture.bind();
@@ -97,11 +97,11 @@ void Model::draw(bool isMaterialEnabled) {
 		}
 		_texture.unbind();
 	} else {
-		_primitive.draw();
+		_primitive.drawWireframe();
 	}
 
-	if (isMaterialEnabled)
-		_material.end();
+	// if (isMaterialEnabled)
+	// 	_material.end();
 }
 
 /**
