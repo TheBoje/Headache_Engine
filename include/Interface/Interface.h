@@ -58,6 +58,8 @@ public:
 	char imageRenderName[64] = "";
 	char import3DObj[64] = "";
 
+	int pxRes = 10;
+
 	bool axesCameraEnable;
 	bool mainCameraOrtho;
 

@@ -62,6 +62,12 @@ public:
 	inline ofFbo& getFbo() {
 		return _fbo;
 	}
+	inline ofMaterial& getMaterial() {
+		return _target.getMaterial();
+	}
+	inline void setMaterial(const ofMaterial& mat) {
+		_target.setMaterial(mat);
+	}
 };
 
 } // namespace ift3100

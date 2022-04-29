@@ -1,5 +1,6 @@
 #include "Renderer3D.h"
 #include "Application.h"
+#include "Ray.h"
 
 namespace ift3100 {
 
@@ -28,9 +29,20 @@ void Renderer3D::setup() {
 
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
-	ofNode box;
-	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
-	hierarchy.addChild(box_shared);
+	// ofNode					  box;
+	std::shared_ptr<Object3D> sphere = std::make_shared<Object3D>("Sphere", ofSpherePrimitive(10, 128));
+	sphere->getNode()->setPosition(0, 20, -100);
+	sphere->getNode()->setScale(2, 2, 2);
+	std::shared_ptr<Object3D> light = std::make_shared<Object3D>("Light", ofLight());
+	light->getNode()->setPosition(100, 100, 0);
+	std::shared_ptr<Object3D> camera = std::make_shared<Object3D>("Camera", ofCamera());
+
+	hierarchy.addChild(sphere);
+	hierarchy.addChild(light);
+	hierarchy.addChild(camera);
+
+	lights.emplace_back(light);
+
 	// SHADERS
 	explodingShader.load("../../src/Shaders/Exploding/exploding.vert.glsl",
 		"../../src/Shaders/Exploding/exploding.frag.glsl",
@@ -38,9 +50,9 @@ void Renderer3D::setup() {
 
 	isExploding = false;
 
-	hierarchy.addChild(box_shared);
+	// hierarchy.addChild(box_shared);
 
-	animatorManager.addAnimator(box_shared);
+	// animatorManager.addAnimator(box_shared);
 
 	selectedCamera = nullptr;
 
@@ -164,6 +176,10 @@ void Renderer3D::deleteSelected() {
 
 void Renderer3D::drawScene() {
 	ofFill();
+
+	Ray ray(ofVec3f(0.005771, 0.028855, -0.999567));
+	ray.draw();
+
 	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
 		// Check if the obj is selected and apply the exploding shader if so
 		bool isSelected = false;
@@ -171,6 +187,17 @@ void Renderer3D::drawScene() {
 			if (selected->getRef() == obj) {
 				isSelected = true;
 				break;
+			}
+		}
+
+		if (obj->getType() == ObjectType::Model3D) {
+			Intersection inter = ray.intersect(obj->getModel()->getPrimitive());
+			if (inter.intersect) {
+				ofPushStyle();
+				ofSetColor(0, 255, 0);
+				ofSphere(inter.position, 1);
+				ray.refract(inter, 1, 1.1).draw();
+				ofPopStyle();
 			}
 		}
 
