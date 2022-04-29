@@ -104,7 +104,7 @@ ofVec3f Raytracing::lightspath(const Intersection& inter, int from) {
 				ofVec3f(cd.r, cd.g, cd.b) * diffuseReflexion + ofVec3f(cs.r, cs.g, cs.b) * specReflexion +
 				(isAmbiantSet ? ofVec3f(0) : ofVec3f(ca.r, ca.g, ca.b)) +
 				(isEmmisiveSet ?
-						  ofVec3f(0) :
+						ofVec3f(0) :
 						  ofVec3f(ce.r, ce.g, ce.b)); // * (light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b) * ratio;
 			isAmbiantSet = true;
 			isEmmisiveSet = true;
@@ -195,8 +195,8 @@ void Raytracing::render(int pxRes) {
 			pixelColor /= resolution; // Average samples.
 			pixelColor = pixelColor.getNormalized();
 
-			IFT_LOG << "(" << x << " " << y << ")"
-					<< "color " << ofColor(pixelColor.x * 255, pixelColor.y * 255, pixelColor.z * 255);
+			// IFT_LOG << "(" << x << " " << y << ")"
+			// << "color " << ofColor(pixelColor.x * 255, pixelColor.y * 255, pixelColor.z * 255);
 
 			_result.getPixelsRef().setColor(x, y, ofColor(pixelColor.x * 255, pixelColor.y * 255, pixelColor.z * 255));
 		}
