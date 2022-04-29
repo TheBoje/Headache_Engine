@@ -59,8 +59,10 @@ ofVec3f getRandomVectorInHemisphere(const ofVec3f& normal) {
 	return ofVec3f(x, y, z).rotate(xrot, yrot, zrot);
 }
 
-ofColor Raytracing::lightspath(const Intersection& inter, int from) {
-	ofColor resultColor = ofColor().black;
+ofVec3f Raytracing::lightspath(const Intersection& inter, int from) {
+	ofVec3f resultColor(0, 0, 0);
+
+	bool isAmbiantSet = false, isEmmisiveSet = false;
 
 	// choper toutes les sources de lumières
 	for (ofLight* light : _lights) {
@@ -79,9 +81,33 @@ ofColor Raytracing::lightspath(const Intersection& inter, int from) {
 			float dist = (inter.position - light->getPosition()).length();
 			float attenuation =
 				(light->getAttenuationConstant() + light->getAttenuationLinear() * dist + light->getAttenuationQuadratic() * dist * dist);
-			float ratio = 1 / (attenuation == 0 ? 1 : attenuation);
-			// TODO: here only for point light, compute for all light types
-			resultColor += light->getDiffuseColor() * ratio;
+			float ratio = 1 / (attenuation == 0 ? 0.001 : attenuation);
+			// TODO: diffuse color est à chier ?
+			ofColor diffuse = _objects[from]->getMaterial().getDiffuseColor();
+
+			ofVec3f L = ((ofVec3f)(light->getPosition() - inter.position)).getNormalized();
+			ofVec3f V = ((ofVec3f)(_viewSource->getPosition() - inter.position)).getNormalized();
+
+			float diffuseReflexion = std::max(inter.normal.dot(L), 0.0f);
+			float specReflexion	   = 0;
+			if (diffuseReflexion > 0) {
+				specReflexion =
+					std::pow(std::max(inter.normal.dot((L + V) / (L + V).length()), 0.0f), _objects[from]->getMaterial().getShininess() / 4);
+			}
+
+			ofColor ca = light->getAmbientColor() * _objects[from]->getMaterial().getAmbientColor();
+			ofColor cd = light->getDiffuseColor() * _objects[from]->getMaterial().getDiffuseColor();
+			ofColor cs = light->getSpecularColor() * _objects[from]->getMaterial().getSpecularColor();
+			ofColor ce = _objects[from]->getMaterial().getEmissiveColor();
+
+			resultColor +=
+				ofVec3f(cd.r, cd.g, cd.b) * diffuseReflexion + ofVec3f(cs.r, cs.g, cs.b) * specReflexion +
+				(isAmbiantSet ? ofVec3f(0) : ofVec3f(ca.r, ca.g, ca.b)) +
+				(isEmmisiveSet ?
+						ofVec3f(0) :
+						  ofVec3f(ce.r, ce.g, ce.b)); // * (light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b) * ratio;
+			isAmbiantSet  = true;
+			isEmmisiveSet = true;
 		}
 	}
 
@@ -95,12 +121,14 @@ ofColor Raytracing::lightspath(const Intersection& inter, int from) {
  * @param depth 
  * @return ofColor 
  */
-ofColor Raytracing::tracepath(Ray& ray, int depth) {
+ofVec3f Raytracing::tracepath(Ray& ray, int depth) {
 	if (depth >= MAX_DEPTH) {
-		return ofColor().black; // Bounced enough times.
+		return ofVec3f(0, 0, 0); // Bounced enough times.
 	}
 
 	ofVec3f cameraPosition = _viewSource->getPosition();
+
+	ofVec3f surfaceColor(0, 0, 0);
 
 	int			 hitobj = -1;
 	int			 li		= -1;
@@ -108,51 +136,52 @@ ofColor Raytracing::tracepath(Ray& ray, int depth) {
 	inter.intersect = false;
 	getIntersectionInWorld(ray, &hitobj, &li, &inter);
 
-	if (inter.intersect) {
-		// récupérer le matériau de l'objet hit
+	float bias = 1e-4;
 
-		// Tirer un rayon aléatoire dans l'hémisphère de la normale
-		ofVec3f nextRayDirection = getRandomVectorInHemisphere(inter.normal);
-		Ray		nextRay(inter.position, nextRayDirection);
+	if (hitobj != -1) {
+		ofColor diffuse = _objects[hitobj]->getMaterial().getDiffuseColor();
+		if ((_objects[hitobj]->transparency > 0 || _objects[hitobj]->reflection > 0) && depth < MAX_DEPTH) {
+			float	facingratio	  = ofClamp(-ray.getDirection().dot(inter.normal), -1, 1);
+			float	fresneleffect = ofLerp(std::pow(1 - facingratio, 3), 1, 0.1);
+			ofVec3f bias		  = 0.001 * inter.normal;
 
-		const float p		  = 1 / (2 * M_PI);
-		float		cos_theta = nextRayDirection.dot(inter.normal);
-		ofColor		BRDF	  = 1 / M_PI; // material.reflectance / PI;
-		// ofColor incoming = tracepath(nextRay, depth + 1);
+			Ray reflectray = ray.reflect(inter);
+			reflectray.setOrigin(reflectray.getOrigin() + bias);
 
-		if (hitobj != -1) {
-			// BRDF = hitobj->getMaterial().t
-			ofColor lightcolor = lightspath(inter, hitobj);
-			return _objects[hitobj]->getMaterial().getEmissiveColor() + lightcolor + (BRDF * cos_theta / p);
+			ofVec3f reflectionColor = tracepath(reflectray, depth + 1);
+			ofVec3f refraction(0, 0, 0);
+
+			// if(_objects[hitobj]->transparency > 0) {
+			// 	Ray refrdir = ray.refract(inter, 1, 1);
+			// 	refrdir.setOrigin(refrdir.getOrigin() - bias);
+			// 	refraction = tracepath(refrdir, depth + 1);
+			// }
+			surfaceColor = (reflectionColor * fresneleffect + refraction * (1 - fresneleffect));
 		}
-
-		return (BRDF * cos_theta / p); // + material.emittance
-	} else {
-		return ofColor().black;
+		surfaceColor += lightspath(inter, hitobj);
 	}
+
+	return surfaceColor;
 }
 
-void Raytracing::render() {
+void Raytracing::render(int pxRes) {
 	float	fov				= _viewSource->getFov();
 	float	aspectRatio		= _viewSource->getAspectRatio();
 	ofVec3f cameraDirection = _viewSource->getLookAtDir();
 	ofVec3f cameraPosition	= _viewSource->getPosition();
 
-	float w = 100; //CAMERA_WIDTH;
-	float h = 100; //CAMERA_WIDTH * aspectRatio;
+	float w = CAMERA_WIDTH / pxRes;
+	float h = (int)((CAMERA_WIDTH / aspectRatio) / pxRes);
 
 	_result.allocate(w, h, ofImageType::OF_IMAGE_COLOR);
 
 	int resolution = 1;
 
-	float  nearest;
 	Model* hitobj = nullptr;
 
 	for (int x = 0; x < w; x++) {
 		for (int y = 0; y < h; y++) {
-			nearest = std::numeric_limits<float>::infinity();
-
-			float Px = (2 * ((x + 0.5) / w) - 1) * std::tan(fov / 2 * M_PI / 180); // * aspectRatio;
+			float Px = (2 * ((x + 0.5) / w) - 1) * std::tan(fov / 2 * M_PI / 180) * aspectRatio;
 			float Py = (1 - 2 * ((y + 0.5) / h) * std::tan(fov / 2 * M_PI / 180));
 
 			Ray ray(cameraPosition, ofVec3f(Px, Py, -1) - cameraPosition);
@@ -161,13 +190,15 @@ void Raytracing::render() {
 			ofVec3f pixelColor(0, 0, 0);
 
 			for (int i = 0; i < resolution; i++) {
-				ofColor c = tracepath(ray, 0);
-				pixelColor += ofVec3f(c.r, c.g, c.b);
+				pixelColor += tracepath(ray, 0);
 			}
 			pixelColor /= resolution; // Average samples.
+			pixelColor = pixelColor.getNormalized();
+
 			IFT_LOG << "(" << x << " " << y << ")"
-					<< "color " << pixelColor;
-			_result.getPixelsRef().setColor(x, y, ofColor(pixelColor.x, pixelColor.y, pixelColor.z));
+					<< "color " << ofColor(pixelColor.x * 255, pixelColor.y * 255, pixelColor.z * 255);
+
+			_result.getPixelsRef().setColor(x, y, ofColor(pixelColor.x * 255, pixelColor.y * 255, pixelColor.z * 255));
 		}
 	}
 }

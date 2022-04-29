@@ -27,13 +27,13 @@ class Raytracing {
 
 	void getIntersectionInWorld(Ray& ray, int* indexHitobj, int* indexHitlight, Intersection* inter);
 
-	ofColor lightspath(const Intersection& inter, int depth);
-	ofColor tracepath(Ray& ray, int depth);
+	ofVec3f lightspath(const Intersection& inter, int depth);
+	ofVec3f tracepath(Ray& ray, int depth);
 
 public:
 	Raytracing(ofCamera* src, std::vector<ofLight*>& lights, std::vector<Model*>& objs);
 
-	void render();
+	void render(int pxRes);
 	void saveImage();
 };
 

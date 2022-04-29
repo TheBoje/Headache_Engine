@@ -212,7 +212,7 @@ void InspectorInterface::lightOptions(Object3D& object) {
 
 	float attenuation[] = {light->getAttenuationConstant(), light->getAttenuationLinear(), light->getAttenuationQuadratic()};
 	ImGui::Text("Constant, linear, quadratic attenuation");
-	if (ImGui::SliderFloat3("##sliderattenuation", attenuation, 0, 10, "%.3f", 1)) {
+	if (ImGui::SliderFloat3("##sliderattenuation", attenuation, 0, 1, "%.3f", 1)) {
 		light->setAttenuation(attenuation[0], attenuation[1], attenuation[2]);
 	}
 

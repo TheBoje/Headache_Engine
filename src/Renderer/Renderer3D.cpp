@@ -31,7 +31,8 @@ void Renderer3D::setup() {
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
 	// ofNode					  box;
 	std::shared_ptr<Object3D> sphere = std::make_shared<Object3D>("Sphere", ofSpherePrimitive(10, 128));
-	sphere->getNode()->setPosition(0, 0, -100);
+	sphere->getNode()->setPosition(0, 20, -100);
+	sphere->getNode()->setScale(2, 2, 2);
 	std::shared_ptr<Object3D> light = std::make_shared<Object3D>("Light", ofLight());
 	light->getNode()->setPosition(100, 100, 0);
 	std::shared_ptr<Object3D> camera = std::make_shared<Object3D>("Camera", ofCamera());
@@ -194,7 +195,7 @@ void Renderer3D::drawScene() {
 				ofPushStyle();
 				ofSetColor(0, 255, 0);
 				ofSphere(inter.position, 1);
-				ray.reflect(inter).draw();
+				ray.refract(inter, 1, 1.1).draw();
 				ofPopStyle();
 			}
 		}

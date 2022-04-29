@@ -27,6 +27,9 @@ class Model {
 public:
 	static void setup();
 
+	float transparency = 0;
+	float reflection   = 0;
+
 	float sobelThreshold	  = 2.0f;
 	float blurAmnt			  = 4.0f;
 	float toneMappingExposure = 1.0f;
@@ -67,6 +70,10 @@ public:
 
 	inline ofMaterial& getMaterial() {
 		return _material;
+	}
+
+	inline void setMaterial(const ofMaterial& mat) {
+		_material = mat;
 	}
 };
 

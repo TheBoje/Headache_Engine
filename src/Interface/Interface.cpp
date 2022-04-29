@@ -96,6 +96,8 @@ void Interface::imageUI() {
 	if (image.isAllocated())
 		ImGui::Image((ImTextureID)(uintptr_t)textureSourceID, ImVec2(textureSource.getWidth() / 4, textureSource.getHeight() / 4));
 
+	ImGui::SliderInt("Pixel resolution", &pxRes, 1, 10);
+
 	if (ImGui::Button("Render")) {
 		ofImage				  image;
 		std::vector<Model*>	  models;
@@ -108,7 +110,7 @@ void Interface::imageUI() {
 				lights.emplace_back((ofLight*)object->getNode());
 		});
 		Raytracing raytracing(Renderer3D::Get()->selectedCamera, lights, models);
-		raytracing.render();
+		raytracing.render(pxRes);
 		raytracing.saveImage();
 	}
 }
@@ -252,7 +254,7 @@ void Interface::drawMaterialViewer() {
 	Model* mod = nullptr;
 	for (auto selected : Renderer3D::Get()->hierarchy.selected_nodes) {
 		if (selected->getRef()->getType() == ObjectType::Model3D) {
-			mod = new Model(*selected->getRef()->getModel());
+			mod = selected->getRef()->getModel(); //new Model(*selected->getRef()->getModel());
 			break;
 		}
 	}
@@ -314,6 +316,39 @@ void Interface::drawMaterialViewer() {
 				ImGui::GetWindowHeight()));
 	}
 	ImGui::End();
+
+	ofMaterial& mat = MaterialViewer::Get()->getMaterial();
+
+	ImVec4 spec = mat.getSpecularColor();
+	if (ImGui::ColorEdit4("Specular", (float*)&spec)) {
+		mat.setSpecularColor(spec);
+	}
+
+	ImVec4 amb = mat.getAmbientColor();
+	if (ImGui::ColorEdit4("Ambient", (float*)&amb)) {
+		mat.setAmbientColor(amb);
+	}
+
+	ImVec4 emm = mat.getEmissiveColor();
+	if (ImGui::ColorEdit4("Emmissive", (float*)&emm)) {
+		mat.setEmissiveColor(emm);
+	}
+
+	ImVec4 diff = mat.getDiffuseColor();
+	if (ImGui::ColorEdit4("Diffuse", (float*)&diff)) {
+		mat.setDiffuseColor(diff);
+	}
+
+	float shi = mat.getShininess();
+	if (ImGui::SliderFloat("Shininess", &shi, 0, 100)) {
+		mat.setShininess(shi);
+	}
+
+	// MaterialViewer::Get()->setMaterial(mat);
+	mod->setMaterial(mat);
+
+	ImGui::SliderFloat("Transparency", &mod->transparency, 0, 1);
+	ImGui::SliderFloat("Reflection", &mod->reflection, 0, 1);
 }
 
 void Interface::draw() {
