@@ -62,8 +62,10 @@ public:
 	}
 
 	inline void setTexture(ofTexture texture) {
-		_texture = texture;
-		_primitive.mapTexCoordsFromTexture(_texture);
+		_texture = texture.isAllocated() ? texture : ofTexture();
+		if (_texture.isAllocated()) {
+			_primitive.mapTexCoordsFromTexture(_texture);
+		}
 	}
 
 	inline of3dPrimitive& getPrimitive() {

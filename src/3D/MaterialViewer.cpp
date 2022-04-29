@@ -38,6 +38,7 @@ void MaterialViewer::draw() {
 
 	ofShader* illum = nullptr;
 	if (illuminationStyle != IlluminationStyle::Default) {
+		_target.enableMaterial = false;
 		switch (illuminationStyle) {
 			case Phong: illum = &_phong; break;
 			case Lambert: illum = &_lambert; break;
@@ -54,6 +55,8 @@ void MaterialViewer::draw() {
 		illum->setUniform3fv("lightPos", array, 1);
 		if (_target.getTexture()->isAllocated())
 			illum->setUniform1i("isTexturePresent", 1);
+	} else {
+		_target.enableMaterial = true;
 	}
 
 	_fbo.begin();
