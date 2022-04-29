@@ -177,9 +177,6 @@ void Renderer3D::deleteSelected() {
 void Renderer3D::drawScene() {
 	ofFill();
 
-	Ray ray(ofVec3f(0.005771, 0.028855, -0.999567));
-	ray.draw();
-
 	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
 		// Check if the obj is selected and apply the exploding shader if so
 		bool isSelected = false;
@@ -187,17 +184,6 @@ void Renderer3D::drawScene() {
 			if (selected->getRef() == obj) {
 				isSelected = true;
 				break;
-			}
-		}
-
-		if (obj->getType() == ObjectType::Model3D) {
-			Intersection inter = ray.intersect(obj->getModel()->getPrimitive());
-			if (inter.intersect) {
-				ofPushStyle();
-				ofSetColor(0, 255, 0);
-				ofSphere(inter.position, 1);
-				ray.refract(inter, 1, 1.1).draw();
-				ofPopStyle();
 			}
 		}
 

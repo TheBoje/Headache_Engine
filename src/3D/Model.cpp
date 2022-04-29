@@ -60,8 +60,8 @@ Model::Model(ofMesh mesh, ofTexture texture)
  * via the inspectorInterface
  * @link InspectorInterface @endlink
  */
-void Model::draw(bool isMaterialEnabled) {
-	if (isMaterialEnabled)
+void Model::draw() {
+	if (enableMaterial)
 		_material.begin();
 
 	if (_texture.isAllocated()) {
@@ -104,7 +104,7 @@ void Model::draw(bool isMaterialEnabled) {
 		_primitive.draw();
 	}
 
-	if (isMaterialEnabled)
+	if (enableMaterial)
 		_material.end();
 }
 

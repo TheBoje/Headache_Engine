@@ -279,6 +279,8 @@ void Interface::drawMaterialViewer() {
 
 	ImGui::Begin("Material preview");
 
+	ImGui::Checkbox("Enable material", &mod->enableMaterial);
+
 	const char* items[] = {"Default", "Phong illumination", "Lambert illumination", "Gouraud illumination", "BlinnPhong illumination"};
 
 	ImGui::Text("illumination:");

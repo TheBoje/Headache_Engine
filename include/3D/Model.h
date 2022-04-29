@@ -36,6 +36,7 @@ public:
 	float toneMappingExposure = 1.0f;
 	float toneMappingGamma = 2.2f;
 	bool toggleToneMapping = true; // true -> aces filming, false -> Reihnard
+	bool enableMaterial = true;
 
 	ShaderType usingShader;
 
@@ -43,7 +44,7 @@ public:
 	Model(of3dPrimitive primitive);
 	Model(ofMesh mesh, ofTexture texture = ofTexture());
 
-	void draw(bool isMaterialEnabled = true);
+	void draw();
 	void loadTexture(std::string path);
 
 	void setMesh(const ofMesh& mesh);
