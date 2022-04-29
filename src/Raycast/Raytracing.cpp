@@ -1,7 +1,7 @@
 #include "Raytracing.h"
 #include "Constant.h"
-#include <cstdlib>
 #include "Renderer3D.h"
+#include <cstdlib>
 
 namespace ift3100 {
 
@@ -42,9 +42,9 @@ void Raytracing::getIntersectionInWorld(Ray& ray, int* indexHitobj, int* indexHi
 
 /**
  * @brief Get a Random Vector In Hemisphere defined by the normalized vector "normal"
- * 
- * @param normal 
- * @return ofVec3f 
+ *
+ * @param normal
+ * @return ofVec3f
  */
 ofVec3f getRandomVectorInHemisphere(const ofVec3f& normal) {
 	float x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
@@ -116,10 +116,10 @@ ofVec3f Raytracing::lightspath(const Intersection& inter, int from) {
 
 /**
  * @brief Path tracing algorithm from https://en.wikipedia.org/wiki/Path_tracing#Algorithm
- * 
- * @param ray 
- * @param depth 
- * @return ofColor 
+ *
+ * @param ray
+ * @param depth
+ * @return ofColor
  */
 ofVec3f Raytracing::tracepath(Ray& ray, int depth) {
 	if (depth >= MAX_DEPTH) {
@@ -165,6 +165,7 @@ ofVec3f Raytracing::tracepath(Ray& ray, int depth) {
 }
 
 void Raytracing::render(int pxRes) {
+	IFT_LOG << "starting";
 	float fov = _viewSource->getFov();
 	float aspectRatio = _viewSource->getAspectRatio();
 	ofVec3f cameraDirection = _viewSource->getLookAtDir();
@@ -201,6 +202,7 @@ void Raytracing::render(int pxRes) {
 			_result.getPixelsRef().setColor(x, y, ofColor(pixelColor.x * 255, pixelColor.y * 255, pixelColor.z * 255));
 		}
 	}
+	IFT_LOG << "done";
 }
 
 void Raytracing::saveImage() {
