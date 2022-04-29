@@ -27,8 +27,12 @@ class Model {
 public:
 	static void setup();
 
+	float transparency = 0;
+	float reflection = 0;
+
 	float sobelThreshold = 2.0f;
 	float blurAmnt = 4.0f;
+
 	float toneMappingExposure = 1.0f;
 	float toneMappingGamma = 2.2f;
 	bool toggleToneMapping = true; // true -> aces filming, false -> Reihnard
@@ -59,6 +63,18 @@ public:
 	inline void setTexture(ofTexture texture) {
 		_texture = texture;
 		_primitive.mapTexCoordsFromTexture(_texture);
+	}
+
+	inline of3dPrimitive& getPrimitive() {
+		return _primitive;
+	}
+
+	inline ofMaterial& getMaterial() {
+		return _material;
+	}
+
+	inline void setMaterial(const ofMaterial& mat) {
+		_material = mat;
 	}
 };
 
