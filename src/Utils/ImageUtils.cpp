@@ -74,13 +74,14 @@ ofTexture ImageUtils::getChessboard(int size, int sizeSquare) {
 	IFT_ASSERT(size >= sizeSquare, "size must be greater than count");
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
+			// I guess this whole thing could be a one-liner, but i'm quite tired and it's working so i'm not touching it
 			if (i % (2 * sizeSquare) >= sizeSquare) {
 				if (j % (2 * sizeSquare) >= sizeSquare) {
 					pixels.setColor(i, j, ofColor::black);
 				} else {
 					pixels.setColor(i, j, ofColor::white);
 				}
-			} else if (i % (2 * sizeSquare) < sizeSquare) {
+			} else {
 				if (j % (2 * sizeSquare) >= sizeSquare) {
 					pixels.setColor(i, j, ofColor::white);
 				} else {
