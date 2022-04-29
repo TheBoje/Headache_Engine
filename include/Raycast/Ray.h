@@ -13,7 +13,7 @@ namespace ift3100 {
  * normal: ofVec3f - the normal of the triangle intersected
  */
 typedef struct inter {
-	bool	intersect;
+	bool intersect;
 	ofVec3f position;
 	ofVec3f normal;
 } Intersection;
@@ -23,7 +23,7 @@ class Ray {
 
 	ofVec3f _origin;
 	ofVec3f _direction; // normalized vector
-	float	_length;
+	float _length;
 
 	void init(ofVec3f src, ofVec3f dir, float length = -1);
 

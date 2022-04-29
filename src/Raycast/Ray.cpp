@@ -4,9 +4,9 @@
 namespace ift3100 {
 
 void Ray::init(ofVec3f src, ofVec3f dir, float length) {
-	_origin	   = src;
+	_origin = src;
 	_direction = dir;
-	_length	   = length;
+	_length = length;
 }
 
 /**
@@ -51,11 +51,11 @@ void Ray::draw() {
 Intersection Ray::intersect(of3dPrimitive obj) {
 	Intersection inter;
 	inter.intersect = false;
-	inter.position	= ofVec3f(0, 0, 0);
-	inter.normal	= ofVec3f(0, 0, 0);
+	inter.position = ofVec3f(0, 0, 0);
+	inter.normal = ofVec3f(0, 0, 0);
 
 	ofVec3f objPosition = obj.getPosition();
-	ofMesh	mesh		= obj.getMesh();
+	ofMesh mesh = obj.getMesh();
 	for (int i = 0; i < mesh.getVertices().size(); i++) {
 		mesh.setVertex(i, obj.getGlobalTransformMatrix() * ofVec4f(mesh.getVertex(i).x, mesh.getVertex(i).y, mesh.getVertex(i).z, 1));
 	}
@@ -73,7 +73,7 @@ Intersection Ray::intersect(of3dPrimitive obj) {
 
 			ofVec3f q1 = face.getVertex(1) - face.getVertex(0);
 			ofVec3f q2 = face.getVertex(2) - face.getVertex(0);
-			ofVec3f r  = (_origin + _direction * t) - face.getVertex(0);
+			ofVec3f r = (_origin + _direction * t) - face.getVertex(0);
 
 			// Louis forgive me i need local variables
 			float q1s(q1.dot(q1)), q2s(q2.dot(q2));
@@ -86,8 +86,8 @@ Intersection Ray::intersect(of3dPrimitive obj) {
 			float w0 = 1 - w1 - w2;
 
 			if (w0 > 0 && w1 > 0 && w2 > 0 && (w1 + w2 <= 1)) {
-				inter.position	= (_origin + _direction * t);
-				inter.normal	= normal;
+				inter.position = (_origin + _direction * t);
+				inter.normal = normal;
 				inter.intersect = true;
 			}
 		}
@@ -99,8 +99,8 @@ Intersection Ray::intersect(of3dPrimitive obj) {
 Intersection Ray::intersect(ofVec3f point) {
 	Intersection inter;
 	inter.intersect = false;
-	inter.normal	= (_origin - point).normalized();
-	inter.position	= point;
+	inter.normal = (_origin - point).normalized();
+	inter.position = point;
 
 	if (_direction.dot(inter.normal) == -1)
 		inter.intersect = true;
@@ -120,11 +120,11 @@ Intersection Ray::intersect(ofLight light) {
 		}
 
 		case ofLightType::OF_LIGHT_DIRECTIONAL: {
-			ofVec3f rot		= light.getOrientationEulerDeg();
-			ofVec3f normal	= ofVec3f(0, 0, 1).rotate(rot.x, rot.y, rot.z).normalized();
+			ofVec3f rot = light.getOrientationEulerDeg();
+			ofVec3f normal = ofVec3f(0, 0, 1).rotate(rot.x, rot.y, rot.z).normalized();
 			inter.intersect = _direction.dot(normal) == -1;
-			inter.position	= light.getPosition();
-			inter.normal	= normal;
+			inter.position = light.getPosition();
+			inter.normal = normal;
 			break;
 		}
 
@@ -137,7 +137,7 @@ Intersection Ray::intersect(ofLight light) {
 			inter = intersect(light.getPosition());
 
 			if (inter.intersect) {
-				ofVec3f rot	   = light.getOrientationEulerDeg();
+				ofVec3f rot = light.getOrientationEulerDeg();
 				ofVec3f normal = ofVec3f(0, 0, 1).rotate(rot.x, rot.y, rot.z).normalized();
 
 				inter.normal = normal;

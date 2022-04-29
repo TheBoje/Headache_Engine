@@ -12,18 +12,18 @@ Raytracing::Raytracing(ofCamera* src, std::vector<ofLight*>& lights, std::vector
 	, _result(ofImage()) { }
 
 void Raytracing::getIntersectionInWorld(Ray& ray, int* indexHitobj, int* indexHitLight, Intersection* inter) {
-	float	nearest		= std::numeric_limits<float>::infinity();
+	float nearest = std::numeric_limits<float>::infinity();
 	ofVec3f rayPosition = ray.getOrigin();
-	*indexHitLight		= -1;
-	*indexHitobj		= -1;
+	*indexHitLight = -1;
+	*indexHitobj = -1;
 
 	// Get the nearest object hit by the ray
 	for (int i = 0; i < _objects.size(); i++) {
 		Intersection tmpinter = ray.intersect(_objects[i]->getPrimitive());
 		if (tmpinter.intersect && (tmpinter.position - rayPosition).length() < nearest) {
-			nearest		 = (tmpinter.position - rayPosition).length();
+			nearest = (tmpinter.position - rayPosition).length();
 			*indexHitobj = i;
-			*inter		 = tmpinter;
+			*inter = tmpinter;
 		}
 	}
 
@@ -32,10 +32,10 @@ void Raytracing::getIntersectionInWorld(Ray& ray, int* indexHitobj, int* indexHi
 		tmpinter = ray.intersect(*_lights[i]);
 
 		if (tmpinter.intersect && (tmpinter.position - rayPosition).length() < nearest) {
-			nearest		   = (tmpinter.position - rayPosition).length();
+			nearest = (tmpinter.position - rayPosition).length();
 			*indexHitLight = i;
-			*indexHitobj   = -1;
-			*inter		   = tmpinter;
+			*indexHitobj = -1;
+			*inter = tmpinter;
 		}
 	}
 }
@@ -52,9 +52,9 @@ ofVec3f getRandomVectorInHemisphere(const ofVec3f& normal) {
 	float z = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 
 	ofVec3f direction = ofVec3f(x, y, z);
-	float	xrot	  = std::acos(normal.dot(ofVec3f(1, 0, 0)));
-	float	yrot	  = std::acos(normal.dot(ofVec3f(0, 1, 0)));
-	float	zrot	  = std::acos(normal.dot(ofVec3f(0, 0, 1)));
+	float xrot = std::acos(normal.dot(ofVec3f(1, 0, 0)));
+	float yrot = std::acos(normal.dot(ofVec3f(0, 1, 0)));
+	float zrot = std::acos(normal.dot(ofVec3f(0, 0, 1)));
 
 	return ofVec3f(x, y, z).rotate(xrot, yrot, zrot);
 }
@@ -70,10 +70,10 @@ ofVec3f Raytracing::lightspath(const Intersection& inter, int from) {
 		if (((ofVec3f)(inter.position - light->getPosition())).dot(inter.normal) > 0)
 			continue;
 
-		int			 hitobj	  = -1;
-		int			 hitlight = -1;
+		int hitobj = -1;
+		int hitlight = -1;
 		Intersection interLight;
-		Ray			 ray(inter.position, light->getPosition() - inter.position);
+		Ray ray(inter.position, light->getPosition() - inter.position);
 		getIntersectionInWorld(ray, &hitobj, &hitlight, &interLight);
 
 		// vérifier si il y a un mesh qui bloque la source d'émission
@@ -89,7 +89,7 @@ ofVec3f Raytracing::lightspath(const Intersection& inter, int from) {
 			ofVec3f V = ((ofVec3f)(_viewSource->getPosition() - inter.position)).getNormalized();
 
 			float diffuseReflexion = std::max(inter.normal.dot(L), 0.0f);
-			float specReflexion	   = 0;
+			float specReflexion = 0;
 			if (diffuseReflexion > 0) {
 				specReflexion =
 					std::pow(std::max(inter.normal.dot((L + V) / (L + V).length()), 0.0f), _objects[from]->getMaterial().getShininess() / 4);
@@ -104,9 +104,9 @@ ofVec3f Raytracing::lightspath(const Intersection& inter, int from) {
 				ofVec3f(cd.r, cd.g, cd.b) * diffuseReflexion + ofVec3f(cs.r, cs.g, cs.b) * specReflexion +
 				(isAmbiantSet ? ofVec3f(0) : ofVec3f(ca.r, ca.g, ca.b)) +
 				(isEmmisiveSet ?
-						ofVec3f(0) :
+						  ofVec3f(0) :
 						  ofVec3f(ce.r, ce.g, ce.b)); // * (light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b) * ratio;
-			isAmbiantSet  = true;
+			isAmbiantSet = true;
 			isEmmisiveSet = true;
 		}
 	}
@@ -130,8 +130,8 @@ ofVec3f Raytracing::tracepath(Ray& ray, int depth) {
 
 	ofVec3f surfaceColor(0, 0, 0);
 
-	int			 hitobj = -1;
-	int			 li		= -1;
+	int hitobj = -1;
+	int li = -1;
 	Intersection inter;
 	inter.intersect = false;
 	getIntersectionInWorld(ray, &hitobj, &li, &inter);
@@ -141,9 +141,9 @@ ofVec3f Raytracing::tracepath(Ray& ray, int depth) {
 	if (hitobj != -1) {
 		ofColor diffuse = _objects[hitobj]->getMaterial().getDiffuseColor();
 		if ((_objects[hitobj]->transparency > 0 || _objects[hitobj]->reflection > 0) && depth < MAX_DEPTH) {
-			float	facingratio	  = ofClamp(-ray.getDirection().dot(inter.normal), -1, 1);
-			float	fresneleffect = ofLerp(std::pow(1 - facingratio, 3), 1, 0.1);
-			ofVec3f bias		  = 0.001 * inter.normal;
+			float facingratio = ofClamp(-ray.getDirection().dot(inter.normal), -1, 1);
+			float fresneleffect = ofLerp(std::pow(1 - facingratio, 3), 1, 0.1);
+			ofVec3f bias = 0.001 * inter.normal;
 
 			Ray reflectray = ray.reflect(inter);
 			reflectray.setOrigin(reflectray.getOrigin() + bias);
@@ -165,10 +165,10 @@ ofVec3f Raytracing::tracepath(Ray& ray, int depth) {
 }
 
 void Raytracing::render(int pxRes) {
-	float	fov				= _viewSource->getFov();
-	float	aspectRatio		= _viewSource->getAspectRatio();
+	float fov = _viewSource->getFov();
+	float aspectRatio = _viewSource->getAspectRatio();
 	ofVec3f cameraDirection = _viewSource->getLookAtDir();
-	ofVec3f cameraPosition	= _viewSource->getPosition();
+	ofVec3f cameraPosition = _viewSource->getPosition();
 
 	float w = CAMERA_WIDTH / pxRes;
 	float h = (int)((CAMERA_WIDTH / aspectRatio) / pxRes);

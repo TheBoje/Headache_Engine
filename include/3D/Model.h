@@ -28,12 +28,12 @@ public:
 	static void setup();
 
 	float transparency = 0;
-	float reflection   = 0;
+	float reflection = 0;
 
 	float sobelThreshold = 2.0f;
 	float blurAmnt = 4.0f;
 
-  float toneMappingExposure = 1.0f;
+	float toneMappingExposure = 1.0f;
 	float toneMappingGamma = 2.2f;
 	bool toggleToneMapping = true; // true -> aces filming, false -> Reihnard
 

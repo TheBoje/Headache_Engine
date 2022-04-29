@@ -19,9 +19,9 @@ class Raytracing {
 
 	const int MAX_DEPTH = 3;
 
-	ofCamera*			  _viewSource;
+	ofCamera* _viewSource;
 	std::vector<ofLight*> _lights;
-	std::vector<Model*>	  _objects;
+	std::vector<Model*> _objects;
 
 	ofImage _result;
 

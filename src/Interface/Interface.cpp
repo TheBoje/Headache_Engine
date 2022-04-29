@@ -99,8 +99,8 @@ void Interface::imageUI() {
 	ImGui::SliderInt("Pixel resolution", &pxRes, 1, 10);
 
 	if (ImGui::Button("Render")) {
-		ofImage				  image;
-		std::vector<Model*>	  models;
+		ofImage image;
+		std::vector<Model*> models;
 		std::vector<ofLight*> lights;
 		Renderer3D::Get()->hierarchy.mapChildren([&](std::shared_ptr<Object3D> object) {
 			if (object->getType() == ObjectType::Model3D)
