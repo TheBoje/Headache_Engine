@@ -21,3 +21,7 @@ Install voro++ using `cd libs/voro++-0.4.6 && sudo make install`.
 ## Compilation
 
 In order to compile the project, run `make && make RunRelease` in the `Makefile` location. The setup part needs to be done before the compilation part.
+
+## Credits
+
+Logo made (with love) by : AKoboldNamedSmol
