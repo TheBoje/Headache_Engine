@@ -14,6 +14,7 @@ public:
 	static unsigned int** computeHistRGB(const ofImage& image);
 	static cv::Mat convert(const ofImage& image, int code);
 	static ofTexture getChessboard(int size, int sizeSquare);
+	static ofTexture getPerlin(int size, float scale);
 };
 } // namespace ift3100
 
