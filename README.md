@@ -1,6 +1,12 @@
-# IFT-3100
+# IFT-3100 - Headache Engine
 
-## Setup
+![Headache Engine](/data/icon.png)
+
+## Required
+
+This project requires the library `voro++` (voro++-dev). Make sure to install it using your favorite package manager.
+
+## Compilation
 
 In order to work properly, our project relies on some community-made plugins. To install them,
 please use the following commands :

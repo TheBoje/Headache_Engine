@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 	windowSettings.setGLVersion(3, 3);
 	ofCreateWindow(windowSettings);
 	ofAppGLFWWindow* win = dynamic_cast<ofAppGLFWWindow*>(ofGetWindowPtr());
-	win->setWindowIcon("../../&.ico");
+	win->setWindowIcon("../../data/icon.png");
 	ofRunApp(ift3100::Application::Get());
 
 	return EXIT_SUCCESS;
