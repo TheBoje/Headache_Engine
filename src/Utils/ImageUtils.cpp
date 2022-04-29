@@ -95,4 +95,22 @@ ofTexture ImageUtils::getChessboard(int size, int sizeSquare) {
 	return res;
 }
 
+ofTexture ImageUtils::getPerlin(int size, float scale) {
+	float noiseVel = ofGetElapsedTimef();
+
+	ofPixels pixels;
+	pixels.clear();
+	pixels.allocate(size, size, OF_IMAGE_GRAYSCALE);
+	for (int y = 0; y < size; y++) {
+		for (int x = 0; x < size; x++) {
+			float noiseVelue = ofNoise(x * scale, y * scale, noiseVel);
+			pixels[y * size + x] = 255 * noiseVelue;
+		}
+	}
+	ofTexture res;
+	res.clear();
+	res.allocate(pixels);
+	res.loadData(pixels);
+	return res;
+}
 } // namespace ift3100
