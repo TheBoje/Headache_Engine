@@ -104,7 +104,7 @@ ofVec3f Raytracing::lightspath(const Intersection& inter, int from) {
 				ofVec3f(cd.r, cd.g, cd.b) * diffuseReflexion + ofVec3f(cs.r, cs.g, cs.b) * specReflexion +
 				(isAmbiantSet ? ofVec3f(0) : ofVec3f(ca.r, ca.g, ca.b)) +
 				(isEmmisiveSet ?
-						ofVec3f(0) :
+						  ofVec3f(0) :
 						  ofVec3f(ce.r, ce.g, ce.b)); // * (light->getDiffuseColor().r, light->getDiffuseColor().g, light->getDiffuseColor().b) * ratio;
 			isAmbiantSet = true;
 			isEmmisiveSet = true;
