@@ -31,7 +31,7 @@ void Cubemap::setup(string spritePath, int size) {
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGB, size, size, 0, pixelFormat, GL_UNSIGNED_BYTE, sprite.getPart(4).getPixels().getData());
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGB, size, size, 0, pixelFormat, GL_UNSIGNED_BYTE, sprite.getPart(5).getPixels().getData());
 
-	IFT_LOG << "done.";
+	IFT_LOG << "done";
 }
 
 void Cubemap::bind(int pos) {

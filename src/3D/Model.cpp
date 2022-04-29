@@ -20,27 +20,48 @@ void Model::setup() {
 		"../../src/Shaders/Filters/ToneMapping/tonemapping.vert.glsl", "../../src/Shaders/Filters/ToneMapping/tonemapping.frag.glsl");
 }
 
+Model::Model(const Model& model)
+	: _texture(model._texture)
+	, _primitive(model._primitive)
+	, usingShader(model.usingShader) { }
+
 Model::Model(of3dPrimitive primitive)
 	: _texture(ofTexture())
 	, _primitive(primitive)
-	, usingShader(ShaderType::NoShader) { }
+	, usingShader(ShaderType::NoShader) {
+	_material.setShininess(120);
+
+	_material.setSpecularColor(ofColor(255, 255, 255, 255));
+	_material.setEmissiveColor(ofColor(0, 0, 0, 255));
+	_material.setDiffuseColor(ofColor(255, 255, 255, 255));
+	_material.setAmbientColor(ofColor(255, 255, 255, 255));
+}
 
 Model::Model(ofMesh mesh, ofTexture texture)
 	: _texture(texture)
 	, usingShader(ShaderType::NoShader) {
 	_primitive.getMesh() = mesh;
+
+	_material.setShininess(120);
+
+	_material.setSpecularColor(ofColor(255, 255, 255, 255));
+	_material.setEmissiveColor(ofColor(0, 0, 0, 255));
+	_material.setDiffuseColor(ofColor(255, 255, 255, 255));
+	_material.setAmbientColor(ofColor(255, 255, 255, 255));
 }
 
 /**
  * @brief Draw the 3D model,
- * Apply a filter if a texture is set and one is applied 
+ * Apply a filter if a texture is set and one is applied
  * via the inspectorInterface
  * @link InspectorInterface @endlink
  */
-void Model::draw() {
+void Model::draw(bool isMaterialEnabled) {
+	if (isMaterialEnabled)
+		_material.begin();
+
 	if (_texture.isAllocated()) {
 		_texture.bind();
-
 		switch (usingShader) {
 			case ShaderType::NoShader: _primitive.draw(); break;
 
@@ -74,17 +95,19 @@ void Model::draw() {
 				_primitive.draw();
 				_toneMappingShader.end();
 		}
-
 		_texture.unbind();
 	} else {
-		_primitive.drawFaces();
+		_primitive.draw();
 	}
+
+	if (isMaterialEnabled)
+		_material.end();
 }
 
 /**
  * @brief Load an image and set it as a
- * texture for the 3D model.	
- * 
+ * texture for the 3D model.
+ *
  * @param path relative path to the image from the bin/data folder
  */
 void Model::loadTexture(std::string path) {
@@ -92,4 +115,9 @@ void Model::loadTexture(std::string path) {
 	image.load(path);
 	_texture = image.getTexture();
 }
+
+void Model::setMesh(const ofMesh& mesh) {
+	_primitive.getMesh() = ofMesh(mesh);
+}
+
 } // namespace ift3100

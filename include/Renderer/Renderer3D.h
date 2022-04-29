@@ -5,6 +5,7 @@
 #include "CameraManager.h"
 #include "Cubemap.h"
 #include "HierarchyContainer.h"
+#include "MaterialViewer.h"
 #include "Object3D.h"
 #include "ofxAssimpModelLoader.h"
 
@@ -21,7 +22,7 @@ class Application;
 */
 class Renderer3D {
 	ofBoxPrimitive _boudaryBox;
-	bool		   _showBoundary;
+	bool _showBoundary;
 
 	static Renderer3D* _renderer3D;
 
@@ -38,16 +39,20 @@ public:
 
 	static Renderer3D* Get();
 
-	ofShader explodingShader;
-	bool	 isExploding;
+	IlluminationStyle illumination;
 
-	ofFbo	  selectedCameraFBO;
+	ofShader explodingShader;
+	bool isExploding;
+
+	ofFbo selectedCameraFBO;
 	ofCamera* selectedCamera;
 
-	CameraManager				 cameraManager;
-	AnimatorManager				 animatorManager;
+	CameraManager cameraManager;
+	AnimatorManager animatorManager;
 	HierarchyContainer<Object3D> hierarchy;
-	Cubemap						 cubemap;
+	Cubemap cubemap;
+
+	std::vector<std::shared_ptr<Object3D>> lights;
 
 	void setup();
 	void update();

@@ -28,8 +28,8 @@ public:
 
 	Renderer2D& operator=(const Renderer2D&) = delete;
 
-	HierarchyContainer<VectorPrimitive>				hierarchyPrimitives;
-	std::vector<std::shared_ptr<VectorPrimitive>>	primitives {};
+	HierarchyContainer<VectorPrimitive> hierarchyPrimitives;
+	std::vector<std::shared_ptr<VectorPrimitive>> primitives {};
 	std::stack<HierarchyContainer<VectorPrimitive>> undoPrimitives {};
 	std::stack<HierarchyContainer<VectorPrimitive>> redoPrimitives {};
 

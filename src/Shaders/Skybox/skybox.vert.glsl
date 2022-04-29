@@ -16,5 +16,5 @@ vertex;
 
 void main(void) {
 	vertex.texcoord = normalize(position.xyz);
-	gl_Position		= modelViewProjectionMatrix * position;
+	gl_Position = modelViewProjectionMatrix * position;
 }

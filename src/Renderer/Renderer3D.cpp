@@ -24,11 +24,13 @@ void Renderer3D::setup() {
 
 	_showBoundary = false;
 
+	// illumination = IlluminationStyle::Default;
+
 	// TODO: Temporaire
 	hierarchy.setRoot(std::make_shared<Object3D>("root"));
-	ofNode					  box;
+	ofNode box;
 	std::shared_ptr<Object3D> box_shared = std::make_shared<Object3D>("box", box);
-
+	hierarchy.addChild(box_shared);
 	// SHADERS
 	explodingShader.load("../../src/Shaders/Exploding/exploding.vert.glsl",
 		"../../src/Shaders/Exploding/exploding.frag.glsl",
@@ -36,15 +38,7 @@ void Renderer3D::setup() {
 
 	isExploding = false;
 
-	// ----
-	// Note: Uncomment me to enable animator testing, this is temporary until we implement a proper UI!
-	// animator.setup();
-	// animator.setTarget(box_shared->getNode());
-	// animator.addKeyframe(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), 0);
-	// animator.addKeyframe(ofVec3f(0, 100, 0), ofVec3f(90, 0, 0), 100);
-	// animator.addKeyframe(ofVec3f(0, 100, -100), ofVec3f(0, 0, 0), 200);
-	// animator.reset();
-	// animator.resume();
+	hierarchy.addChild(box_shared);
 
 	animatorManager.addAnimator(box_shared);
 
@@ -104,12 +98,12 @@ void Renderer3D::computeBoundaryBox() {
 				return;
 
 			// Get the center and the rotation (needed for rotated meshes to compute global vertex position)
-			ofVec3f nodePos		= object->getNode()->getPosition();
-			ofVec3f nodeScale	= object->getNode()->getScale();
+			ofVec3f nodePos = object->getNode()->getPosition();
+			ofVec3f nodeScale = object->getNode()->getScale();
 			ofVec3f nodRotation = object->getNode()->getOrientationEulerDeg();
 
 			if (object->getType() == ObjectType::Model3D) {
-				ofMesh		mesh		= ((of3dPrimitive*)object->getNode())->getMesh();
+				ofMesh mesh = ((of3dPrimitive*)object->getNode())->getMesh();
 				std::size_t numVertices = mesh.getNumVertices();
 
 				// Go through all vertices of the mesh if it exist
@@ -195,6 +189,12 @@ void Renderer3D::drawScene() {
 
 void Renderer3D::draw() {
 	ofEnableDepthTest();
+	ofEnableLighting();
+
+	// TODO: limiter à 8 lumières
+	for (int i = 0; i < lights.size(); i++) {
+		((ofLight*)lights[i]->getNode())->enable();
+	}
 
 	// Store result of selected camera in the FBO
 	if (selectedCamera != nullptr) {
@@ -238,6 +238,10 @@ void Renderer3D::draw() {
 
 	cameraManager.endCamera(3);
 
+	for (std::shared_ptr<Object3D> light : lights)
+		((ofLight*)light->getNode())->disable();
+
+	ofDisableLighting();
 	ofDisableDepthTest();
 }
 
@@ -284,7 +288,7 @@ void Renderer3D::importFromPath(const std::string& filepath) {
 	} else if (model.getMeshCount() > 1) {
 		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
 
-		std::shared_ptr<Object3D>			   parent = std::make_shared<Object3D>(filepath, ofNode());
+		std::shared_ptr<Object3D> parent = std::make_shared<Object3D>(filepath, ofNode());
 		std::vector<std::shared_ptr<Object3D>> children;
 		children.reserve(model.getMeshCount());
 

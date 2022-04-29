@@ -1,11 +1,11 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include "Logger.h"
 #include "of3dPrimitives.h"
-#include "ofTexture.h"
 #include "ofMesh.h"
 #include "ofNode.h"
-#include "Logger.h"
+#include "ofTexture.h"
 
 namespace ift3100 {
 
@@ -20,25 +20,29 @@ class Model {
 	static ofShader _gaussianShader;
 	static ofShader _toneMappingShader;
 
-	ofTexture	  _texture;
+	ofTexture _texture;
 	of3dPrimitive _primitive;
+	ofMaterial _material;
 
 public:
 	static void setup();
 
-	float sobelThreshold	  = 2.0f;
-	float blurAmnt			  = 4.0f;
+	float sobelThreshold = 2.0f;
+	float blurAmnt = 4.0f;
 	float toneMappingExposure = 1.0f;
-	float toneMappingGamma	  = 2.2f;
-	bool  toggleToneMapping	  = true; // true -> aces filming, false -> Reihnard
+	float toneMappingGamma = 2.2f;
+	bool toggleToneMapping = true; // true -> aces filming, false -> Reihnard
 
 	ShaderType usingShader;
 
+	Model(const Model& model);
 	Model(of3dPrimitive primitive);
 	Model(ofMesh mesh, ofTexture texture = ofTexture());
 
-	void draw();
+	void draw(bool isMaterialEnabled = true);
 	void loadTexture(std::string path);
+
+	void setMesh(const ofMesh& mesh);
 
 	inline ofMesh* getMesh() {
 		return _primitive.getMeshPtr();

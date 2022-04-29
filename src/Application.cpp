@@ -19,13 +19,13 @@ Application* Application::Get() {
 // fonction d'initialisation de l'application
 void Application::setup() {
 	ofSetWindowTitle("IFT-3100 - Main");
-
 	ofDisableArbTex();
 	ofSetVerticalSync(true);
 	ofSetCircleResolution(32);
+
 	isMouseDown = false;
 
-	interface  = Interface::Get();
+	interface = Interface::Get();
 	renderer2D = Renderer2D::Get();
 	renderer3D = Renderer3D::Get();
 
@@ -41,8 +41,7 @@ void Application::setup() {
 // fonction de mise à jour de la logique de l'application
 void Application::update() {
 	// Draw 2D primitive preview if UI not used && drawing mode on
-	if (isMouseDown && interface->mouseAction == DrawPrimitive &&
-		(!ImGui::IsWindowFocused() || !ImGui::IsWindowHovered() || !ImGui::IsAnyItemHovered())) {
+	if (isMouseDown && interface->mouseAction == DrawPrimitive && (!ImGui::IsWindowHovered() || !ImGui::IsAnyItemHovered())) {
 		// NOTE(Refactor): Maybe this bit belongs in `Interface`?
 		Renderer2D::Get()->addPreviewPrimitive(mousePos,
 			interface->drawMode,
@@ -98,10 +97,10 @@ void Application::mouseDragged(int x, int y, int button) {
 }
 
 void Application::mousePressed(int x, int y, int button) {
-	mousePos.x	= x;
-	mousePos.y	= y;
-	mousePos.z	= x;
-	mousePos.w	= y;
+	mousePos.x = x;
+	mousePos.y = y;
+	mousePos.z = x;
+	mousePos.w = y;
 	isMouseDown = true;
 	if (ImGui::IsWindowHovered() || ImGui::IsAnyItemHovered() || interface->mouseAction == DrawPrimitive) {
 		renderer3D->setMouseInput(false); // Disable camera mouse input
@@ -109,8 +108,8 @@ void Application::mousePressed(int x, int y, int button) {
 }
 
 void Application::mouseReleased(int x, int y, int button) {
-	mousePos.x	= x;
-	mousePos.y	= y;
+	mousePos.x = x;
+	mousePos.y = y;
 	isMouseDown = false;
 	renderer3D->setMouseInput(true); // Enable mouse input
 
