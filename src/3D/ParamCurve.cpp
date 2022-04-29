@@ -9,8 +9,8 @@ ParamCurve::ParamCurve(ParamCurveType t, int _precision)
 	, precision(_precision) { }
 
 void ParamCurve::setup(ofVec3f p1, ofVec3f p2, ofVec3f p3, ofVec3f p4) {
-	cached_pos	  = pos;
-	points		  = {p1, p2, p3, p4};
+	cached_pos = pos;
+	points = {p1, p2, p3, p4};
 	cached_points = {}; // Force first iteration computation on update
 	for (int i = 0; i <= precision; i++) {
 		line.addVertex(ofPoint());
@@ -23,7 +23,7 @@ void ParamCurve::update() {
 		return;
 	}
 	// If changed, update cached data
-	cached_pos	  = pos;
+	cached_pos = pos;
 	cached_points = points;
 	// Compute points
 	switch (type) {

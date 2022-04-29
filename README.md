@@ -10,6 +10,8 @@ please use the following commands :
 
 In `Makefile` change the `OF_ROOT` at line 9 to your current openFrameworks location.
 
+Install voro++ using `cd libs/voro++-0.4.6 && sudo make install`.
+
 ## Compilation
 
 In order to compile the project, run `make && make RunRelease` in the `Makefile` location. The setup part needs to be done before the compilation part.

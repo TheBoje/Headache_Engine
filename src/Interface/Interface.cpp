@@ -24,25 +24,25 @@ Interface* Interface::Get() {
 }
 
 void Interface::setup() {
-	theme				   = new Theme();
-	mainMenu			   = new bool;
-	*mainMenu			   = true;
+	theme = new Theme();
+	mainMenu = new bool;
+	*mainMenu = true;
 	ImGuiConfigFlags flags = ImGuiConfigFlags_DockingEnable;
 	// flags |= ImGuiConfigFlag	s_ViewportsEnable;
 	_gui.setup(theme, true, flags, true);
 
 	inspector.setup();
 
-	primitiveStrokeWidth   = DEFAULT_STROKE_WIDTH;
-	primitiveStrokeColor   = ofColor::white;
+	primitiveStrokeWidth = DEFAULT_STROKE_WIDTH;
+	primitiveStrokeColor = ofColor::white;
 	primitiveStrokeColor.w = 1;
-	primitiveFillColor	   = ofColor::gray;
-	primitiveFillColor.w   = 1;
-	primitiveFill		   = true;
-	mouseAction			   = None;
-	drawMode			   = Line;
-	axesCameraEnable	   = false;
-	mainCameraOrtho		   = false;
+	primitiveFillColor = ofColor::gray;
+	primitiveFillColor.w = 1;
+	primitiveFill = true;
+	mouseAction = None;
+	drawMode = Line;
+	axesCameraEnable = false;
+	mainCameraOrtho = false;
 
 	isHistComputed = false;
 
@@ -60,7 +60,7 @@ void Interface::loadImage(std::string path) {
 
 void Interface::imageUI() {
 	if (ImGui::Button("compute histogram") && image.isAllocated()) {
-		_rgb		   = ImageUtils::computeHistRGB(image);
+		_rgb = ImageUtils::computeHistRGB(image);
 		isHistComputed = true;
 	}
 
@@ -199,6 +199,17 @@ void Interface::draw3dRendererUI() {
 				{-15, -30, 15},
 				{-15, 0, 5}});
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("surface coons", ps));
+		}
+		if (ImGui::MenuItem("Voronoi 3D", NULL, false, true)) {
+			int nb_pts = 6;
+			// TODO(Louis): Change control points translation from UI!
+			Voronoi3D voronoi;
+			std::vector<ofVec3f> pts = {};
+			for (int i = 0; i < nb_pts; i++) {
+				pts.push_back({ofRandom(-100, 100), ofRandom(-100, 100), ofRandom(-100, 100)});
+			}
+			voronoi.setup(pts, ofBoxPrimitive(200, 200, 200));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("voronoi 3D", voronoi));
 		}
 		ImGui::Separator();
 		if (ImGui::MenuItem("Camera", NULL, false, true)) {

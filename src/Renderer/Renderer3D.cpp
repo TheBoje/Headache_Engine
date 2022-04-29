@@ -110,12 +110,12 @@ void Renderer3D::computeBoundaryBox() {
 				return;
 
 			// Get the center and the rotation (needed for rotated meshes to compute global vertex position)
-			ofVec3f nodePos		= object->getNode()->getPosition();
-			ofVec3f nodeScale	= object->getNode()->getScale();
+			ofVec3f nodePos = object->getNode()->getPosition();
+			ofVec3f nodeScale = object->getNode()->getScale();
 			ofVec3f nodRotation = object->getNode()->getOrientationEulerDeg();
 
 			if (object->getType() == ObjectType::Model3D) {
-				ofMesh		mesh		= ((of3dPrimitive*)object->getNode())->getMesh();
+				ofMesh mesh = ((of3dPrimitive*)object->getNode())->getMesh();
 				std::size_t numVertices = mesh.getNumVertices();
 
 				// Go through all vertices of the mesh if it exist
@@ -176,7 +176,8 @@ void Renderer3D::deleteSelected() {
 
 void Renderer3D::drawScene() {
 	ofFill();
-	Ray ray(ofVec3f(0.005771, 0.028855, -0.999567));
+
+  Ray ray(ofVec3f(0.005771, 0.028855, -0.999567));
 	ray.draw();
 
 	hierarchy.mapChildren([&](std::shared_ptr<Object3D> obj) {
@@ -314,7 +315,7 @@ void Renderer3D::importFromPath(const std::string& filepath) {
 	} else if (model.getMeshCount() > 1) {
 		IFT_LOG << "loading " << model.getMeshCount() << " meshes";
 
-		std::shared_ptr<Object3D>			   parent = std::make_shared<Object3D>(filepath, ofNode());
+		std::shared_ptr<Object3D> parent = std::make_shared<Object3D>(filepath, ofNode());
 		std::vector<std::shared_ptr<Object3D>> children;
 		children.reserve(model.getMeshCount());
 

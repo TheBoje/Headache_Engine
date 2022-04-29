@@ -14,7 +14,7 @@ vec3 getNormal() {
 // the camera direction.
 vec4 explode(vec4 position, vec3 normal) {
 	float magnitude = 2.0;
-	vec3  direction = normal * (-50);
+	vec3 direction = normal * (-50);
 	return position + vec4(direction, 0.0);
 }
 

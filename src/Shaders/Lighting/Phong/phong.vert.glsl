@@ -20,9 +20,9 @@ out int count;
 // attributs uniformes
 uniform mat4x4 modelViewMatrix;
 uniform mat4x4 projectionMatrix;
-uniform mat4   textureMatrix;
-uniform vec3   lightPos[MAX_LIGHTS];
-uniform int	   nbLights;
+uniform mat4 textureMatrix;
+uniform vec3 lightPos[MAX_LIGHTS];
+uniform int nbLights;
 
 void main() {
 	// calculer la matrice normale
@@ -37,7 +37,7 @@ void main() {
 	for (int i = 0; i < nbLights; i++) {
 		light_position[i] = vec3(modelViewMatrix * vec4(lightPos[i], 1.0));
 	}
-	count			= nbLights;
+	count = nbLights;
 	texCoordVarying = texcoord;
 	// transformation de la position du sommet par les matrices de modèle, vue et projection
 	gl_Position = projectionMatrix * modelViewMatrix * position;

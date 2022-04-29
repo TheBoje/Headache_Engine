@@ -1,4 +1,5 @@
 #include "ImageUtils.h"
+#include "Asserts.h"
 
 namespace ift3100 {
 ofImage* ImageUtils::importImage(const std::string& path) {
@@ -23,8 +24,8 @@ void ImageUtils::exportImage(const std::string& name) {
      * @return a 3 lengthen array of 256 lengthen unsigned int vectors for rbg colors
      */
 unsigned int** ImageUtils::computeHistRGB(const ofImage& image) {
-	int			   channels = 3;
-	unsigned int** hist		= new unsigned int*[channels];
+	int channels = 3;
+	unsigned int** hist = new unsigned int*[channels];
 
 	for (int i = 0; i < channels; i++)
 		hist[i] = new unsigned int[256]();
@@ -65,4 +66,34 @@ cv::Mat ImageUtils::convert(const ofImage& image, int code) {
 	cv::cvtColor(tmp, converted, code); // Convert color
 	return converted;
 }
+
+ofTexture ImageUtils::getChessboard(int size, int sizeSquare) {
+	ofPixels pixels;
+	pixels.clear();
+	pixels.allocate(size, size, OF_PIXELS_RGB);
+	IFT_ASSERT(size >= sizeSquare, "size must be greater than count");
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			// I guess this whole thing could be a one-liner, but i'm quite tired and it's working so i'm not touching it
+			if (i % (2 * sizeSquare) >= sizeSquare) {
+				if (j % (2 * sizeSquare) >= sizeSquare) {
+					pixels.setColor(i, j, ofColor::black);
+				} else {
+					pixels.setColor(i, j, ofColor::white);
+				}
+			} else {
+				if (j % (2 * sizeSquare) >= sizeSquare) {
+					pixels.setColor(i, j, ofColor::white);
+				} else {
+					pixels.setColor(i, j, ofColor::black);
+				}
+			}
+		}
+	}
+	ofTexture res;
+	res.allocate(pixels);
+	res.loadData(pixels);
+	return res;
+}
+
 } // namespace ift3100

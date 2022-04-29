@@ -28,10 +28,10 @@ class MaterialViewer {
 	ofShader _blinnphong;
 
 	PreviewPrimitiveType _primitiveType;
-	Model				 _target;
+	Model _target;
 
 	ofCamera _camera;
-	ofFbo	 _fbo;
+	ofFbo _fbo;
 
 	MaterialViewer();
 

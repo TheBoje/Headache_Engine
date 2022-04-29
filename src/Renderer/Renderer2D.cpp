@@ -44,7 +44,7 @@ void Renderer2D::addPreviewPrimitive(
 	// Call proper render method based on UI state / mouse action
 	// Set colors slightly transparent
 	strokeColor.a = 80;
-	fillColor.a	  = 80;
+	fillColor.a = 80;
 
 	// Draw transparent preview primitive for 1 frame
 	addPrimitive(mousePos, type, strokeWidth, strokeColor, fill, fillColor, 1);
