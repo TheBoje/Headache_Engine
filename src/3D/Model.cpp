@@ -21,9 +21,13 @@ void Model::setup() {
 }
 
 Model::Model(const Model& model)
-	: _texture(model._texture)
-	, _primitive(model._primitive)
-	, usingShader(model.usingShader) { }
+	: _primitive(model._primitive)
+	, usingShader(model.usingShader) {
+	if (_texture.isAllocated())
+		_texture = model._texture;
+	else
+		_texture = ofTexture();
+}
 
 Model::Model(of3dPrimitive primitive)
 	: _texture(ofTexture())
@@ -32,7 +36,7 @@ Model::Model(of3dPrimitive primitive)
 	_material.setShininess(120);
 
 	_material.setSpecularColor(ofColor(255, 255, 255, 255));
-	_material.setEmissiveColor(ofColor(0, 0, 0, 255));
+	_material.setEmissiveColor(ofColor(120, 0, 0, 255));
 	_material.setDiffuseColor(ofColor(255, 255, 255, 255));
 	_material.setAmbientColor(ofColor(255, 255, 255, 255));
 }
@@ -45,7 +49,7 @@ Model::Model(ofMesh mesh, ofTexture texture)
 	_material.setShininess(120);
 
 	_material.setSpecularColor(ofColor(255, 255, 255, 255));
-	_material.setEmissiveColor(ofColor(0, 0, 0, 255));
+	_material.setEmissiveColor(ofColor(120, 0, 0, 255));
 	_material.setDiffuseColor(ofColor(255, 255, 255, 255));
 	_material.setAmbientColor(ofColor(255, 255, 255, 255));
 }

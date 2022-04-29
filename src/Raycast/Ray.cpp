@@ -96,6 +96,59 @@ Intersection Ray::intersect(of3dPrimitive obj) {
 	return inter;
 }
 
+Intersection Ray::intersect(ofVec3f point) {
+	Intersection inter;
+	inter.intersect = false;
+	inter.normal	= (_origin - point).normalized();
+	inter.position	= point;
+
+	if (_direction.dot(inter.normal) == -1)
+		inter.intersect = true;
+
+	return inter;
+}
+
+Intersection Ray::intersect(ofLight light) {
+	Intersection inter;
+
+	switch (light.getType()) {
+		case ofLightType::OF_LIGHT_AREA: {
+			ofPlanePrimitive plane(100, 100, 100, 100);
+			plane.setPosition(light.getPosition());
+			inter = intersect(plane);
+			break;
+		}
+
+		case ofLightType::OF_LIGHT_DIRECTIONAL: {
+			ofVec3f rot		= light.getOrientationEulerDeg();
+			ofVec3f normal	= ofVec3f(0, 0, 1).rotate(rot.x, rot.y, rot.z).normalized();
+			inter.intersect = _direction.dot(normal) == -1;
+			inter.position	= light.getPosition();
+			inter.normal	= normal;
+			break;
+		}
+
+		case ofLightType::OF_LIGHT_POINT: {
+			inter = intersect(light.getPosition());
+			break;
+		}
+
+		case ofLightType::OF_LIGHT_SPOT: {
+			inter = intersect(light.getPosition());
+
+			if (inter.intersect) {
+				ofVec3f rot	   = light.getOrientationEulerDeg();
+				ofVec3f normal = ofVec3f(0, 0, 1).rotate(rot.x, rot.y, rot.z).normalized();
+
+				inter.normal = normal;
+			}
+			break;
+		}
+	}
+
+	return inter;
+}
+
 Ray Ray::reflect(Intersection inter) {
 	IFT_ASSERT(inter.intersect, "there must be an intersection to compute reflection");
 	return Ray(inter.position, (_direction + 2 * inter.normal.dot(-_direction) * inter.normal));

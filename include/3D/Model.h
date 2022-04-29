@@ -64,6 +64,10 @@ public:
 	inline of3dPrimitive& getPrimitive() {
 		return _primitive;
 	}
+
+	inline ofMaterial& getMaterial() {
+		return _material;
+	}
 };
 
 } // namespace ift3100

@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "ParamCurve.h"
 
+#include "Raytracing.h"
+
 #include <string>
 
 namespace ift3100 {
@@ -93,6 +95,22 @@ void Interface::imageUI() {
 
 	if (image.isAllocated())
 		ImGui::Image((ImTextureID)(uintptr_t)textureSourceID, ImVec2(textureSource.getWidth() / 4, textureSource.getHeight() / 4));
+
+	if (ImGui::Button("Render")) {
+		ofImage				  image;
+		std::vector<Model*>	  models;
+		std::vector<ofLight*> lights;
+		Renderer3D::Get()->hierarchy.mapChildren([&](std::shared_ptr<Object3D> object) {
+			if (object->getType() == ObjectType::Model3D)
+				models.emplace_back(object->getModel());
+
+			if (object->getType() == ObjectType::Light)
+				lights.emplace_back((ofLight*)object->getNode());
+		});
+		Raytracing raytracing(Renderer3D::Get()->selectedCamera, lights, models);
+		raytracing.render();
+		raytracing.saveImage();
+	}
 }
 
 void Interface::drawingUI() {

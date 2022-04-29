@@ -34,8 +34,11 @@ public:
 	void draw();
 
 	Intersection intersect(of3dPrimitive obj);
-	Ray			 reflect(Intersection inter);
-	Ray			 refract(Intersection inter, float n1, float n2);
+	Intersection intersect(ofVec3f point);
+	Intersection intersect(ofLight light);
+
+	Ray reflect(Intersection inter);
+	Ray refract(Intersection inter, float n1, float n2);
 
 	/**
      * @brief Set the direction of the Ray to dir.normalized()
@@ -50,6 +53,21 @@ public:
 	}
 	inline void setLegth(float length) {
 		_length = length;
+	}
+
+	/**
+	 * @brief Return normalized ray direction
+	 * 
+	 * @return ofVec3f 
+	 */
+	inline ofVec3f getDirection() {
+		return _direction;
+	}
+	inline ofVec3f getOrigin() {
+		return _origin;
+	}
+	inline float getLength() {
+		return _length;
 	}
 };
 
