@@ -24,6 +24,7 @@ void Application::setup() {
 	ofDisableArbTex();
 	ofSetVerticalSync(true);
 	ofSetCircleResolution(32);
+
 	isMouseDown = false;
 
 	interface = Interface::Get();

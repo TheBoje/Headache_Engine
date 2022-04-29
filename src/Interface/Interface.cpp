@@ -180,6 +180,17 @@ void Interface::draw3dRendererUI() {
 				{-15, 0, 5}});
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("surface coons", ps));
 		}
+		if (ImGui::MenuItem("Voronoi 3D", NULL, false, true)) {
+			int nb_pts = 6;
+			// TODO(Louis): Change control points translation from UI!
+			Voronoi3D voronoi;
+			std::vector<ofVec3f> pts = {};
+			for (int i = 0; i < nb_pts; i++) {
+				pts.push_back({ofRandom(-100, 100), ofRandom(-100, 100), ofRandom(-100, 100)});
+			}
+			voronoi.setup(pts, ofBoxPrimitive(200, 200, 200));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("voronoi 3D", voronoi));
+		}
 		ImGui::Separator();
 		if (ImGui::MenuItem("Camera", NULL, false, true)) {
 			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Camera", ofCamera()));

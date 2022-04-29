@@ -53,6 +53,12 @@ jobs:
       - name: Download openFrameworks libs
         run: sudo openFrameworks/scripts/linux/download_libs.sh -a 64gcc6;
 
+      - name: libvoro++.so install
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y voro++ voro++-dev
+          ld -lvoro++ --verbose
+
       - name: Install openFrameworks dependencies
         run: |
           export OF_ROOT=${{ github.workspace }}/openFrameworks
@@ -67,5 +73,9 @@ jobs:
       - name: Build IFT-3100
         run: |
           ls
-          cd IFT-3100
+          cd ${{ github.workspace }}/IFT-3100
           make -j4 OF_ROOT=${{ github.workspace }}/openFrameworks
+
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
