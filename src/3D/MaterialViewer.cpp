@@ -47,9 +47,18 @@ void MaterialViewer::draw() {
 		}
 		float array[] = {_light.getGlobalPosition().x, _light.getGlobalPosition().y, _light.getGlobalPosition().z};
 		illum->begin();
-		illum->setUniform3f("color_ambient", _light.getAmbientColor().r, _light.getAmbientColor().g, _light.getAmbientColor().b);
-		illum->setUniform3f("color_diffuse", _light.getDiffuseColor().r, _light.getDiffuseColor().g, _light.getDiffuseColor().b);
-		illum->setUniform3f("color_specular", _light.getDiffuseColor().r, _light.getDiffuseColor().g, _light.getDiffuseColor().b);
+		illum->setUniform3f("color_ambient",
+			_light.getAmbientColor().r * _target.getMaterial().getAmbientColor().r,
+			_light.getAmbientColor().g * _target.getMaterial().getAmbientColor().g,
+			_light.getAmbientColor().b * _target.getMaterial().getAmbientColor().b);
+		illum->setUniform3f("color_diffuse",
+			_light.getDiffuseColor().r * _target.getMaterial().getDiffuseColor().r,
+			_light.getDiffuseColor().g * _target.getMaterial().getDiffuseColor().g,
+			_light.getDiffuseColor().b * _target.getMaterial().getDiffuseColor().b);
+		illum->setUniform3f("color_specular",
+			_light.getSpecularColor().r * _target.getMaterial().getSpecularColor().r,
+			_light.getSpecularColor().g * _target.getMaterial().getSpecularColor().g,
+			_light.getSpecularColor().b * _target.getMaterial().getSpecularColor().b);
 		illum->setUniform1f("brightness", _light.getDiffuseColor().getBrightness());
 		illum->setUniform1i("nbLights", 1);
 		illum->setUniform3fv("lightPos", array, 1);
