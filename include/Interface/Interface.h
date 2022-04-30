@@ -1,59 +1,67 @@
 #ifndef IFT_3100_INTERFACE_H
 #define IFT_3100_INTERFACE_H
 
-#include "DrawingProperties.h"
 #include "Hierarchy.h"
 #include "ImageUtils.h"
 #include "InspectorInterface.h"
-#include "InterfaceUtils.h"
-#include "Logger.h"
 #include "Renderer2D.h"
+#include "Renderer3D.h"
 #include "Theme.h"
 #include "ofImage.h"
 #include "ofMain.h"
 #include "ofxImGui.h"
+#include "MaterialViewer.h"
 
 #include <string.h>
 
 namespace ift3100 {
 class Application;
 class Interface {
-public:
-	Application& application; // Reference to main application for callbacks
+private:
+	static Interface* _interface;
 
+protected:
+	Interface();
+
+public:
+	Interface(const Interface&) = delete;
+	~Interface();
+
+	static Interface* Get();
+
+	Interface& operator=(const Interface&) = delete;
+
+public:
 	InspectorInterface inspector;
 
 	ofxImGui::Gui _gui;
-	Theme		  theme;
-	ofVec4f		  mousePos;
+	Theme* theme;
+	bool* mainMenu;
 
 	unsigned int** _rgb;
 
-	float  primitiveStrokeWidth;
+	float primitiveStrokeWidth;
 	ImVec4 primitiveStrokeColor; // Dont question it.
-	bool   primitiveFill;
+	bool primitiveFill;
 	ImVec4 primitiveFillColor; // Forget it.
 
 	PrimitiveType drawMode;
-	MouseAction	  mouseAction;
+	MouseAction mouseAction;
 
 	ofTexture textureSource;
-	GLuint	  textureSourceID;
-	ofImage	  image;
-	bool	  isHistComputed;
-	char	  imageRenderName[64];
-	char	  import3DObj[64];
+	GLuint textureSourceID;
+	ofTexture cameraTexture;
+	GLuint cameraTextureID;
 
-	// WIP: add keyframes to animation
-	ofVec3f	 animPosition;
-	ofVec3f	 animRotation;
-	uint64_t animFrame;
-	bool	 animPaused;
+	ofImage image;
+	bool isHistComputed;
+	char imageRenderName[64] = "";
+	char import3DObj[64] = "";
+
+	int pxRes = 10;
 
 	bool axesCameraEnable;
 	bool mainCameraOrtho;
-
-	Interface(Application& _application);
 
 	void setup();
 	void loadImage(std::string path);
@@ -61,7 +69,9 @@ public:
 	void drawingUI();
 	void drawInspector();
 	void draw3dRendererUI();
+	void drawOptionsMenu();
 	void drawAnimator();
+	void drawMaterialViewer();
 
 	void draw();
 	void button_pressed();

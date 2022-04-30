@@ -1,5 +1,4 @@
 #include "Animator.h"
-#include "Logger.h"
 
 namespace ift3100 {
 
@@ -11,7 +10,7 @@ Animator::Animator()
 	, _currentFrame(0)
 	, _paused(true) { }
 
-Animator::Animator(ofNode* target, InterpolationType type)
+Animator::Animator(std::shared_ptr<Object3D> target, InterpolationType type)
 	: _target(target)
 	, _indexLastKeyFrame(-1)
 	, _indexNextKeyFrame(-1)
@@ -19,7 +18,7 @@ Animator::Animator(ofNode* target, InterpolationType type)
 	, _currentFrame(0)
 	, _paused(true) { }
 
-Animator::Animator(ofNode* target, const std::vector<Keyframe> keyframes, InterpolationType type)
+Animator::Animator(std::shared_ptr<Object3D> target, const std::vector<Keyframe> keyframes, InterpolationType type)
 	: _target(target)
 	, _indexLastKeyFrame(-1)
 	, _indexNextKeyFrame(-1)
@@ -33,23 +32,27 @@ Animator::Animator(ofNode* target, const std::vector<Keyframe> keyframes, Interp
 	}
 }
 
-void Animator::setInterpolationType(InterpolationType type) { _interpolationType = type; }
+void Animator::setInterpolationType(InterpolationType type) {
+	_interpolationType = type;
+}
 
-void Animator::setTarget(ofNode* target) { _target = target; }
+void Animator::setTarget(std::shared_ptr<Object3D> target) {
+	_target = target;
+}
 
 /**
- * @brief Add a keyframe to the animation. 
+ * @brief Add a keyframe to the animation.
  * The keyframes are sort by frame.
- * 
- * @param position 
- * @param rotation 
- * @param frame 
+ *
+ * @param position
+ * @param rotation
+ * @param frame
  */
 void Animator::addKeyframe(const ofVec3f& position, const ofVec3f& rotation, uint64_t frame) {
 	Keyframe kf;
 	kf.position = position;
 	kf.rotation = rotation;
-	kf.frame	= frame;
+	kf.frame = frame;
 
 	std::size_t keyframes_size = _keyframes.size();
 
@@ -93,38 +96,42 @@ void Animator::update() {
 /**
  * @brief Reset the animation and pause it.
  * Set the target to the first animation position and rotation.
- * 
+ *
  */
 void Animator::reset() {
 	_currentFrame = 0;
-	_paused		  = true;
+	_paused = true;
 
 	if (_keyframes.size() >= 2) {
 		_indexLastKeyFrame = 0;
 		_indexNextKeyFrame = 1;
 
-		_target->setPosition(_keyframes[_indexLastKeyFrame].position);
-		_target->setGlobalOrientation(glm::quat(_keyframes[_indexLastKeyFrame].rotation * DEG_TO_RAD));
+		_target->getNode()->setPosition(_keyframes[_indexLastKeyFrame].position);
+		_target->getNode()->setGlobalOrientation(glm::quat(_keyframes[_indexLastKeyFrame].rotation * DEG_TO_RAD));
 	} else {
 		_indexLastKeyFrame = -1;
 		_indexNextKeyFrame = -1;
 	}
 }
 
-void Animator::pause() { _paused = true; }
+void Animator::pause() {
+	_paused = true;
+}
 
-void Animator::resume() { _paused = false; }
+void Animator::resume() {
+	_paused = false;
+}
 
 void Animator::computePiecewiseInterpolation() {
 	Keyframe* lastKeyFrame = &_keyframes[_indexLastKeyFrame];
 	Keyframe* nextKeyFrame = &_keyframes[_indexNextKeyFrame];
 
 	if ((_currentFrame - lastKeyFrame->frame) < ((nextKeyFrame->frame - lastKeyFrame->frame) / 2)) {
-		_target->setPosition(lastKeyFrame->position);
-		_target->setGlobalOrientation(glm::quat(lastKeyFrame->rotation * DEG_TO_RAD));
+		_target->getNode()->setPosition(lastKeyFrame->position);
+		_target->getNode()->setGlobalOrientation(glm::quat(lastKeyFrame->rotation * DEG_TO_RAD));
 	} else {
-		_target->setPosition(nextKeyFrame->position);
-		_target->setGlobalOrientation(glm::quat(nextKeyFrame->rotation * DEG_TO_RAD));
+		_target->getNode()->setPosition(nextKeyFrame->position);
+		_target->getNode()->setGlobalOrientation(glm::quat(nextKeyFrame->rotation * DEG_TO_RAD));
 	}
 }
 
@@ -132,7 +139,7 @@ void Animator::computeLinearInterpolation() {
 	Keyframe* lastKeyFrame = &_keyframes[_indexLastKeyFrame];
 	Keyframe* nextKeyFrame = &_keyframes[_indexNextKeyFrame];
 
-	float	alpha = (float)(_currentFrame - lastKeyFrame->frame) / (float)(nextKeyFrame->frame - lastKeyFrame->frame);
+	float alpha = (float)(_currentFrame - lastKeyFrame->frame) / (float)(nextKeyFrame->frame - lastKeyFrame->frame);
 	ofVec3f lerpPosition(ofLerp(lastKeyFrame->position.x, nextKeyFrame->position.x, alpha),
 		ofLerp(lastKeyFrame->position.y, nextKeyFrame->position.y, alpha),
 		ofLerp(lastKeyFrame->position.z, nextKeyFrame->position.z, alpha));
@@ -141,12 +148,12 @@ void Animator::computeLinearInterpolation() {
 		ofLerpDegrees(lastKeyFrame->rotation.y, nextKeyFrame->rotation.y, alpha),
 		ofLerpDegrees(lastKeyFrame->rotation.z, nextKeyFrame->rotation.z, alpha));
 
-	_target->setPosition(lerpPosition);
-	_target->setGlobalOrientation(glm::quat(lerpRotation * DEG_TO_RAD));
+	_target->getNode()->setPosition(lerpPosition);
+	_target->getNode()->setGlobalOrientation(glm::quat(lerpRotation * DEG_TO_RAD));
 }
 
 void Animator::computeInterpolation() {
-	if (_indexNextKeyFrame == _keyframes.size() || _indexLastKeyFrame == -1 || _indexNextKeyFrame == -1) {
+	if ((size_t)_indexNextKeyFrame == _keyframes.size() || _indexLastKeyFrame == -1 || _indexNextKeyFrame == -1) {
 		IFT_LOG << "reset";
 		reset();
 		resume(); // infinitely looping if resume here an unpausing

@@ -1,0 +1,81 @@
+name: Run build linux
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    env:
+      TRAVIS_BUILD_DIR: ${{ github.workspace }}
+      TARGET: linux64
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v3
+        with:
+          path: IFT-3100
+          submodules: 'recursive'
+
+      - name: Checkout openFrameworks
+        uses: actions/checkout@v3
+        with:
+          repository: openframeworks/openFrameworks
+          path: openFrameworks
+          ref: master
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: 'recursive'
+
+      - name: Checkout TheBoje/ofxImGui
+        uses: actions/checkout@v3
+        with:
+          repository: TheBoje/ofxImGui
+          path: openFrameworks/addons/ofxImGui
+          ref: master
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: 'recursive'
+
+      - name: Checkout kylemcdonald/ofxCv
+        uses: actions/checkout@v3
+        with:
+          repository: kylemcdonald/ofxCv
+          path: openFrameworks/addons/ofxCv
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: 'recursive'
+
+      - name: Add gcc-6 repository
+        run: |
+          sudo apt update -y
+          sudo apt-get install libasound2
+
+      - name: Download openFrameworks libs
+        run: sudo openFrameworks/scripts/linux/download_libs.sh -a 64gcc6;
+
+      - name: libvoro++.so install
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y voro++ voro++-dev
+          ld -lvoro++ --verbose
+
+      - name: Install openFrameworks dependencies
+        run: |
+          export OF_ROOT=${{ github.workspace }}/openFrameworks
+          sudo openFrameworks/scripts/ci/linux64/install.sh
+
+      - name: Install GLFW3
+        run: |
+          echo deb http://dk.archive.ubuntu.com/ubuntu/ focal main universe | sudo tee /etc/apt/sources.list
+          sudo apt-get update -u
+          sudo apt-get install -y -u libglfw3-dev
+
+      - name: Build IFT-3100
+        run: |
+          ls
+          cd ${{ github.workspace }}/IFT-3100
+          make -j4 OF_ROOT=${{ github.workspace }}/openFrameworks
+
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3

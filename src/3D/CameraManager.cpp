@@ -1,6 +1,7 @@
 #include "CameraManager.h"
-#include "ofMain.h"
+#include "Asserts.h"
 #include "Logger.h"
+#include "ofMain.h"
 
 namespace ift3100 {
 static const ofVec3f OFFSET_DATA[] = {
@@ -17,7 +18,7 @@ CameraManager::CameraManager()
      *
      */
 void CameraManager::computeViewports() {
-	float width	 = ofGetWidth();
+	float width = ofGetWidth();
 	float height = ofGetHeight();
 
 	int i = 0;
@@ -25,17 +26,17 @@ void CameraManager::computeViewports() {
 		for (; i < NB_AXES_CAM; i++) {
 			_axes_cameras[i].enableOrtho();
 
-			viewports[i].x		= (CameraManager::OFFSET / 2) + ((width) / 2) * (i % 2);
-			viewports[i].y		= (CameraManager::OFFSET / 2) + ((height) / 2) * (i / 2);
-			viewports[i].width	= (width / 2) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
+			viewports[i].x = (CameraManager::OFFSET / 2) + ((width) / 2) * (i % 2);
+			viewports[i].y = (CameraManager::OFFSET / 2) + ((height) / 2) * (i / 2);
+			viewports[i].width = (width / 2) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
 			viewports[i].height = (height / 2) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
 		}
 	}
 
 	// i = 3 main camera viewport
-	viewports[3].x		= (CameraManager::OFFSET / 2) - CameraManager::STROKE_WIDTH + ((width) / 2) * (i % 2);
-	viewports[3].y		= (CameraManager::OFFSET / 2) - CameraManager::STROKE_WIDTH + ((height) / 2) * (i / 2);
-	viewports[3].width	= (width / (i == 0 ? 1 : 2)) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
+	viewports[3].x = (CameraManager::OFFSET / 2) - CameraManager::STROKE_WIDTH + ((width) / 2) * (i % 2);
+	viewports[3].y = (CameraManager::OFFSET / 2) - CameraManager::STROKE_WIDTH + ((height) / 2) * (i / 2);
+	viewports[3].width = (width / (i == 0 ? 1 : 2)) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
 	viewports[3].height = (height / (i == 0 ? 1 : 2)) - CameraManager::OFFSET - CameraManager::STROKE_WIDTH;
 }
 
@@ -46,7 +47,9 @@ void CameraManager::setup() {
 
 void CameraManager::update() { }
 
-void CameraManager::windowResize() { computeViewports(); }
+void CameraManager::windowResize() {
+	computeViewports();
+}
 
 /**
      * @brief Focus the camera.s on the position.
@@ -57,9 +60,12 @@ void CameraManager::focus(const ofVec3f& position) {
 	_main_camera.setPosition(position + OFFSET_DATA[0]);
 	_main_camera.lookAt(position);
 
-	for (int i = 0; i < NB_AXES_CAM; i++) _axes_cameras[i].setPosition(position + OFFSET_DATA[i]);
+	for (int i = 0; i < NB_AXES_CAM; i++)
+		_axes_cameras[i].setPosition(position + OFFSET_DATA[i]);
 
-	for (int i = 0; i < NB_AXES_CAM; i++) { _axes_cameras[i].lookAt(ofVec3f(0, 0, 0)); }
+	for (int i = 0; i < NB_AXES_CAM; i++) {
+		_axes_cameras[i].lookAt(ofVec3f(0, 0, 0));
+	}
 }
 
 /**
@@ -99,10 +105,14 @@ void CameraManager::endCamera(std::size_t index) {
 void CameraManager::setMouseInput(bool enable) {
 	if (enable) {
 		_main_camera.enableMouseInput();
-		for (int i = 0; i < NB_AXES_CAM; i++) { _axes_cameras[i].enableMouseInput(); }
+		for (int i = 0; i < NB_AXES_CAM; i++) {
+			_axes_cameras[i].enableMouseInput();
+		}
 	} else {
 		_main_camera.disableMouseInput();
-		for (int i = 0; i < NB_AXES_CAM; i++) { _axes_cameras[i].disableMouseInput(); }
+		for (int i = 0; i < NB_AXES_CAM; i++) {
+			_axes_cameras[i].disableMouseInput();
+		}
 	}
 }
 
@@ -120,5 +130,18 @@ void CameraManager::toggleAxesCameras(bool enabled) {
 	IFT_LOG << "axes cameras is now " << (enabled ? "enabled" : "disabled");
 }
 
-bool const CameraManager::axesCamerasEnabled() const { return _axes_cameras_enabled; }
+bool const CameraManager::axesCamerasEnabled() const {
+	return _axes_cameras_enabled;
+}
+
+const ofCamera& CameraManager::get(int i) const {
+	IFT_ASSERT(i >= 0 && i <= 3, "Could not get camera [" << i << "], out of range [0, 3]");
+	if (i == 3) {
+		return _main_camera;
+	} else if (i < NB_AXES_CAM && i >= 0) {
+		return _axes_cameras[i];
+	} else {
+		exit(EXIT_FAILURE);
+	}
+}
 } // namespace ift3100

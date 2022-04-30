@@ -1,19 +1,23 @@
 #include "Application.h"
-#include "ImageUtils.h"
-#include "Logger.h"
+#include "Interface.h"
+#include "Renderer2D.h"
+#include "Renderer3D.h"
 #include "ofMain.h"
-#include <iostream>
 
 int main(int argc, char** argv) {
-	// ofSetLogLevel(OF_LOG_NOTICE);
-	ofSetLogLevel(OF_LOG_VERBOSE);
+#ifdef SILENT
+	ofSetLogLevel(OF_LOG_SILENT);
+#else
+	ofSetLogLevel(OF_LOG_NOTICE);
+#endif
 
 	ofGLFWWindowSettings windowSettings;
 	windowSettings.setSize(1024, 1024);
-	// windowSettings.setGLVersion(3, 2);
-
+	windowSettings.setGLVersion(3, 3);
 	ofCreateWindow(windowSettings);
-	ofRunApp(new ift3100::Application());
+	ofAppGLFWWindow* win = dynamic_cast<ofAppGLFWWindow*>(ofGetWindowPtr());
+	win->setWindowIcon("../../data/icon.png");
+	ofRunApp(ift3100::Application::Get());
 
 	return EXIT_SUCCESS;
 }

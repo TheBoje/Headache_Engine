@@ -1,37 +1,57 @@
+#include "Interface.h"
+#include "Application.h"
+#include "ParamCurve.h"
+
+#include "Raytracing.h"
+
 #include <string>
 
-#include "Application.h"
-#include "Interface.h"
-
 namespace ift3100 {
-Interface::Interface(Application& _application)
-	: application(_application) { }
+Interface* Interface::_interface = nullptr;
+
+Interface::Interface() { }
+
+Interface::~Interface() {
+	delete theme;
+	delete mainMenu;
+}
+
+Interface* Interface::Get() {
+	if (_interface == nullptr) {
+		_interface = new Interface();
+	}
+	return _interface;
+}
 
 void Interface::setup() {
-	_gui.setup();
-	_gui.setTheme(new Theme());
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	theme = new Theme();
+	mainMenu = new bool;
+	*mainMenu = true;
+	ImGuiConfigFlags flags = ImGuiConfigFlags_DockingEnable;
+	// flags |= ImGuiConfigFlag	s_ViewportsEnable;
+	_gui.setup(theme, true, flags, true);
 
-	animPaused = false;
 	inspector.setup();
 
-	primitiveStrokeWidth   = DEFAULT_STROKE_WIDTH;
-	primitiveStrokeColor   = ofColor::white;
+	primitiveStrokeWidth = DEFAULT_STROKE_WIDTH;
+	primitiveStrokeColor = ofColor::white;
 	primitiveStrokeColor.w = 1;
-	primitiveFillColor	   = ofColor::gray;
-	primitiveFillColor.w   = 1;
-	primitiveFill		   = true;
-	mouseAction			   = None;
-	drawMode			   = Line;
-	axesCameraEnable	   = false;
-	mainCameraOrtho		   = false;
+	primitiveFillColor = ofColor::gray;
+	primitiveFillColor.w = 1;
+	primitiveFill = true;
+	mouseAction = None;
+	drawMode = Line;
+	axesCameraEnable = false;
+	mainCameraOrtho = false;
 
 	isHistComputed = false;
 
 	IFT_LOG << "done";
 }
 
-float getter(void* data, int index) { return (float)((int*)data)[index]; }
+float getter(void* data, int index) {
+	return (float)((int*)data)[index];
+}
 
 void Interface::loadImage(std::string path) {
 	image.load(path);
@@ -40,7 +60,7 @@ void Interface::loadImage(std::string path) {
 
 void Interface::imageUI() {
 	if (ImGui::Button("compute histogram") && image.isAllocated()) {
-		_rgb		   = ImageUtils::computeHistRGB(image);
+		_rgb = ImageUtils::computeHistRGB(image);
 		isHistComputed = true;
 	}
 
@@ -65,16 +85,34 @@ void Interface::imageUI() {
 
 	ImGui::InputText("Output file name", imageRenderName, IM_ARRAYSIZE(imageRenderName));
 	if (ImGui::Button("Export")) {
-		application.exportRender(std::string(imageRenderName));
+		ImageUtils::exportImage(imageRenderName);
 	}
 
 	ImGui::InputText("Import 3D file", import3DObj, IM_ARRAYSIZE(import3DObj));
 	if (ImGui::Button("Import")) {
-		application.import3DObj(std::string(import3DObj));
+		Renderer3D::Get()->importFromPath(import3DObj);
 	}
 
 	if (image.isAllocated())
 		ImGui::Image((ImTextureID)(uintptr_t)textureSourceID, ImVec2(textureSource.getWidth() / 4, textureSource.getHeight() / 4));
+
+	ImGui::SliderInt("Pixel resolution", &pxRes, 1, 10);
+
+	if (ImGui::Button("Render")) {
+		ofImage image;
+		std::vector<Model*> models;
+		std::vector<ofLight*> lights;
+		Renderer3D::Get()->hierarchy.mapChildren([&](std::shared_ptr<Object3D> object) {
+			if (object->getType() == ObjectType::Model3D)
+				models.emplace_back(object->getModel());
+
+			if (object->getType() == ObjectType::Light)
+				lights.emplace_back((ofLight*)object->getNode());
+		});
+		Raytracing raytracing(Renderer3D::Get()->selectedCamera, lights, models);
+		raytracing.render(pxRes);
+		raytracing.saveImage();
+	}
 }
 
 void Interface::drawingUI() {
@@ -100,68 +138,236 @@ void Interface::drawingUI() {
 
 	bool isDrawPrimitive = mouseAction == DrawPrimitive;
 	if (ImGui::Checkbox("Draw", &isDrawPrimitive)) {
-		if (isDrawPrimitive)
-			mouseAction = DrawPrimitive;
-		else
-			mouseAction = None;
+		mouseAction = DrawPrimitive;
 	}
 
 	if (ImGui::Button("Undo")) {
-		application.rendererUndo();
+		Renderer2D::Get()->undoPrimitive();
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Redo")) {
-		application.rendererRedo();
+		Renderer2D::Get()->redoPrimitive();
 	}
 }
 
+/**
+ * @brief Menu for every instanciation of 3D models and objects
+ */
 void Interface::draw3dRendererUI() {
 	if (ImGui::BeginMenu("Objects")) {
 		if (ImGui::MenuItem("Cube", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cube", ofBoxPrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Cube", ofBoxPrimitive()));
 		}
 		if (ImGui::MenuItem("Cone", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cone", ofConePrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Cone", ofConePrimitive()));
 		}
 		if (ImGui::MenuItem("Plane", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Plane", ofPlanePrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Plane", ofPlanePrimitive()));
 		}
 		if (ImGui::MenuItem("Sphere", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Sphere", ofSpherePrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Sphere", ofSpherePrimitive(10, 64)));
 		}
 		if (ImGui::MenuItem("IcoSphere", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("IcoSphere", ofIcoSpherePrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("IcoSphere", ofIcoSpherePrimitive()));
 		}
 		if (ImGui::MenuItem("Cylinder", NULL, false, true)) {
-			application.renderer3D.hierarchy.addChild(std::make_shared<Object3D>("Cylinder", ofCylinderPrimitive()));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Cylinder", ofCylinderPrimitive()));
+		}
+		if (ImGui::MenuItem("Curve Bezier", NULL, false, true)) {
+			ParamCurve pc(ParamCurveType::Bezier, 50);
+			pc.setup({-100, 0, 0}, {-50, 100, 0}, {50, -100, 0}, {100, 0, 0});
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("bezier curve", pc));
+		}
+		if (ImGui::MenuItem("Curve Hermite", NULL, false, true)) {
+			ParamCurve pc(ParamCurveType::Hermite, 50);
+			pc.setup({-100, 0, 0}, {-50, 100, 0}, {50, -100, 0}, {100, 0, 0});
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("hermite curve", pc));
+		}
+		if (ImGui::MenuItem("Surface Coons (Bezier)", NULL, false, true)) {
+			// TODO(Louis): Change control points translation from UI!
+			ParamSurface ps(ParamSurfaceType::Coons, 20, 20);
+			ps.setup({{-15, 0, -15},
+				{-5, -10, -15},
+				{5, 50, -15},
+				{15, 0, -15},
+				{15, -10, -5},
+				{15, -40, 5},
+				{15, 0, 15},
+				{5, 20, 15},
+				{-5, 0, 15},
+				{-15, 10, 15},
+				{-15, -30, 15},
+				{-15, 0, 5}});
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("surface coons", ps));
+		}
+		if (ImGui::MenuItem("Voronoi 3D", NULL, false, true)) {
+			int nb_pts = 6;
+			// TODO(Louis): Change control points translation from UI!
+			Voronoi3D voronoi;
+			std::vector<ofVec3f> pts = {};
+			for (int i = 0; i < nb_pts; i++) {
+				pts.push_back({ofRandom(-100, 100), ofRandom(-100, 100), ofRandom(-100, 100)});
+			}
+			voronoi.setup(pts, ofBoxPrimitive(200, 200, 200));
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("voronoi 3D", voronoi));
+		}
+		ImGui::Separator();
+		if (ImGui::MenuItem("Camera", NULL, false, true)) {
+			Renderer3D::Get()->hierarchy.addChild(std::make_shared<Object3D>("Camera", ofCamera()));
+		}
+		if (ImGui::MenuItem("Light", NULL, false, true)) {
+			if (Renderer3D::Get()->lights.size() == MAX_LIGHTS) {
+				IFT_LOG_WARNING << "Max number of light is reached. Max lights = " << MAX_LIGHTS;
+			} else {
+				std::shared_ptr<Object3D> light = std::make_shared<Object3D>("Light", ofLight());
+				Renderer3D::Get()->lights.emplace_back(light);
+				Renderer3D::Get()->hierarchy.addChild(light);
+			}
+		}
+
+		ImGui::EndMenu();
+	}
+}
+
+/**
+ * @brief Menu for every options modifying the interface
+ * or the engine functionnality
+ */
+void Interface::drawOptionsMenu() {
+	if (ImGui::BeginMenu("Options")) {
+		ImGui::Checkbox("Enable exploding on selected meshes", &Renderer3D::Get()->isExploding);
+		ImGui::Separator();
+
+		const char* items[] = {"Default", "Phong illumination", "Lambert illumination", "Gouraud illumination", "BlinnPhong illumination"};
+
+		ImGui::Text("illumination:");
+		if (ImGui::BeginListBox("##listboxIllum")) {
+			for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
+				const bool is_selected = (Renderer3D::Get()->illumination == n);
+				if (ImGui::Selectable(items[n], is_selected)) {
+					Renderer3D::Get()->illumination = (IlluminationStyle)n;
+					IFT_LOG << "switched to " << items[n];
+				}
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndListBox();
 		}
 		ImGui::EndMenu();
 	}
 }
 
-void Interface::drawAnimator() {
-	if (animPaused) {
-		if (ImGui::Button("Resume")) {
-			application.renderer3D.anim.resume();
-			animPaused = false;
-		}
-	} else {
-		if (ImGui::Button("Pause")) {
-			application.renderer3D.anim.pause();
-			animPaused = true;
+void Interface::drawAnimator() { }
+
+void Interface::drawMaterialViewer() {
+	Model* mod = nullptr;
+	for (auto selected : Renderer3D::Get()->hierarchy.selected_nodes) {
+		if (selected->getRef()->getType() == ObjectType::Model3D) {
+			mod = selected->getRef()->getModel(); //new Model(*selected->getRef()->getModel());
+			break;
 		}
 	}
 
-	if (ImGui::Button("Reset")) {
-		application.renderer3D.anim.reset();
-		animPaused = true;
+	// If there is no model selected in the Renderer3D, we escape the function
+	if (mod == nullptr)
+		return;
+
+	MaterialViewer::Get()->setTarget(*mod);
+	MaterialViewer::Get()->draw();
+
+	ImGui::Begin("Material preview");
+
+	ImGui::Checkbox("Enable material", &mod->enableMaterial);
+
+	const char* items[] = {"Default", "Phong illumination", "Lambert illumination", "Gouraud illumination", "BlinnPhong illumination"};
+
+	ImGui::Text("illumination:");
+	if (ImGui::BeginListBox("##listbox")) {
+		for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
+			const bool is_selected = (MaterialViewer::Get()->illuminationStyle == n);
+			if (ImGui::Selectable(items[n], is_selected)) {
+				MaterialViewer::Get()->illuminationStyle = (IlluminationStyle)n;
+				IFT_LOG << "switched to " << items[n];
+			}
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
 	}
+
+	const char* itemsPrimitive[] = {"Sphere", "Cube", "IcoSphere", "Cone"};
+
+	ImGui::Text("Primitive:");
+	if (ImGui::BeginListBox("##listbox2")) {
+		for (int n = 0; n < IM_ARRAYSIZE(itemsPrimitive); n++) {
+			const bool is_selected = (MaterialViewer::Get()->getType() == n);
+			if (ImGui::Selectable(itemsPrimitive[n], is_selected)) {
+				MaterialViewer::Get()->setPrimitiveType((PreviewPrimitiveType)n);
+				IFT_LOG << "switched to " << itemsPrimitive[n] << " display type";
+			}
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+
+	ImVec4 lightColor = MaterialViewer::Get()->getLightColor();
+	if (ImGui::ColorEdit4("Light color", (float*)&lightColor)) {
+		MaterialViewer::Get()->setLightColor(lightColor);
+	}
+
+	ImGui::Begin("Preview");
+	{
+		ofxImGui::AddImage(MaterialViewer::Get()->getFbo(),
+			ofVec2f(ImGui::GetWindowHeight() * (MaterialViewer::Get()->getFbo().getWidth() / MaterialViewer::Get()->getFbo().getHeight()),
+				ImGui::GetWindowHeight()));
+	}
+	ImGui::End();
+
+	ofMaterial& mat = MaterialViewer::Get()->getMaterial();
+
+	ImVec4 spec = mat.getSpecularColor();
+	if (ImGui::ColorEdit4("Specular", (float*)&spec)) {
+		mat.setSpecularColor(spec);
+	}
+
+	ImVec4 amb = mat.getAmbientColor();
+	if (ImGui::ColorEdit4("Ambient", (float*)&amb)) {
+		mat.setAmbientColor(amb);
+	}
+
+	ImVec4 emm = mat.getEmissiveColor();
+	if (ImGui::ColorEdit4("Emmissive", (float*)&emm)) {
+		mat.setEmissiveColor(emm);
+	}
+
+	ImVec4 diff = mat.getDiffuseColor();
+	if (ImGui::ColorEdit4("Diffuse", (float*)&diff)) {
+		mat.setDiffuseColor(diff);
+	}
+
+	float shi = mat.getShininess();
+	if (ImGui::SliderFloat("Shininess", &shi, 0, 100)) {
+		mat.setShininess(shi);
+	}
+
+	// MaterialViewer::Get()->setMaterial(mat);
+	mod->setMaterial(mat);
+
+	ImGui::SliderFloat("Transparency", &mod->transparency, 0, 1);
+	ImGui::SliderFloat("Reflection", &mod->reflection, 0, 1);
 }
 
 void Interface::draw() {
 	_gui.begin();
-	bool* mainmenu;
-	ImGui::Begin("Main menu", mainmenu, ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("Main menu", mainMenu, ImGuiWindowFlags_MenuBar);
+
 	{
 		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen)) {
 			ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -173,45 +379,62 @@ void Interface::draw() {
 		}
 
 		if (ImGui::CollapsingHeader("Tree")) {
-			application.renderer2D.hierarchyPrimitives.drawUI();
+			Renderer2D::Get()->hierarchyPrimitives.drawUI();
 		}
 
 		if (ImGui::CollapsingHeader("3d tree")) {
-			application.renderer3D.hierarchy.drawUI();
+			Renderer3D::Get()->hierarchy.drawUI();
 		}
 
 		if (ImGui::CollapsingHeader("Drawing")) {
 			drawingUI();
 		}
 
-		if (ImGui::CollapsingHeader("Animator")) {
-			drawAnimator();
-		}
-
 		if (ImGui::BeginMenuBar()) {
 			draw3dRendererUI();
+			drawOptionsMenu();
 			ImGui::EndMenuBar();
 		}
 
 		if (ImGui::CollapsingHeader("Cameras")) {
 			if (ImGui::Checkbox("Activate axes cameras", &axesCameraEnable)) {
-				application.renderer3D.toggleAxesCameras(axesCameraEnable);
+				Renderer3D::Get()->toggleAxesCameras(axesCameraEnable);
 			}
 
 			if (ImGui::Checkbox("Main camera ortho", &mainCameraOrtho)) {
-				application.renderer3D.setMainCameraOrtho(mainCameraOrtho);
+				Renderer3D::Get()->setMainCameraOrtho(mainCameraOrtho);
 			}
 		}
 	}
 
-	if (!application.renderer2D.hierarchyPrimitives.selected_nodes.empty()) {
-		ImGui::Begin("Inspector");
-		{ inspector.drawInspectorVectorPrimitive(&application.renderer2D.hierarchyPrimitives.selected_nodes); }
+	if (!Renderer2D::Get()->hierarchyPrimitives.selected_nodes.empty()) {
+		ImGui::Begin("Inspector 2D");
+		{ inspector.drawInspectorVectorPrimitive(&Renderer2D::Get()->hierarchyPrimitives.selected_nodes); }
 	}
 
-	if (!application.renderer3D.hierarchy.selected_nodes.empty()) {
+	if (!Renderer3D::Get()->hierarchy.selected_nodes.empty()) {
 		ImGui::Begin("Inspector 3D");
-		{ inspector.drawInspector3d(&application.renderer3D.hierarchy.selected_nodes); }
+		{ inspector.drawInspector3d(&Renderer3D::Get()->hierarchy.selected_nodes); }
+	}
+
+	drawMaterialViewer();
+
+	ImGui::Begin("Animator");
+	{
+		Renderer3D::Get()->animatorManager.drawUI();
+		ImGui::Separator();
+
+		if (!Renderer3D::Get()->hierarchy.selected_nodes.empty()) {
+			if (ImGui::Button("Add animator")) {
+				Renderer3D::Get()->animatorManager.addAnimator(Renderer3D::Get()->hierarchy.selected_nodes.at(0)->getRef());
+			}
+		}
+	}
+
+	auto fbo = Renderer3D::Get()->selectedCameraFBO;
+	if (fbo.isAllocated()) {
+		ImGui::Begin("Camera preview");
+		{ ofxImGui::AddImage(fbo, ofVec2f(ImGui::GetWindowHeight() * (fbo.getWidth() / fbo.getHeight()), ImGui::GetWindowHeight())); }
 	}
 
 	_gui.end();
